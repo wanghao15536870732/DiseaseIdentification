@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:background="#ffffff">
+
+    <TextView
+        android:id="@+id/day_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text="20"
+        android:textColor="#666666"
+        android:textSize="60sp"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="15dp"
+        tools:layout_editor_absoluteY="30dp" />
+
+    <TextView
+        android:id="@+id/week_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:gravity="center"
+        android:text="星期二"
+        android:textSize="14sp"
+        android:textColor="#666666"
+        android:layout_marginTop="10dp"
+        app:layout_constraintLeft_toRightOf="@+id/day_tv"
+        app:layout_constraintTop_toTopOf="@+id/day_tv" />
+
+    <TextView
+        android:id="@+id/date_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:gravity="center"
+        android:text="08/2018"
+        android:textColor="#666666"
+        android:layout_marginBottom="10dp"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/day_tv"
+        app:layout_constraintLeft_toRightOf="@+id/day_tv" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="尖草坪区:    阴  24度"
+        android:textSize="14sp"
+        android:textColor="#666666"
+        android:layout_marginLeft="10dp"
+        app:layout_constraintLeft_toLeftOf="@+id/day_tv"
+        app:layout_constraintTop_toBottomOf="@+id/day_tv" />
+
+    <LinearLayout
+        android:id="@+id/cancel_ll"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <View
+            android:id="@+id/common_horizontal_line"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="#f7f7f7"
+            android:layout_above="@+id/cancel_iv"/>
+
+        <ImageView
+            android:id="@+id/cancel_iv"
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:scaleType="centerInside"
+            android:src="@mipmap/cancel"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/icon_group"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/cancel_ll">
+
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>
