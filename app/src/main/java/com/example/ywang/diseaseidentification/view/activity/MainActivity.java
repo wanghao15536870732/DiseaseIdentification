@@ -1,4 +1,4 @@
-package com.example.ywang.diseaseidentification;
+package com.example.ywang.diseaseidentification.view.activity;
 
 import android.Manifest;
 import android.animation.Animator;
@@ -28,6 +28,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ywang.diseaseidentification.view.fragment.FourthFragment;
+import com.example.ywang.diseaseidentification.view.fragment.MainFragment;
+import com.example.ywang.diseaseidentification.R;
+import com.example.ywang.diseaseidentification.view.fragment.SecondFragment;
+import com.example.ywang.diseaseidentification.view.fragment.ThirdFragment;
 import com.example.ywang.diseaseidentification.view.KickBackAnimator;
 import com.next.easynavigation.constant.Anim;
 import com.next.easynavigation.utils.NavigationUtil;

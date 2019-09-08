@@ -1,4 +1,4 @@
-package com.example.ywang.diseaseidentification.baseEnum;
+package com.example.ywang.diseaseidentification.bean.baseEnum;
 
 /**
  * 功能:定义发音人

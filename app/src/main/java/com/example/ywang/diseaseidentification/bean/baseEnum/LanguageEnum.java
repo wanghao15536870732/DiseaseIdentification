@@ -1,4 +1,4 @@
-package com.example.ywang.diseaseidentification.baseEnum;
+package com.example.ywang.diseaseidentification.bean.baseEnum;
 
 public enum LanguageEnum {
     zh_cn, //简体中文

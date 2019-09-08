@@ -4,9 +4,9 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.example.ywang.diseaseidentification.baseEnum.AccenteEnum;
-import com.example.ywang.diseaseidentification.baseEnum.LanguageEnum;
-import com.example.ywang.diseaseidentification.baseEnum.SpeechPeopleEnum;
+import com.example.ywang.diseaseidentification.bean.baseEnum.AccenteEnum;
+import com.example.ywang.diseaseidentification.bean.baseEnum.LanguageEnum;
+import com.example.ywang.diseaseidentification.bean.baseEnum.SpeechPeopleEnum;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechSynthesizer;

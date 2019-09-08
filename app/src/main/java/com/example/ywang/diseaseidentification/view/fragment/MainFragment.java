@@ -1,6 +1,7 @@
-package com.example.ywang.diseaseidentification;
+package com.example.ywang.diseaseidentification.view.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,13 +12,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ywang.diseaseidentification.R;
+import com.example.ywang.diseaseidentification.view.activity.PanoramaActivity;
 import com.iflytek.cloud.ErrorCode;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechSynthesizer;
 import com.iflytek.cloud.SynthesizerListener;
-
-import org.w3c.dom.Text;
 
 public class MainFragment extends Fragment {
 
@@ -29,13 +30,13 @@ public class MainFragment extends Fragment {
         text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SpeechSynthesizer("你好");
+                startActivity(new Intent(getActivity(),PanoramaActivity.class));
             }
         });
         return view;
     }
 
-    /*-------------------------------语音合成--------------------------*/
+    /*语音合成*/
     public void SpeechSynthesizer(String text){
         //1.创建SpeechSynthesizer对象, 第二个参数：本地合成时传InitListener
         SpeechSynthesizer mTts = SpeechSynthesizer.createSynthesizer(getContext(), null);
@@ -63,44 +64,28 @@ public class MainFragment extends Fragment {
         }
     }
 
-    //合成监听器
+    /*合成监听器*/
     private SynthesizerListener mSynListener = new SynthesizerListener() {
         //会话结束回调接口，没有错误时，error为null
-        public void onCompleted(SpeechError error) {
-
-        }
+        public void onCompleted(SpeechError error) {}
 
         //缓冲进度回调
-        //percent为缓冲进度0~100，beginPos为缓冲音频在文本中开始位置，endPos表示缓冲音频在文本中结束位置，info为附加信息。
-        public void onBufferProgress(int percent, int beginPos, int endPos, String info) {
-
-        }
+        public void onBufferProgress(int percent, int beginPos, int endPos, String info) { }
 
         //开始播放
-        public void onSpeakBegin() {
-
-        }
+        public void onSpeakBegin() { }
 
         //暂停播放
-        public void onSpeakPaused() {
-
-        }
+        public void onSpeakPaused() { }
 
         //播放进度回调
-        //percent为播放进度0~100,beginPos为播放音频在文本中开始位置，endPos表示播放音频在文本中结束位置.
-        public void onSpeakProgress(int percent, int beginPos, int endPos) {
-
-        }
+        public void onSpeakProgress(int percent, int beginPos, int endPos) { }
 
         //恢复播放回调接口
-        public void onSpeakResumed() {
-
-        }
+        public void onSpeakResumed() { }
 
         //会话事件回调接口
-        public void onEvent(int arg0, int arg1, int arg2, Bundle arg3) {
-
-        }
+        public void onEvent(int arg0, int arg1, int arg2, Bundle arg3) { }
     };
 
 }

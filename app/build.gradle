@@ -31,4 +31,6 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.5'
     //悬浮按钮
     implementation 'com.getbase:floatingactionbutton:1.10.1'
+    implementation 'com.github.bumptech.glide:glide:4.9.0'
+    implementation 'com.android.support:design:27.1.1'
 }

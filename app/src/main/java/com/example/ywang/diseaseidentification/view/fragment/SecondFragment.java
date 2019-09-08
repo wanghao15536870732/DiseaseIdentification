@@ -1,4 +1,4 @@
-package com.example.ywang.diseaseidentification;
+package com.example.ywang.diseaseidentification.view.fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,14 +16,23 @@ import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.Marker;
+import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
+import com.baidu.mapapi.map.Overlay;
+import com.baidu.mapapi.map.OverlayOptions;
+import com.baidu.mapapi.map.PolylineOptions;
 import com.baidu.mapapi.model.LatLng;
+import com.example.ywang.diseaseidentification.R;
 import com.example.ywang.diseaseidentification.utils.MyOrientationListener;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
-public class SecondFragment extends Fragment {
+import java.util.ArrayList;
+import java.util.List;
+
+public class SecondFragment extends Fragment implements BaiduMap.OnMarkerClickListener{
 
     private MapView mMapView = null;
     private BaiduMap mBaiduMap = null;
@@ -31,7 +40,7 @@ public class SecondFragment extends Fragment {
     private MyLocationConfiguration.LocationMode mLocationMode;
 
     private FloatingActionsMenu mFloatingActionsMenu;
-    private FloatingActionButton mapTypeBtn,locModeBtn,posQuickBtn;
+    private FloatingActionButton mapTypeBtn,locModeBtn,posQuickBtn,panoramaBtn;
 
     private boolean isFirstLoc = true;
     /*自定义图标*/
@@ -42,6 +51,8 @@ public class SecondFragment extends Fragment {
     private double mLatitude;
     private double mLongitude;
 
+    private List<LatLng> points = new ArrayList<>();
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -51,8 +62,9 @@ public class SecondFragment extends Fragment {
         mBaiduMap = mMapView.getMap();
         //开启地图的定位图层
         mBaiduMap.setMyLocationEnabled(true);
-        initFloatButton(view);
+        mBaiduMap.setIndoorEnable(true);
         initMap();
+        initFloatButton(view);
         return view;
     }
 
@@ -71,8 +83,9 @@ public class SecondFragment extends Fragment {
         //通过LocationClientOption设置LocationClient相关参数
         LocationClientOption option = new LocationClientOption();
         option.setOpenGps(true);  //打开Gps
-        option.setCoorType("bd0911"); //设置坐标类型
+        option.setCoorType("bd09ll"); //设置坐标类型
         option.setScanSpan(1000);
+
         //设置LocationClientOptions
         mLocationClient.setLocOption(option);
         //注册LocationListener监听器
@@ -91,7 +104,10 @@ public class SecondFragment extends Fragment {
             }
         });
         mMyOrientationListener.start();
+        mBaiduMap.setOnMarkerClickListener(this); //设置Marker点击事件
     }
+
+
 
     private void initFloatButton(View view){
         mFloatingActionsMenu = (FloatingActionsMenu) view.findViewById(R.id.map_actions_menu);
@@ -113,6 +129,7 @@ public class SecondFragment extends Fragment {
                 mFloatingActionsMenu.toggle();
             }
         });
+
         locModeBtn = (FloatingActionButton) view.findViewById(R.id.change_map_model);
         locModeBtn.setIcon(R.drawable.map_mode_compass);
         locModeBtn.setTitle("罗盘模式");
@@ -141,6 +158,21 @@ public class SecondFragment extends Fragment {
                 LatLng latLng = new LatLng(mLatitude,mLongitude);
                 MapStatusUpdate status = MapStatusUpdateFactory.newLatLng(latLng);
                 mBaiduMap.animateMapStatus(status);
+                mFloatingActionsMenu.toggle();
+            }
+        });
+
+        panoramaBtn = (FloatingActionButton) view.findViewById(R.id.position_panorama);
+        panoramaBtn.setIcon(R.drawable.map_panorama);
+        panoramaBtn.setTitle("全景图");
+        panoramaBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                Intent intent = new Intent(getActivity(),PanoramaActivity.class);
+//                intent.putExtra("latitude",mLatitude);
+//                intent.putExtra("longitude",mLongitude);
+//                startActivity(intent);
+                addOverlaysToMap();
                 mFloatingActionsMenu.toggle();
             }
         });
@@ -177,7 +209,35 @@ public class SecondFragment extends Fragment {
             }
         }
     }
-    
+
+    public void addOverlaysToMap(){
+        LatLng point = new LatLng(mLatitude,mLatitude);
+        //构建marker图标
+        BitmapDescriptor bitmap = BitmapDescriptorFactory
+                .fromResource(R.mipmap.icon_gcoding);
+        //构建MarkerOption,用于在地图上添加Marker
+        OverlayOptions options = new MarkerOptions()
+                .position(point)
+                .icon(bitmap);
+        Overlay marker = mBaiduMap.addOverlay(options);
+
+        points.add(point);
+        if(points.size() == 4){
+            OverlayOptions mOverlayOptions = new PolylineOptions()
+                    .width(10)
+                    .color(0xAAFF0000)
+                    .points(points);
+            //在地图上绘制
+            Overlay mPolyline = mBaiduMap.addOverlay(mOverlayOptions);
+        }
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        return false;
+    }
+
+
     @Override
     public void onStart() {
         super.onStart();
@@ -214,5 +274,4 @@ public class SecondFragment extends Fragment {
         mMapView = null;
         super.onDestroy();
     }
-
 }

@@ -55,6 +55,17 @@
             fab:fab_colorPressed="@color/blue_pressed"
             fab:fab_title="快速定位"/>
 
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/position_panorama"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_addButtonColorNormal="@color/fab_color"
+            fab:fab_addButtonColorPressed="@color/blue_normal"
+            fab:fab_size="mini"
+            fab:fab_colorNormal="@color/blue_normal"
+            fab:fab_colorPressed="@color/blue_pressed"
+            fab:fab_title="全景图"/>
+
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 

@@ -1,41 +1,23 @@
 package com.example.ywang.diseaseidentification.application;
 
-
 import android.app.Application;
-import android.os.Environment;
+import android.content.Context;
 import android.util.Log;
-
+import android.widget.Toast;
+import com.baidu.lbsapi.BMapManager;
+import com.baidu.lbsapi.MKGeneralListener;
 import com.baidu.mapapi.CoordType;
 import com.baidu.mapapi.SDKInitializer;
 import com.example.ywang.diseaseidentification.utils.RecognitionManager;
 import com.example.ywang.diseaseidentification.utils.SynthesisManager;
-import com.iflytek.cloud.ErrorCode;
-import com.iflytek.cloud.InitListener;
 import com.iflytek.cloud.SpeechConstant;
-import com.iflytek.cloud.SpeechRecognizer;
-import com.iflytek.cloud.SpeechSynthesizer;
 import com.iflytek.cloud.SpeechUtility;
-import com.iflytek.cloud.VoiceWakeuper;
-import com.iflytek.cloud.util.ResourceUtil;
 
 public class MyApplication extends Application {
 
-    String TAG = "MyApplication";
-    // 语音合成对象
-    public SpeechSynthesizer mTts;
-    // 语音唤醒对象
-    public VoiceWakeuper mIvw;
-    // 语音听写对象
-    public SpeechRecognizer mIat;
-
-    // 默认云端发音人
-    public static String voicerCloud = "xiaoyan";
-    public String mEngineType = SpeechConstant.TYPE_CLOUD;
-
-    // 设置门限值 ： 门限值越低越容易被唤醒
-    private int curThresh = 1450;
-    private String keep_alive = "1";
-    private String ivwNetMode = "1";
+    public static String TAG = "Init";
+    public BMapManager mBMapManager;
+    private static MyApplication mInstance = null;
 
     @Override
     public void onCreate() {
@@ -47,6 +29,36 @@ public class MyApplication extends Application {
         SDKInitializer.initialize(this);
         //包括BD09LL和GCJ02两种坐标，默认是BD09LL坐标。
         SDKInitializer.setCoordType(CoordType.BD09LL);
+        mInstance = this;
+        initEngineManager(this);
     }
 
+    public void initEngineManager(Context context) {
+        if (mBMapManager == null) {
+            mBMapManager = new BMapManager(context);
+        }
+
+        if (!mBMapManager.init(new MyGeneralListener())) {
+            Toast.makeText(MyApplication.getInstance().getApplicationContext(), "BMapManager初始化错误!",
+                    Toast.LENGTH_LONG).show();
+        }
+        Log.d(TAG, "initEngineManager");
+    }
+
+    public static MyApplication getInstance() {
+        return mInstance;
+    }
+
+    // 常用事件监听，用来处理通常的网络错误，授权验证错误等
+    public static class MyGeneralListener implements MKGeneralListener {
+        @Override
+        public void onGetPermissionState(int iError) {
+            //非零值表示key验证未通过
+            if (iError != 0) { // 授权Key错误：
+                Log.d(TAG, "请在AndroidManifest.xml中输入正确的授权Key,并检查您的网络连接是否正常！error: " + iError);
+            } else {
+                Log.d(TAG, "key认证成功");
+            }
+        }
+    }
 }
