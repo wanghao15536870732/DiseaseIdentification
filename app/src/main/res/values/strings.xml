@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">DiseaseIdentification</string>
+    <string name="toolbar_text">病虫害识别</string>
 </resources>

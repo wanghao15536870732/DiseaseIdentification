@@ -5,8 +5,10 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
@@ -19,7 +21,10 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
@@ -27,23 +32,25 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.ywang.diseaseidentification.view.fragment.FourthFragment;
 import com.example.ywang.diseaseidentification.view.fragment.MainFragment;
 import com.example.ywang.diseaseidentification.R;
-import com.example.ywang.diseaseidentification.view.fragment.SecondFragment;
 import com.example.ywang.diseaseidentification.view.fragment.ThirdFragment;
 import com.example.ywang.diseaseidentification.view.KickBackAnimator;
+import com.mxn.soul.flowingdrawer_core.ElasticDrawer;
+import com.mxn.soul.flowingdrawer_core.FlowingDrawer;
 import com.next.easynavigation.constant.Anim;
 import com.next.easynavigation.utils.NavigationUtil;
 import com.next.easynavigation.view.EasyNavigationBar;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+import me.panpf.swsv.CircularLayout;
+import me.panpf.swsv.SpiderWebScoreView;
+
+public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuItemClickListener,View.OnClickListener{
 
     private String[] tabText = {"首页", "发现", "","消息", "我的"};
 
@@ -74,6 +81,21 @@ public class MainActivity extends AppCompatActivity {
 
     private Uri imageUri;
 
+    private FlowingDrawer mDrawer;  //侧滑栏控件
+    private Toolbar toolbar; //自定义Toolbar
+    private ImageView mMenu,mBack;  //菜单按钮
+    private SpiderWebScoreView spiderWebScoreView;  //蛛网控件
+    private CircularLayout circularLayout;
+
+    private Score[] scores = new Score[]{
+            new Score(7.0f,R.drawable.corn,"玉米"),
+            new Score(2.0f,R.drawable.corn,"玉米"),
+            new Score(3.0f,R.drawable.corn,"玉米"),
+            new Score(5.0f,R.drawable.corn,"玉米"),
+            new Score(8.0f,R.drawable.corn,"玉米"),
+            new Score(2.0f,R.drawable.corn,"玉米"),
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentManager = getSupportFragmentManager();
 
         fragments.add(new MainFragment());
-        fragments.add(new SecondFragment());
+        fragments.add(new MainFragment());
         fragments.add(new ThirdFragment());
         fragments.add(new FourthFragment());
 
@@ -107,11 +129,54 @@ public class MainActivity extends AppCompatActivity {
                 .mode(EasyNavigationBar.MODE_ADD)
                 .anim(Anim.ZoomIn)
                 .build();
-        navigationBar.setAddViewLayout(createWeiboView());
+        navigationBar.setAddViewLayout(createWeiBoView());
+        mDrawer = (FlowingDrawer) findViewById(R.id.drawer_layout);
+        mDrawer.setTouchMode(ElasticDrawer.TOUCH_MODE_BEZEL);
+        mDrawer.setOnDrawerStateChangeListener(new ElasticDrawer.OnDrawerStateChangeListener() {
+            @Override
+            public void onDrawerStateChange(int oldState, int newState) {
+
+            }
+
+            @Override
+            public void onDrawerSlide(float openRatio, int offsetPixels) {
+
+            }
+        });
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        mMenu = (ImageView) findViewById(R.id.avatar);
+        mBack = (ImageView) findViewById(R.id.back_menu);
+        //setSupportActionBar(toolbar);
+        toolbar.setOnMenuItemClickListener(this);
+        mMenu.setOnClickListener(this);
+        mBack.setOnClickListener(this);
+        spiderWebScoreView = (SpiderWebScoreView) findViewById(R.id.spiderWeb);
+        circularLayout = (CircularLayout) findViewById(R.id.layout_circular);
+        setup(spiderWebScoreView,circularLayout,scores);
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void setup(SpiderWebScoreView spiderWebScoreView, CircularLayout circularLayout, Score... scores){
+        float[] scoreArray = new float[scores.length];
+        for(int w = 0; w < scores.length; w++){
+            scoreArray[w] = scores[w].score;
+        }
+        spiderWebScoreView.setScores(10f, scoreArray);
+
+        circularLayout.removeAllViews();
+        for(Score score : scores){
+            TextView scoreTextView = (TextView)
+                    LayoutInflater.from(getBaseContext()).inflate(R.layout.score, circularLayout, false);
+            scoreTextView.setText(score.title);
+            if(score.iconId != 0){
+                scoreTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, score.iconId, 0);
+            }
+            circularLayout.addView(scoreTextView);
+        }
     }
 
     //仿微博弹出菜单
-    private View createWeiboView(){
+    private View createWeiBoView(){
         ViewGroup view = (ViewGroup) View.inflate(this,R.layout.layout_add_view,null);
         menuLayout = view.findViewById(R.id.icon_group);
         cancelImageView = view.findViewById(R.id.cancel_iv);
@@ -352,4 +417,43 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()){
+            default:
+                break;
+        }
+        return true;
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.avatar:
+                mDrawer.openMenu();
+                break;
+            case R.id.back_menu:
+                mDrawer.closeMenu();
+                break;
+            default:
+                break;
+        }
+    }
+
+    //蛛网评分组件
+    private static class Score{
+        private float score;
+        private String title;
+        private int iconId;
+
+        private Score(float score, int iconId,String title) {
+            this.score = score;
+            this.iconId = iconId;
+            this.title = title;
+        }
+
+        private Score(float score) {
+            this.score = score;
+        }
+    }
 }

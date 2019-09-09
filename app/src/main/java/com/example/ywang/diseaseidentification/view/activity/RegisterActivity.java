@@ -2,17 +2,19 @@ package com.example.ywang.diseaseidentification.view.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.AppCompatButton;
+import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.example.ywang.diseaseidentification.R;
-
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -26,7 +28,7 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText mNameText,mEmailtText,mPasswordText;
     public static final int SHOW_RESPONSE = 1;
     private String name,password;
-    private AppCompatButton registerBtn;
+    private Button registerBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,9 +37,9 @@ public class RegisterActivity extends AppCompatActivity {
         mNameText = (EditText) findViewById(R.id.input_name);
         mEmailtText = (EditText) findViewById(R.id.input_email);
         mPasswordText = (EditText) findViewById(R.id.input_password);
-        registerBtn = (AppCompatButton) findViewById(R.id.btn_signup);
+        registerBtn = (Button) findViewById(R.id.btn_sign_up);
 
-        mPasswordText.setOnClickListener(new View.OnClickListener() {
+        registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 name = mNameText.getText().toString().trim();
@@ -45,6 +47,12 @@ public class RegisterActivity extends AppCompatActivity {
                 sendRequestWithHttpURLConnection(name,password);
             }
         });
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Window window = getWindow();
+            window.addFlags( WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(getResources().getColor(android.R.color.white));
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR|View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+        }
     }
 
     private void sendRequestWithHttpURLConnection(final String id,final String pw){
@@ -54,7 +62,7 @@ public class RegisterActivity extends AppCompatActivity {
                 HttpURLConnection connection = null;
                 BufferedReader reader = null;
                 try{
-                    URL url = new URL("http://101.37.79.26:8080/twoweb/SearchServlet");
+                    URL url = new URL("http://101.37.79.26:8080/twoweb/adduserServlet");
                     connection = (HttpURLConnection) url.openConnection();
                     connection.setRequestMethod("POST");
                     DataOutputStream out = new DataOutputStream(connection.getOutputStream());
@@ -100,6 +108,7 @@ public class RegisterActivity extends AppCompatActivity {
     @SuppressLint("HandlerLeak")
     public Handler handler=new Handler() {
         public void handleMessage(Message msg) {
+            Log.e("MainActivity","----------------------");
             switch (msg.what){
                 case SHOW_RESPONSE:
                     String response=(String)msg.obj;
