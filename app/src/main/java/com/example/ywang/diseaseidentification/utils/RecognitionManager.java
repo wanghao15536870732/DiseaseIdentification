@@ -21,7 +21,11 @@ import com.iflytek.cloud.ui.RecognizerDialog;
 import com.iflytek.cloud.ui.RecognizerDialogListener;
 import java.util.List;
 
+/**
+ * 语音听写工具类
+ */
 public class RecognitionManager {
+
     private Context mContext;
     private final String TAG = "RecognitionManager";
     private SpeechRecognizer mIat;

@@ -1,4 +1,5 @@
 package com.example.ywang.diseaseidentification.view.fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -26,12 +27,18 @@ import com.baidu.mapapi.map.PolylineOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.example.ywang.diseaseidentification.R;
 import com.example.ywang.diseaseidentification.utils.MyOrientationListener;
+import com.example.ywang.diseaseidentification.view.activity.AddDynamicActivity;
+import com.example.ywang.diseaseidentification.view.activity.MainActivity;
+import com.example.ywang.diseaseidentification.view.activity.PanoramaActivity;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 地图fragment
+ */
 public class SecondFragment extends Fragment implements BaiduMap.OnMarkerClickListener{
 
     private MapView mMapView = null;
@@ -168,11 +175,11 @@ public class SecondFragment extends Fragment implements BaiduMap.OnMarkerClickLi
         panoramaBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent intent = new Intent(getActivity(),PanoramaActivity.class);
-//                intent.putExtra("latitude",mLatitude);
-//                intent.putExtra("longitude",mLongitude);
-//                startActivity(intent);
-                addOverlaysToMap();
+                Intent intent = new Intent(getActivity(),PanoramaActivity.class);
+                intent.putExtra("latitude",mLatitude);
+                intent.putExtra("longitude",mLongitude);
+                startActivity(intent);
+//                addOverlaysToMap();
                 mFloatingActionsMenu.toggle();
             }
         });

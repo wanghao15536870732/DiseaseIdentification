@@ -11,6 +11,9 @@ import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+/**
+ * 圆形转场动画工具类
+ */
 public class CircularAnimUtils {
 
     public static final long PERFECT_MILLS = 618;

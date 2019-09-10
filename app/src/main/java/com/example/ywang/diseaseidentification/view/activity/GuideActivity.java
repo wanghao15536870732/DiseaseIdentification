@@ -22,15 +22,15 @@ public class GuideActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guide);
-        signInBtn = (Button) findViewById(R.id.btn_sign_in);
-        signUpBtn = (Button) findViewById(R.id.btn_sign_up);
+        signInBtn = (Button) findViewById(R.id.btn_sign_in_guide);
+        signUpBtn = (Button) findViewById(R.id.btn_sign_up_guide);
         skipBtn = (Button) findViewById(R.id.btn_skip);
 
         /*登录*/
         signInBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                CircularAnimUtils.startActivity(GuideActivity.this,LogInActivity.class,signInBtn,R.color.blue_normal);
             }
         });
 

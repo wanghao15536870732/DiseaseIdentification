@@ -30,7 +30,7 @@ public class MainFragment extends Fragment {
         text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getActivity(),PanoramaActivity.class));
+                SpeechSynthesizer("你好");
             }
         });
         return view;

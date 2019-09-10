@@ -51,12 +51,12 @@
 
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.example.diseaseidentification"
+            android:authorities="com.example.ywang.diseaseidentification.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths" />
+                android:resource="@xml/picture_file_paths" />
         </provider>
 
         <!-- 开发者申请的key -->
@@ -73,12 +73,13 @@
             android:name=".view.activity.PanoramaActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="sensor" />
-
-        <activity android:name=".view.activity.RegisterActivity"
+        <activity
+            android:name=".view.activity.RegisterActivity"
             android:windowSoftInputMode="stateHidden|stateUnchanged" />
-
-        <activity android:name=".view.activity.MainActivity"/>
-
+        <activity android:name=".view.activity.MainActivity" />
+        <activity android:name=".view.activity.AddDynamicActivity" />
+        <activity android:name=".view.activity.LogInActivity"
+            android:windowSoftInputMode="stateHidden|stateUnchanged" />
     </application>
 
 </manifest>

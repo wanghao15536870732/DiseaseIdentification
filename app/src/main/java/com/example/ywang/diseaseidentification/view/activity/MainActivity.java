@@ -35,6 +35,7 @@ import android.widget.Toast;
 import com.example.ywang.diseaseidentification.view.fragment.FourthFragment;
 import com.example.ywang.diseaseidentification.view.fragment.MainFragment;
 import com.example.ywang.diseaseidentification.R;
+import com.example.ywang.diseaseidentification.view.fragment.SecondFragment;
 import com.example.ywang.diseaseidentification.view.fragment.ThirdFragment;
 import com.example.ywang.diseaseidentification.view.KickBackAnimator;
 import com.mxn.soul.flowingdrawer_core.ElasticDrawer;
@@ -71,8 +72,8 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
     private View cancelImageView;
 
     //弹出窗口图片和文字集合
-    private int [] menuItems = {R.mipmap.menu_take_pic,R.mipmap.menu_select_pic};
-    private String [] menuTextItems = {"拍照","相册"};
+    private int [] menuItems = {R.mipmap.menu_take_pic,R.mipmap.menu_select_pic,R.mipmap.ic_star};
+    private String [] menuTextItems = {"拍照","相册","动态"};
     private Handler mHandler = new Handler();
 
     private static final int PERMISSION_CODE = 100;
@@ -104,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
         fragmentManager = getSupportFragmentManager();
 
         fragments.add(new MainFragment());
-        fragments.add(new MainFragment());
+        fragments.add(new SecondFragment());
         fragments.add(new ThirdFragment());
         fragments.add(new FourthFragment());
 
@@ -186,7 +187,7 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
                 closeAnimation();
             }
         });
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 3; i++) {
             View itemView = (ViewGroup) View.inflate(MainActivity.this,R.layout.item_icon,null);
             ImageView menuImage = (ImageView) itemView.findViewById(R.id.menu_icon_im);
             TextView menuText = (TextView) itemView.findViewById(R.id.menu_text_tx);
@@ -212,7 +213,7 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
                         }else {
                             takePicture();
                         }
-                    }else {
+                    }else if (index == 1){
                         //Toast.makeText(MainActivity.this, "你点击了相册！", Toast.LENGTH_SHORT).show();
                         if (ContextCompat.checkSelfPermission(MainActivity.this,
                                 Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
@@ -222,6 +223,8 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
                         }else{
                             openAlbum();
                         }
+                    }else {
+                        startActivity(new Intent(MainActivity.this,AddDynamicActivity.class));
                     }
                 }
             });
@@ -363,7 +366,7 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
         if (Build.VERSION.SDK_INT >= 24){
             //调用FileProvider的getUriForFile()方法将照片解析成Uri对象
             imageUri = FileProvider.getUriForFile(MainActivity.this,
-                    "com.example.diseaseidentification",outputImage);
+                    "com.example.ywang.diseaseidentification.fileprovider",outputImage);
         }else {
             imageUri = Uri.fromFile(outputImage);
         }

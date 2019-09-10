@@ -13,6 +13,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 import com.example.ywang.diseaseidentification.R;
 import java.io.BufferedReader;
@@ -29,6 +30,7 @@ public class RegisterActivity extends AppCompatActivity {
     public static final int SHOW_RESPONSE = 1;
     private String name,password;
     private Button registerBtn;
+    private ImageView backBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +40,13 @@ public class RegisterActivity extends AppCompatActivity {
         mEmailtText = (EditText) findViewById(R.id.input_email);
         mPasswordText = (EditText) findViewById(R.id.input_password);
         registerBtn = (Button) findViewById(R.id.btn_sign_up);
+        backBtn = (ImageView) findViewById(R.id.back_sign_up);
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,14 +71,13 @@ public class RegisterActivity extends AppCompatActivity {
                 HttpURLConnection connection = null;
                 BufferedReader reader = null;
                 try{
-                    URL url = new URL("http://101.37.79.26:8080/twoweb/adduserServlet");
+                    URL url = new URL("http://101.37.79.26:8080/web/adduserServlet");
                     connection = (HttpURLConnection) url.openConnection();
                     connection.setRequestMethod("POST");
                     DataOutputStream out = new DataOutputStream(connection.getOutputStream());
                     out.writeBytes("id="+id+"&password="+pw);
                     out.flush();
                     out.close();
-
                     //设置连接超时和读取超时的毫秒数
                     connection.setConnectTimeout(8000);
                     connection.setReadTimeout(8000);

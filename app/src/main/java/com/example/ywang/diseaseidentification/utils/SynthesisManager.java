@@ -13,6 +13,9 @@ import com.iflytek.cloud.SpeechSynthesizer;
 import com.iflytek.cloud.SpeechUtility;
 import com.iflytek.cloud.SynthesizerListener;
 
+/**
+ * 语音合成工具类
+ */
 public class SynthesisManager {
     private final String TAG = "SynthesisManager";
     private Context mContext;

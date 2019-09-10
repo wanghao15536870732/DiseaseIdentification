@@ -40,7 +40,7 @@
             android:background="?android:attr/selectableItemBackground">
 
             <Button
-                android:id="@+id/btn_sign_in"
+                android:id="@+id/btn_sign_in_guide"
                 android:layout_width="260dp"
                 android:layout_height="56dp"
                 android:text="登  录"
@@ -59,7 +59,7 @@
             app:cardElevation="8dp">
 
             <Button
-                android:id="@+id/btn_sign_up"
+                android:id="@+id/btn_sign_up_guide"
                 android:layout_width="260dp"
                 android:layout_height="56dp"
                 android:text="注  册"
