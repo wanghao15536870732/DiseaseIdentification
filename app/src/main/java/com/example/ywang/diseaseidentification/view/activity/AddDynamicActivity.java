@@ -95,25 +95,22 @@ public class AddDynamicActivity extends AppCompatActivity implements View.OnClic
 
         labelsView = (LabelsView) findViewById(R.id.labels);
         ArrayList<String> label = new ArrayList<>();
-        label.add("Android");
-        label.add("IOS");
-        label.add("前端");
-        label.add("后台");
-        label.add("微信开发");
-        label.add("游戏开发");
+        label.add("农业资讯");
+        label.add("病虫防治");
+        label.add("疾病普及");
+        label.add("农耕作业");
+        label.add("耕种妙招");
+        label.add("生活点滴");
         labelsView.setLabels(label); //直接设置一个字符串数组就可以了。
 
         //LabelsView可以设置任何类型的数据，而不仅仅是String。
         ArrayList<TestBean> testList = new ArrayList<>();
-        testList.add(new TestBean("Android",1));
-        testList.add(new TestBean("IOS",2));
-        testList.add(new TestBean("前端",3));
-        testList.add(new TestBean("后台",4));
-        testList.add(new TestBean("微信开发",5));
-        testList.add(new TestBean("游戏开发",6));
-        testList.add(new TestBean("游戏开发",7));
-        testList.add(new TestBean("游戏开发",8));
-        testList.add(new TestBean("游戏开发",9));
+        testList.add(new TestBean("农业资讯",1));
+        testList.add(new TestBean("病虫防治",2));
+        testList.add(new TestBean("疾病普及",3));
+        testList.add(new TestBean("农耕作业",4));
+        testList.add(new TestBean("耕种妙招",5));
+        testList.add(new TestBean("生活点滴",6));
         labelsView.setLabels(testList, new LabelsView.LabelTextProvider<TestBean>() {
             @Override
             public CharSequence getLabelText(TextView label, int position, TestBean data) {

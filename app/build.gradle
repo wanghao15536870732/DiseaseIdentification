@@ -45,4 +45,6 @@ dependencies {
     implementation 'com.github.LuckSiege.PictureSelector:picture_library:v2.2.3'
     //多标签选择
     implementation 'com.github.donkingliang:LabelsView:1.5.0'
+    //轮播控件
+    implementation 'com.youth.banner:banner:1.4.10'
 }

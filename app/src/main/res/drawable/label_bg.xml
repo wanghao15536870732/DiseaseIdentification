@@ -4,15 +4,15 @@
     <item android:state_selected="true">
         <shape>
             <stroke android:width="2dp" android:color="#000000" />
-            <corners android:radius="8dp" />
-            <solid android:color="@android:color/white" />
+            <corners android:radius="4dp" />
+            <solid android:color="@android:color/black" />
         </shape>
     </item>
     <!-- 标签的正常背景 -->
     <item>
         <shape>
             <stroke android:width="2dp" android:color="#656565" />
-            <corners android:radius="8dp" />
+            <corners android:radius="4dp" />
             <solid android:color="@android:color/white" />
         </shape>
     </item>
