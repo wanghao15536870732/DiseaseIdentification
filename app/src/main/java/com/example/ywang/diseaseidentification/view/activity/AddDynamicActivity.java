@@ -62,6 +62,7 @@ public class AddDynamicActivity extends AppCompatActivity implements View.OnClic
                 if (selectList.size() > 0) {
                     LocalMedia media = selectList.get(position);
                     String pictureType = media.getPictureType();
+
                     int mediaType = PictureMimeType.pictureToVideo(pictureType);
                     switch (mediaType) {
                         case 1:

@@ -2,4 +2,5 @@
     <string name="app_name">DiseaseIdentification</string>
     <string name="toolbar_text">病虫害识别</string>
     <string name="dynamic_text">这一刻的想法</string>
+    <string name="copy_msg">已经复制链接地址到剪切板! </string>
 </resources>

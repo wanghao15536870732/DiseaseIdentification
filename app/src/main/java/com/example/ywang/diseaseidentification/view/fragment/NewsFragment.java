@@ -1,66 +1,143 @@
 package com.example.ywang.diseaseidentification.view.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
-
+import com.bumptech.glide.Glide;
 import com.example.ywang.diseaseidentification.R;
-
+import com.example.ywang.diseaseidentification.bean.NewsBean;
+import com.example.ywang.diseaseidentification.utils.WebUtil;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
-public class NewsFragment extends Fragment{
+public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
 
     private RecyclerView recyclerView;
-    private ArrayList<String> nameList = new ArrayList<>();
-    private MyAdapter adapter;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private NewsListAdapter adapter;
+    private List<NewsBean> mNewsBeans = new ArrayList<>();
+
+    private NewsBean[] news = {
+            new NewsBean(1,"农业网","2019/9/11 9:01:00","蔬果价格继续回落 保障充足供应中秋",
+                    "随着中秋佳节的临近，政府和大众关心的“菜篮子”保障供应如何？物价又上涨了吗？",
+                    "http://img8.agronet.com.cn/Users/100/617/663/2019911901105591.jpg",
+                    "http://news.1nongjing.com/201909/252620.html"),
+            new NewsBean(2,"中国农业网 　","2019-07-12 14:28:27","江山代有“良品”出丨挖掘品牌黄瓜背",
+                    "","http://www.zgny.com.cn/ifm/consultation/images/2019718947.jpg",
+                    "http://www.zgny.com.cn/ifm/consultation/2019-7-12/559259.shtml"),
+    };
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_news,container,false);
-        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        for(int i = 0;i < 30;i ++){
-            nameList.add("name "+i);
-        }
-        adapter = new MyAdapter();
+        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView_news);
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout_news);
+        initData();
+        adapter = new NewsListAdapter(mNewsBeans);
         recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(container.getContext()));
+//        recyclerView.addItemDecoration(new DividerItemDecoration(container.getContext(), DividerItemDecoration.VERTICAL));
+        swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary,
+                R.color.colorPrimaryDark, R.color.colorAccent);
         return view;
     }
 
-    class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
+    private void initData(){
+        for (int i = 0; i < news.length; i++) {
+            mNewsBeans.add(news[i]);
+        }
+    }
+
+    @Override
+    public void onRefresh() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    Thread.sleep(2000);
+                }catch (InterruptedException e){
+                    e.printStackTrace();
+                }
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mNewsBeans.clear();
+                        for (int i = 0; i < 2; i++) {
+                            Random random = new Random();
+                            int index = random.nextInt(news.length);
+                            mNewsBeans.add(news[index]);
+                        }
+                        adapter.notifyDataSetChanged();
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                });
+            }
+        }).start();
+    }
+
+    class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.ViewHolder>{
+
+        private Context mContext;
+        private List<NewsBean> mNewsList;
+
+        NewsListAdapter(List<NewsBean> items){
+            this.mNewsList = items;
+        }
 
         @Override
-        public MyAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = getActivity().getLayoutInflater().inflate(R.layout.list_item,parent,false);
-            MyViewHolder holder = new MyViewHolder(view);
+        public NewsListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_news,parent,false);
+            final ViewHolder holder = new ViewHolder(view);
+            mContext = parent.getContext();
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = holder.getAdapterPosition();
+                    NewsBean newsBean = mNewsList.get(position);
+                    WebUtil.openWeb(mContext, newsBean.getTitle(), newsBean.getMain_url());
+                }
+            });
             return holder;
         }
 
         @Override
-        public void onBindViewHolder(MyViewHolder holder, int position) {
-            //set item's value
-            holder.nameText.setText(nameList.get(position));
+        public void onBindViewHolder(ViewHolder holder, int position) {
+            NewsBean newsBean = mNewsList.get(position);
+            holder.time.setText( newsBean.getTime() );
+            holder.author.setText( newsBean.getAuthor() );
+            holder.title.setText( newsBean.getTitle() );
+            Glide.with(mContext).load( newsBean.getUrl() ).into( holder.mImageView );
         }
 
         @Override
         public int getItemCount() {
-            return nameList.size();
+            return mNewsBeans.size();
         }
 
-        class MyViewHolder extends RecyclerView.ViewHolder{
-            public TextView nameText;
-            public MyViewHolder(View itemView) {
+        class ViewHolder extends RecyclerView.ViewHolder{
+            private TextView title,time,author;
+            private ImageView mImageView;
+
+            public ViewHolder(View itemView) {
                 super(itemView);
-                //get到相关控件的引用
-                nameText= (TextView) itemView.findViewById(R.id.name_text);
+                title = (TextView) itemView.findViewById( R.id.item_news_title );
+                author = (TextView) itemView.findViewById( R.id.item_news_source );
+                time = (TextView) itemView.findViewById( R.id.item_news_date );
+                mImageView = (ImageView) itemView.findViewById( R.id.img_news);
             }
         }
     }

@@ -78,8 +78,11 @@
             android:windowSoftInputMode="stateHidden|stateUnchanged" />
         <activity android:name=".view.activity.MainActivity" />
         <activity android:name=".view.activity.AddDynamicActivity" />
-        <activity android:name=".view.activity.LogInActivity"
+        <activity
+            android:name=".view.activity.LogInActivity"
             android:windowSoftInputMode="stateHidden|stateUnchanged" />
+        <activity android:name=".view.activity.WebUIActivity" />
+        <activity android:name=".view.activity.RobotActivity"></activity>
     </application>
 
 </manifest>

@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
 
     private FlowingDrawer mDrawer;  //侧滑栏控件
     private Toolbar toolbar; //自定义Toolbar
-    private ImageView mMenu,mBack;  //菜单按钮
+    private ImageView mMenu,mBack,mRobotBtn;  //菜单按钮
     private SpiderWebScoreView spiderWebScoreView;  //蛛网控件
     private CircularLayout circularLayout;
 
@@ -147,13 +147,16 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         mMenu = (ImageView) findViewById(R.id.avatar);
         mBack = (ImageView) findViewById(R.id.back_menu);
+        mRobotBtn = (ImageView) findViewById(R.id.robot);
         //setSupportActionBar(toolbar);
         toolbar.setOnMenuItemClickListener(this);
         mMenu.setOnClickListener(this);
         mBack.setOnClickListener(this);
+        mRobotBtn.setOnClickListener(this);
         spiderWebScoreView = (SpiderWebScoreView) findViewById(R.id.spiderWeb);
         circularLayout = (CircularLayout) findViewById(R.id.layout_circular);
         setup(spiderWebScoreView,circularLayout,scores);
+
     }
 
     @SuppressLint("SetTextI18n")
@@ -437,6 +440,9 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
                 break;
             case R.id.back_menu:
                 mDrawer.closeMenu();
+                break;
+            case R.id.robot:
+                startActivity(new Intent(MainActivity.this,RobotActivity.class));
                 break;
             default:
                 break;
