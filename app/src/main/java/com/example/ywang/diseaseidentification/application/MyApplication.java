@@ -8,10 +8,14 @@ import com.baidu.lbsapi.BMapManager;
 import com.baidu.lbsapi.MKGeneralListener;
 import com.baidu.mapapi.CoordType;
 import com.baidu.mapapi.SDKInitializer;
+import com.example.ywang.diseaseidentification.bean.ChatListData;
 import com.example.ywang.diseaseidentification.utils.RecognitionManager;
 import com.example.ywang.diseaseidentification.utils.SynthesisManager;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MyApplication extends Application {
 

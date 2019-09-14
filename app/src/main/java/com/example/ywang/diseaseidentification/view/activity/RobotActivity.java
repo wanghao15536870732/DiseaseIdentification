@@ -1,40 +1,43 @@
 package com.example.ywang.diseaseidentification.view.activity;
-
+import android.annotation.SuppressLint;
 import android.content.res.AssetManager;
-import android.net.ParseException;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Base64;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.ywang.diseaseidentification.R;
 import com.example.ywang.diseaseidentification.adapter.ChatListAdapter;
 import com.example.ywang.diseaseidentification.bean.ChatListData;
+import com.example.ywang.diseaseidentification.bean.baseEnum.DictationResult;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.iflytek.aiui.AIUIAgent;
 import com.iflytek.aiui.AIUIConstant;
 import com.iflytek.aiui.AIUIEvent;
 import com.iflytek.aiui.AIUIListener;
 import com.iflytek.aiui.AIUIMessage;
+import com.iflytek.cloud.ErrorCode;
+import com.iflytek.cloud.InitListener;
+import com.iflytek.cloud.RecognizerResult;
+import com.iflytek.cloud.SpeechError;
+import com.iflytek.cloud.ui.RecognizerDialog;
+import com.iflytek.cloud.ui.RecognizerDialogListener;
 
 import org.json.JSONObject;
-
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class RobotActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -47,6 +50,12 @@ public class RobotActivity extends AppCompatActivity implements View.OnClickList
     //语音助手
     private AIUIAgent mAIUIAgent;
     private int mAIUIState = AIUIConstant.STATE_IDLE;
+    private Toolbar toolbar;
+    private ImageView voiceBtn,keyboardBtn;
+    private TextView voiceTxt;
+    //有动画效果
+    private RecognizerDialog iatDialog;
+    private Button btnRecognizerDialog; //带窗口的语音识别
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,14 +65,33 @@ public class RobotActivity extends AppCompatActivity implements View.OnClickList
         //输入框
         et_chat_text = findViewById(R.id.et_chat_text);
         btn_sent = findViewById(R.id.btn_sent);
+        voiceBtn = findViewById(R.id.input_voice);
+        keyboardBtn = findViewById(R.id.input_keyboard);
+        voiceTxt = findViewById(R.id.et_chat_voice);
         btn_sent.setOnClickListener(this);
+        voiceBtn.setOnClickListener(this);
+        keyboardBtn.setOnClickListener(this);
+        voiceTxt.setOnClickListener(this);
 
         //设置设配器
         adapter = new ChatListAdapter(RobotActivity.this, mList);
         mChatListView.setAdapter(adapter);
         //去掉分割线
         mChatListView.setDividerHeight(0);
+        toolbar = (Toolbar) findViewById(R.id.toolbar_web);
         addLeftItem("我是小农！您的科普小助手！");
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_back));
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setTitle("农种小助手");
+
+
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            Window window = getWindow();
+//            window.addFlags( WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+//            window.setStatusBarColor(getResources().getColor(android.R.color.white));
+//            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR|View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+//        }
     }
 
 
@@ -117,6 +145,26 @@ public class RobotActivity extends AppCompatActivity implements View.OnClickList
                     Toast.makeText(this,"输入框不能为空！",Toast.LENGTH_SHORT).show();
                 }
                 break;
+            case R.id.input_voice:
+                voiceBtn.setVisibility(View.GONE);
+                keyboardBtn.setVisibility(View.VISIBLE);
+                et_chat_text.setVisibility(View.GONE);
+                voiceTxt.setVisibility(View.VISIBLE);
+                hideInput();
+                break;
+            case R.id.input_keyboard:
+                keyboardBtn.setVisibility(View.GONE);
+                voiceBtn.setVisibility(View.VISIBLE);
+                voiceTxt.setVisibility(View.GONE);
+                et_chat_text.setVisibility(View.VISIBLE);
+                showInput(et_chat_text);
+                break;
+            case R.id.et_chat_voice:
+                voice_text();
+                break;
+            default:
+                break;
+
         }
     }
 
@@ -256,6 +304,95 @@ public class RobotActivity extends AppCompatActivity implements View.OnClickList
 
                 default:
                     break;
+            }
+        }
+    };
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                this.finish();
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * 显示键盘
+     */
+    public void showInput(final EditText et) {
+        et.requestFocus();
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        imm.showSoftInput(et, InputMethodManager.SHOW_IMPLICIT);
+    }
+
+    /**
+     * 隐藏键盘
+     */
+    protected void hideInput() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        View v = getWindow().peekDecorView();
+        if (null != v) {
+            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+        }
+    }
+
+    /*-------------------------------语音转文字--------------------------*/
+    private void voice_text(){
+        // 有交互动画的语音识别器
+        iatDialog = new RecognizerDialog(RobotActivity.this, mInitListener);
+
+        iatDialog.setListener(new RecognizerDialogListener() {
+            String resultJson = "[";//放置在外边做类的变量则报错，会造成json格式不对（？）
+
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onResult(RecognizerResult recognizerResult, boolean isLast) {
+                System.out.println("-----------------   onResult   -----------------");
+                if (!isLast) {
+                    resultJson += recognizerResult.getResultString() + ",";
+                } else {
+                    resultJson += recognizerResult.getResultString() + "]";
+                }
+
+                if (isLast) {
+                    //解析语音识别后返回的json格式的结果
+                    Gson gson = new Gson();
+                    List<DictationResult> resultList = gson.fromJson(resultJson,
+                            new TypeToken<List<DictationResult>>() {
+                            }.getType());
+                    StringBuilder result = new StringBuilder();
+                    for (int i = 0; i < resultList.size() - 1; i++) {
+                        result.append(resultList.get(i).toString());
+                    }
+
+                    if (et_chat_text.getText() != null) {
+                        et_chat_text.setText( et_chat_text.getText().toString() + result);
+                    }else {
+                        et_chat_text.setText( et_chat_text.getText().toString());
+                    }
+                }
+            }
+
+            @Override
+            public void onError(SpeechError speechError) {
+                //自动生成的方法存根
+                speechError.getPlainDescription(true);
+            }
+        });
+        //开始听写，需将sdk中的assets文件下的文件夹拷入项目的assets文件夹下（没有的话自己新建）
+        iatDialog.show();
+    }
+
+    private InitListener mInitListener = new InitListener() {
+        @Override
+        public void onInit(int code) {
+            Log.d("RobotActivity", "SpeechRecognizer init() code = " + code);
+            if (code != ErrorCode.SUCCESS) {
+                Toast.makeText(RobotActivity.this, "初始化失败，错误码：" + code, Toast.LENGTH_SHORT).show();
             }
         }
     };
