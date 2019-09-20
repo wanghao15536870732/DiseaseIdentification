@@ -17,7 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.example.ywang.diseaseidentification.R;
 import com.example.ywang.diseaseidentification.adapter.ChatListAdapter;
-import com.example.ywang.diseaseidentification.bean.ChatListData;
+import com.example.ywang.diseaseidentification.bean.baseData.ChatListData;
 import com.example.ywang.diseaseidentification.bean.baseEnum.DictationResult;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;

@@ -1,12 +1,13 @@
 package com.example.ywang.diseaseidentification.view.activity;
 
+import android.annotation.SuppressLint;
+import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.net.http.SslError;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,11 +24,8 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
-
 import com.example.ywang.diseaseidentification.R;
 import com.example.ywang.diseaseidentification.utils.SnackBarUtil;
-
-import java.lang.reflect.Method;
 
 public class WebUIActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener{
 
@@ -61,6 +59,7 @@ public class WebUIActivity extends AppCompatActivity implements SwipeRefreshLayo
         init_web_view();
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     protected  void init_web_view(){
         WebSettings settings = webView.getSettings();
         settings.setCacheMode(WebSettings.LOAD_DEFAULT);
@@ -148,8 +147,11 @@ public class WebUIActivity extends AppCompatActivity implements SwipeRefreshLayo
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
         case R.id.item_copy:
+            //获取剪贴板管理器：
             ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-            cm.setText(url);
+            // 创建普通字符型ClipData
+            ClipData mClipData = ClipData.newPlainText("Label", url);
+            cm.setPrimaryClip(mClipData);
             SnackBarUtil.showSnackBar(R.string.copy_msg, webView, this);
             break;
         case R.id.item_browser:
@@ -165,21 +167,4 @@ public class WebUIActivity extends AppCompatActivity implements SwipeRefreshLayo
         }
         return super.onOptionsItemSelected(item);
     }
-
-    private void setIconEnable(Menu menu, boolean enable) {
-        if (menu != null) {
-            try {
-                Class clazz = menu.getClass();
-                if (clazz.getSimpleName().equals("MenuBuilder")) {
-                    Method m = clazz.getDeclaredMethod("setOptionalIconsVisible", Boolean.TYPE);
-                    m.setAccessible(true);
-                    //MenuBuilder实现Menu接口，创建菜单时，传进来的menu其实就是MenuBuilder对象(java的多态特征)
-                    m.invoke(menu, enable);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
 }

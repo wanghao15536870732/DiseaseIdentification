@@ -7,7 +7,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.example.ywang.diseaseidentification.R;
-import com.example.ywang.diseaseidentification.bean.ChatListData;
+import com.example.ywang.diseaseidentification.bean.baseData.ChatListData;
 
 import java.util.List;
 

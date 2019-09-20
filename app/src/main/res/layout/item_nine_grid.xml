@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="10dp">
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:scaleType="centerCrop"
+        android:background="@drawable/avatar" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="王浩"
+                android:layout_alignParentLeft="true"
+                android:textColor="#f9b516" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:text="今天的天气是真的好" />
+
+        <com.example.ywang.diseaseidentification.adapter.NineGridLayout
+            android:id="@+id/layout_nine_grid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:spacing="4dp" />
+
+        <RelativeLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp">
+
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="10分钟前" />
+
+
+            <ImageView
+                android:id="@+id/comment"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_toRightOf="@+id/time"
+                android:layout_marginLeft="40dp"
+                android:src="@drawable/ic_comment" />
+
+            <ImageView
+                android:id="@+id/transmit"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_toRightOf="@+id/comment"
+                android:layout_marginLeft="40dp"
+                android:src="@drawable/ic_trans"/>
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+</LinearLayout>

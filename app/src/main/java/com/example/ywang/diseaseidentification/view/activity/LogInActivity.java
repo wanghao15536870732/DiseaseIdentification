@@ -15,7 +15,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.ywang.diseaseidentification.R;
-import com.example.ywang.diseaseidentification.bean.User;
+import com.example.ywang.diseaseidentification.bean.baseData.UserBean;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -39,9 +39,9 @@ public class LogInActivity extends AppCompatActivity {
                 case SHOW_RESPONSE:
                     String response=(String)msg.obj;
                     if(response.equals("true")){
-                        User.isLogin = true;
-                        User.isId = name;
-                        User.isPw = password;
+                        UserBean.isLogin = true;
+                        UserBean.isId = name;
+                        UserBean.isPw = password;
                         Intent intent = new Intent(LogInActivity.this,MainActivity.class);
                         startActivity(intent);
                         finish();

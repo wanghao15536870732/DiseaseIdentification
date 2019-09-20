@@ -82,7 +82,8 @@
             android:name=".view.activity.LogInActivity"
             android:windowSoftInputMode="stateHidden|stateUnchanged" />
         <activity android:name=".view.activity.WebUIActivity" />
-        <activity android:name=".view.activity.RobotActivity"></activity>
+        <activity android:name=".view.activity.RobotActivity" />
+        <activity android:name=".view.activity.DisplayImageActivity"></activity>
     </application>
 
 </manifest>

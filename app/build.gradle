@@ -47,4 +47,5 @@ dependencies {
     implementation 'com.github.donkingliang:LabelsView:1.5.0'
     //轮播控件
     implementation 'com.youth.banner:banner:1.4.10'
+    implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
 }

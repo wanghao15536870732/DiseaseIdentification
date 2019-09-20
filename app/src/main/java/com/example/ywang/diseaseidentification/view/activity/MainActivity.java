@@ -53,7 +53,7 @@ import me.panpf.swsv.SpiderWebScoreView;
 
 public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuItemClickListener,View.OnClickListener{
 
-    private String[] tabText = {"首页", "发现", "","消息", "我的"};
+    private String[] tabText = {"首页", "发现", "","消息", "农业圈"};
 
     private int[] normalIcon = {R.mipmap.index, R.mipmap.find,
             R.mipmap.add_image,R.mipmap.message, R.mipmap.me};

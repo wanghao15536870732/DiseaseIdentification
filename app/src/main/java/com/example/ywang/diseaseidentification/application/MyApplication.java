@@ -8,14 +8,13 @@ import com.baidu.lbsapi.BMapManager;
 import com.baidu.lbsapi.MKGeneralListener;
 import com.baidu.mapapi.CoordType;
 import com.baidu.mapapi.SDKInitializer;
-import com.example.ywang.diseaseidentification.bean.ChatListData;
 import com.example.ywang.diseaseidentification.utils.RecognitionManager;
 import com.example.ywang.diseaseidentification.utils.SynthesisManager;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 
 public class MyApplication extends Application {
 
@@ -35,6 +34,7 @@ public class MyApplication extends Application {
         SDKInitializer.setCoordType(CoordType.BD09LL);
         mInstance = this;
         initEngineManager(this);
+        initImageLoader(this);
     }
 
     public void initEngineManager(Context context) {
@@ -64,5 +64,19 @@ public class MyApplication extends Application {
                 Log.d(TAG, "key认证成功");
             }
         }
+    }
+
+    /**
+     * 初始化ImageLoader
+     */
+    public static void initImageLoader(Context context) {
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
+                context)
+                .threadPoolSize(3).threadPriority(Thread.NORM_PRIORITY - 2)
+                //.memoryCache(new WeakMemoryCache())
+                .denyCacheImageMultipleSizesInMemory()
+                .tasksProcessingOrder( QueueProcessingType.LIFO)
+                .build();
+        ImageLoader.getInstance().init(config);
     }
 }

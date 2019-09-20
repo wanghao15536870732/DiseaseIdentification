@@ -13,88 +13,95 @@
     app:edMenuSize="280dp"
     app:edMenuBackground="#dddddd">
 
-    <LinearLayout
+    <FrameLayout
+        android:id="@+id/main_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <android.support.design.widget.AppBarLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
+            <android.support.design.widget.AppBarLayout
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:contentInsetStart="0dp"
-                app:popupTheme="@style/AppTheme">
+                android:layout_height="wrap_content">
 
-                <LinearLayout
-                    android:id="@+id/navigation"
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:layout_height="?attr/actionBarSize"
+                    app:contentInsetStart="0dp"
+                    app:popupTheme="@style/AppTheme">
 
-                    <ImageView
-                        android:id="@+id/avatar"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginStart="10dp"
-                        android:src="@drawable/ic_menu" />
-
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/toolbar_user"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginStart="15dp"
-                        android:src="@drawable/avatar" />
-
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:maxLines="1"
-                        android:text="@string/toolbar_text"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginStart="10dp"
-                        android:textColor="@color/white"
-                        android:textSize="15sp" />
-
-                    <RelativeLayout
+                    <LinearLayout
+                        android:id="@+id/navigation"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
                         <ImageView
-                            android:id="@+id/robot"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:layout_alignParentRight="true"
-                            android:layout_alignParentEnd="true"
-                            android:src="@drawable/robot"
-                            android:layout_margin="8dp"/>
+                            android:id="@+id/avatar"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginStart="10dp"
+                            android:src="@drawable/ic_menu" />
 
-                    </RelativeLayout>
-                </LinearLayout>
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/toolbar_user"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="15dp"
+                            android:layout_marginStart="15dp"
+                            android:src="@drawable/avatar" />
 
-            </android.support.v7.widget.Toolbar>
 
-        </android.support.design.widget.AppBarLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:maxLines="1"
+                            android:text="@string/toolbar_text"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginStart="10dp"
+                            android:textColor="@color/white"
+                            android:textSize="15sp" />
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                android:id="@+id/robot"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_alignParentRight="true"
+                                android:layout_alignParentEnd="true"
+                                android:src="@drawable/robot"
+                                android:layout_margin="8dp"/>
+
+                        </RelativeLayout>
+                    </LinearLayout>
+
+                </android.support.v7.widget.Toolbar>
+
+            </android.support.design.widget.AppBarLayout>
 
 
-        <com.next.easynavigation.view.EasyNavigationBar
-            android:id="@+id/navigationBar"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            app:Easy_navigationHeight="60dp"
-            app:Easy_hasPadding="false"
-            app:Easy_navigationBackground="#90ffffff">
-        </com.next.easynavigation.view.EasyNavigationBar>
+            <com.next.easynavigation.view.EasyNavigationBar
+                android:id="@+id/navigationBar"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                app:Easy_navigationHeight="60dp"
+                app:Easy_hasPadding="false"
+                app:Easy_navigationBackground="#90ffffff">
+            </com.next.easynavigation.view.EasyNavigationBar>
 
-    </LinearLayout>
+        </LinearLayout>
+
+    </FrameLayout>
 
     <com.mxn.soul.flowingdrawer_core.FlowingMenuLayout
         android:id="@+id/menu_layout"

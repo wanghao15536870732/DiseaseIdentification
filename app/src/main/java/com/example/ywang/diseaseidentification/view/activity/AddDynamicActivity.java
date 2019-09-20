@@ -6,18 +6,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.donkingliang.labels.LabelsView;
 import com.example.ywang.diseaseidentification.R;
 import com.example.ywang.diseaseidentification.adapter.FullyGridLayoutManager;
 import com.example.ywang.diseaseidentification.adapter.GridImageAdapter;
-import com.example.ywang.diseaseidentification.bean.TestBean;
+import com.example.ywang.diseaseidentification.bean.baseData.DynamicBean;
+import com.example.ywang.diseaseidentification.bean.baseData.TabBean;
+import com.example.ywang.diseaseidentification.utils.UpLoadFileTask;
+import com.example.ywang.diseaseidentification.utils.UpToServlet;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
@@ -33,9 +38,7 @@ public class AddDynamicActivity extends AppCompatActivity implements View.OnClic
     private RecyclerView recyclerView;
     private GridImageAdapter adapter;
     private List<LocalMedia> selectList = new ArrayList<>();
-    private String [] filepaths;
-    private List<String> mUriList = new ArrayList<>( );
-    private int maxSelecNum = 9;
+    private int maxSelectNum = 9;
     private Button send_btn;
     private ImageView back_Btn;
     private EditText mEditText;
@@ -71,7 +74,7 @@ public class AddDynamicActivity extends AppCompatActivity implements View.OnClic
                             //PictureSelector.create(MainActivity.this).themeStyle(themeId).externalPicturePreview(position, "/custom_file", selectList);
                             PictureSelector.create(AddDynamicActivity.this)
                                     .themeStyle(themeId)
-                                    .maxSelectNum( maxSelecNum )
+                                    .maxSelectNum( maxSelectNum )
                                     .openExternalPreview(position, selectList);
                             break;
                         case 2:
@@ -105,16 +108,16 @@ public class AddDynamicActivity extends AppCompatActivity implements View.OnClic
         labelsView.setLabels(label); //直接设置一个字符串数组就可以了。
 
         //LabelsView可以设置任何类型的数据，而不仅仅是String。
-        ArrayList<TestBean> testList = new ArrayList<>();
-        testList.add(new TestBean("农业资讯",1));
-        testList.add(new TestBean("病虫防治",2));
-        testList.add(new TestBean("疾病普及",3));
-        testList.add(new TestBean("农耕作业",4));
-        testList.add(new TestBean("耕种妙招",5));
-        testList.add(new TestBean("生活点滴",6));
-        labelsView.setLabels(testList, new LabelsView.LabelTextProvider<TestBean>() {
+        ArrayList<TabBean> testList = new ArrayList<>();
+        testList.add(new TabBean("农业资讯",1));
+        testList.add(new TabBean("病虫防治",2));
+        testList.add(new TabBean("疾病普及",3));
+        testList.add(new TabBean("农耕作业",4));
+        testList.add(new TabBean("耕种妙招",5));
+        testList.add(new TabBean("生活点滴",6));
+        labelsView.setLabels(testList, new LabelsView.LabelTextProvider<TabBean>() {
             @Override
-            public CharSequence getLabelText(TextView label, int position, TestBean data) {
+            public CharSequence getLabelText(TextView label, int position, TabBean data) {
                 //根据data和position返回label需要显示的数据。
                 return data.getName();
             }
@@ -125,7 +128,24 @@ public class AddDynamicActivity extends AppCompatActivity implements View.OnClic
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.toolbar_send:
-
+                for (int i = 0;i < selectList.size();i ++){
+                    LocalMedia localMedia = selectList.get(i);
+                    String path = localMedia.getPath();
+                    String content = mEditText.getText().toString().trim();
+                    String type = "农业资讯";
+                    String avatar = "农民";
+                    DynamicBean bean = new DynamicBean(avatar,content,getTime(),type,new ArrayList<String>(),selectList.size());
+                    UpLoadFileTask task = new UpLoadFileTask(AddDynamicActivity.this,bean);
+                    task.execute(path);
+                }
+                if(UpToServlet.SUCCESS){
+                    Toast.makeText(this, "上传成功！", Toast.LENGTH_SHORT).show();
+                    UpToServlet.SUCCESS = false;
+                }else {
+                    Toast.makeText(this, "上传失败！", Toast.LENGTH_SHORT).show();
+                    UpToServlet.SUCCESS = false;
+                }
+                this.finish();
                 break;
             case R.id.toolbar_back:
                 finish();
@@ -141,7 +161,7 @@ public class AddDynamicActivity extends AppCompatActivity implements View.OnClic
             // 单独拍照
             PictureSelector.create(AddDynamicActivity.this)
                     .openGallery(PictureMimeType.ofAll())// 全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()、音频.ofAudio()
-                    .maxSelectNum(maxSelecNum)// 最大图片选择数量
+                    .maxSelectNum(maxSelectNum)// 最大图片选择数量
                     .minSelectNum(1)// 最小选择数量
                     .imageSpanCount(3)// 每行显示个数
                     .selectionMode(
@@ -197,5 +217,15 @@ public class AddDynamicActivity extends AppCompatActivity implements View.OnClic
             return path;
         }
         return path;
+    }
+
+    private String getTime(){
+        Time t = new Time(); // or Time t=new Time("GMT+8"); 加上Time Zone资料。
+        t.setToNow(); // 取得系统时间
+        int year = t.year;
+        int month = t.month+1;
+        int day = t.monthDay;
+        int hour = t.hour; // 0-23
+        return year + "." + month + "." + day + "." + hour;
     }
 }

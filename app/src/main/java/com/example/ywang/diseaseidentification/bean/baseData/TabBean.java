@@ -1,11 +1,11 @@
-package com.example.ywang.diseaseidentification.bean;
+package com.example.ywang.diseaseidentification.bean.baseData;
 
-public class TestBean {
+public class TabBean {
 
     private String name;
     private int id;
 
-    public TestBean(String name, int id) {
+    public TabBean(String name, int id) {
         this.name = name;
         this.id = id;
     }
@@ -28,7 +28,7 @@ public class TestBean {
 
     @Override
     public String toString() {
-        return "TestBean{" +
+        return "TabBean{" +
                 "name='" + name + '\'' +
                 ", id=" + id +
                 '}';

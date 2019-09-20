@@ -1,4 +1,4 @@
-package com.example.ywang.diseaseidentification.bean;
+package com.example.ywang.diseaseidentification.bean.baseData;
 
 public class ChatListData {
 

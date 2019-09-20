@@ -1,13 +1,13 @@
-package com.example.ywang.diseaseidentification.bean;
+package com.example.ywang.diseaseidentification.bean.baseData;
 
-public class User {
+public class UserBean {
     private String userId;
     private String userPassword;
     public static boolean isLogin = false;
     public static String isId = null;
     public static String isPw = null;
 
-    public User(String userId, String userPassword) {
+    public UserBean(String userId, String userPassword) {
         this.userId = userId;
         this.userPassword = userPassword;
     }
@@ -33,7 +33,7 @@ public class User {
     }
 
     public static void setIsLogin(boolean isLogin) {
-        User.isLogin = isLogin;
+        UserBean.isLogin = isLogin;
     }
 
     public static String getIsId() {
@@ -41,7 +41,7 @@ public class User {
     }
 
     public static void setIsId(String isId) {
-        User.isId = isId;
+        UserBean.isId = isId;
     }
 
     public static String getIsPw() {
@@ -49,6 +49,6 @@ public class User {
     }
 
     public static void setIsPw(String isPw) {
-        User.isPw = isPw;
+        UserBean.isPw = isPw;
     }
 }
