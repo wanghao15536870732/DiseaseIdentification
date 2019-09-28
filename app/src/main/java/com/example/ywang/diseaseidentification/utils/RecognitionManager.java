@@ -154,12 +154,12 @@ public class RecognitionManager {
         //保存音频文件到本地（有需要的话）   仅支持pcm和wav，且需要自行添加读写SD卡权限
         mIat.setParameter(SpeechConstant.ASR_AUDIO_PATH, Environment.getExternalStorageDirectory() + "/msc/mIat.wav");*/
         // 3.开始听写
-        mIat.startListening(mRecoListener);
+        mIat.startListening(mRecognizerListener);
     }
 
 
     //听写监听器
-    private RecognizerListener mRecoListener = new RecognizerListener() {
+    private RecognizerListener mRecognizerListener = new RecognizerListener() {
         //听写结果回调接口(返回Json格式结果，用户可参见附录13.1)；
         // 一般情况下会通过onResults接口多次返回结果，完整的识别内容是多次结果的累加；
         // 关于解析Json的代码可参见Demo中JsonParser类；

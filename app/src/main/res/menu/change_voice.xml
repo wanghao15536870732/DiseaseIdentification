@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/xiaoyan"
+        android:title="@string/xiaoyan" />
+    <item
+        android:id="@+id/xiaoyu"
+        android:title="@string/xiaoyu"/>
+    <item
+        android:id="@+id/henry"
+        android:title="@string/hengli"/>
+    <item
+        android:id="@+id/vimary"
+        android:title="@string/mali"/>
+    <item
+        android:id="@+id/xiaomei"
+        android:title="@string/xiaomei" />
+    <item
+        android:id="@+id/vixl"
+        android:title="@string/xaioli"/>
+    <item
+        android:id="@+id/xiaorong"
+        android:title="@string/xiaorong"/>
+    <item
+        android:id="@+id/xiaokun"
+        android:title="@string/xiaokun"/>
+    <item
+        android:id="@+id/xiaoqiang"
+        android:title="@string/xiaoqiang"/>
+    <item
+        android:id="@+id/vixying"
+        android:title="@string/xiaoying"/>
+    <item
+        android:id="@+id/xiaoxin"
+        android:title="@string/xiaoxin"/>
+    <item
+        android:id="@+id/nannan"
+        android:title="@string/nannan"/>
+    <item
+        android:id="@+id/vils"
+        android:title="@string/laosun"/>
+    <item
+        android:id="@+id/cancel_chose"
+        android:title="@string/cancel"/>
+</menu>

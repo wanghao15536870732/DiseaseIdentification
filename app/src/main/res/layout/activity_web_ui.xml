@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:fab="http://schemas.android.com/apk/res-auto">
 
     <include
         layout="@layout/toolbar_layout"
@@ -14,16 +15,87 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar_web">
 
-        <WebView
-            android:id="@+id/web_view"
+
+        <ScrollView
+            android:id="@+id/scrollView_news"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbarSize="2dp"
             android:scrollbarStyle="outsideOverlay"
+            android:scrollbarThumbVertical="@color/black"
             android:scrollbars="vertical">
 
-        </WebView>
+            <WebView
+                android:id="@+id/web_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbarSize="2dp"
+                android:scrollbarStyle="outsideOverlay"
+                android:scrollbars="vertical">
+            </WebView>
+
+        </ScrollView>
 
     </android.support.v4.widget.SwipeRefreshLayout>
+
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/detail_actions_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        fab:fab_addButtonColorNormal="@color/fab_color"
+        fab:fab_addButtonColorPressed="@color/blue_normal"
+        fab:fab_addButtonPlusIconColor="@color/white"
+        android:layout_marginBottom="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
+        fab:fab_addButtonSize="mini"
+        android:layout_gravity="bottom|right|end"
+        fab:fab_labelStyle="@style/menu_labels_style">
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_up"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_addButtonColorNormal="@color/fab_color"
+            fab:fab_addButtonColorPressed="@color/blue_normal"
+            fab:fab_colorNormal="#f08fb0"
+            fab:fab_colorPressed="#ef739d"
+            android:src="@drawable/ic_arrow_up"
+            fab:fab_size="mini"
+            fab:fab_title="返回顶部" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/action_text_to_voice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_addButtonColorNormal="@color/fab_color"
+            fab:fab_addButtonColorPressed="@color/blue_normal"
+            fab:fab_addButtonSize="mini"
+            fab:fab_colorNormal="@color/fab_color"
+            fab:fab_colorPressed="@color/blue_normal"
+            fab:fab_size="mini"
+            fab:fab_title="文字播报" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/change_voice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_addButtonColorNormal="@color/fab_color"
+            fab:fab_addButtonColorPressed="@color/blue_normal"
+            fab:fab_addButtonSize="mini"
+            fab:fab_colorNormal="#f08fb0"
+            fab:fab_colorPressed="#ef739d"
+            fab:fab_size="mini"
+            android:src="@drawable/ic_change"
+            fab:fab_title="声音切换"/>
+
+
+
+
+
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
 </RelativeLayout>

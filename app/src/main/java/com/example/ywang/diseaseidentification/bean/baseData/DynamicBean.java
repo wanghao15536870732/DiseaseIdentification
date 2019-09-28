@@ -11,6 +11,8 @@ public class DynamicBean {
     public int img_num = 0;
     public static List<String> mUrl = new ArrayList<>();
 
+    public DynamicBean(){}
+
     public DynamicBean(String user, String content, String time, String type, List<String> url, int img_num) {
         this.user = user;
         this.content = content;

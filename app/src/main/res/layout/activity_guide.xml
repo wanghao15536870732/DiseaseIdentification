@@ -1,93 +1,267 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".view.activity.GuideActivity">
+    android:background="@drawable/background2">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:id="@+id/ll_title_layout"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingTop="56dp"
-        android:paddingLeft="24dp"
-        android:paddingRight="24dp">
+        android:orientation="horizontal"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginLeft="25dp">
 
-        <ImageView
+        <android.support.v7.widget.CardView
             android:layout_width="wrap_content"
-            android:layout_height="72dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="24dp"
-            android:src="@drawable/logo"/>
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="2dp">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/logo"/>
+
+        </android.support.v7.widget.CardView>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginLeft="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="智农有道"
+                android:textColor="@android:color/white"
+
+                android:textSize="24sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:text="科学防害  智慧农种"
+                android:textColor="@color/white"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="vertical"
+        android:id="@+id/ll_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"
+        android:orientation="vertical"
+        android:layout_above="@id/other_login_api">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/underline"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/et_input_account"
+                style="@style/LoginEditTextTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginEnd="10dp"
+                android:layout_toStartOf="@+id/iv_clear_account"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@+id/iv_clear_account"
+                android:hint="输入账号"
+                android:inputType="number"/>
+
+            <ImageView
+                android:id="@+id/iv_clear_account"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_toStartOf="@id/cb_login_drop_down"
+                android:layout_toLeftOf="@id/cb_login_drop_down"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp"
+                android:src="@mipmap/clear" />
+
+            <CheckBox
+                android:id="@+id/cb_login_drop_down"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/account_drop_down"
+                android:button="@null"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_password_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@drawable/underline">
+
+            <EditText
+                android:id="@+id/et_input_password"
+                style="@style/LoginEditTextTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginEnd="10dp"
+                android:layout_toStartOf="@id/iv_clear_password"
+                android:hint="密码"
+                android:inputType="textPassword"
+                android:longClickable="false"
+                android:layout_alignParentLeft="true"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@id/iv_clear_password" />
+
+            <ImageView
+                android:id="@+id/iv_clear_password"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_toStartOf="@id/iv_login_open_eye"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:src="@mipmap/clear"
+                android:layout_toLeftOf="@id/iv_login_open_eye"
+                android:layout_marginRight="10dp" />
+
+            <CheckBox
+                android:id="@+id/iv_login_open_eye"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/password_eye"
+                android:button="@null"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp" />
+
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/btn_login"
+            android:layout_width="match_parent"
+            android:layout_height="38dp"
+            android:layout_marginTop="22dp"
+            android:text="登 录"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            android:background="@drawable/bg_btn_login"
+            style="?android:attr/borderlessButtonStyle" />
+
+        <Button
+            android:id="@+id/btn_skip"
+            android:layout_width="match_parent"
+            android:layout_height="38dp"
+            android:layout_marginTop="22dp"
+            android:text="跳  过"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            android:background="@drawable/bg_btn_login"
+            style="?android:attr/borderlessButtonStyle" />
 
 
-        <android.support.v7.widget.CardView
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/other_login_api"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_above="@+id/sign_in"
+        android:layout_marginTop="20dp">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:src="@mipmap/qq" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:src="@mipmap/wechat" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/sign_in"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/ll_terms_of_service_layout"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp">
+
+        <TextView
+            android:id="@+id/tv_forget_password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="36dp"
-            app:cardCornerRadius="4dp"
-            app:cardElevation="8dp"
-            android:background="?android:attr/selectableItemBackground">
+            android:layout_marginTop="20dp"
+            android:text="忘记密码"
+            style="@style/ClickableTextView" />
 
-            <Button
-                android:id="@+id/btn_sign_in_guide"
-                android:layout_width="260dp"
-                android:layout_height="56dp"
-                android:text="登  录"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                android:background="@color/colorPrimary" />
-
-        </android.support.v7.widget.CardView>
-
-        <android.support.v7.widget.CardView
+        <TextView
+            android:id="@+id/tv_register_account"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="36dp"
-            app:cardCornerRadius="4dp"
-            app:cardElevation="8dp">
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="20dp"
+            android:text="注册账号"
+            style="@style/ClickableTextView" />
 
-            <Button
-                android:id="@+id/btn_sign_up_guide"
-                android:layout_width="260dp"
-                android:layout_height="56dp"
-                android:text="注  册"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                android:background="@color/colorPrimary" />
+    </RelativeLayout>
 
-        </android.support.v7.widget.CardView>
 
-        <android.support.v7.widget.CardView
+    <LinearLayout
+        android:id="@+id/ll_terms_of_service_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="52.7dp">
+
+        <TextView
+            android:id="@+id/login_read_and_apply"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="120dp"
-            app:cardCornerRadius="4dp"
-            app:cardElevation="8dp">
+            android:text="阅读并同意"
+            android:textColor="@android:color/white"
+            />
 
-            <Button
-                android:id="@+id/btn_skip"
-                android:layout_width="260dp"
-                android:layout_height="56dp"
-                android:text="跳  过"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                android:background="@color/colorPrimary" />
-
-        </android.support.v7.widget.CardView>
-
+        <TextView
+            android:id="@+id/tv_terms_of_service"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="start|center_vertical"
+            android:text="服务条款"
+            android:textColor="@drawable/bg_hypertext"
+            style="@style/ClickableTextView"/>
 
     </LinearLayout>
 

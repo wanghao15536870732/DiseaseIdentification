@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
         fragments.add(new MainFragment());
         fragments.add(new SecondFragment());
         fragments.add(new ThirdFragment());
-        fragments.add(new FourthFragment());
+        fragments.add(FourthFragment.newInstance());
 
         navigationBar.titleItems(tabText)
                 .normalIconItems(normalIcon)

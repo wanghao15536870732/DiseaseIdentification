@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -14,4 +14,55 @@
         <item name="android:background">@drawable/fab_label_background</item>
         <item name="android:textColor">@color/white</item>
     </style>
+
+   //登录
+    <!--自定义EditText的下划线-->
+    <style name="Theme.Custom.Control.EditText" parent="Theme.AppCompat.Light">
+        <!--EditText未被激活时的下划线颜色-->
+        <item name="colorControlNormal">@color/transparent</item>
+        <!--EditText激活时的下划线颜色-->
+        <item name="colorControlActivated">@color/transparent</item>
+    </style>
+
+    <style name="AccountTextStyle">
+
+        <item name="android:textColor">#f8fefe</item>
+
+        <item name="android:textSize">20sp</item>
+        <!--最多显示1行-->
+        <item name="android:maxLines">1</item>
+        <!--垂直滚动条-->
+        <item name="android:scrollbars">vertical</item>
+        <!--单行?-->
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="LoginEditTextTheme" parent="AccountTextStyle">
+
+        <item name="android:textColorHint">#b0ffffff</item>
+        <!--光标颜色-->
+        <item name="android:textCursorDrawable">@drawable/cursor</item>
+        <item name="android:theme">@style/Theme.Custom.Control.EditText</item>
+        <!--下划线颜色-->
+        <item name="android:backgroundTint" tools:ignore="NewApi">@color/transparent</item>
+        <!--选中文本的背景颜色-->
+        <item name="android:textColorHighlight">#8090df24</item>
+        <!--<item name="android:textSelectHandle">@color/alpha90_green</item>-->
+        <!--小水滴图标-->
+        <item name="android:textSelectHandleLeft">@drawable/custom_text_select_handle_left_material</item>
+        <item name="android:textColorHighlightInverse">@drawable/custom_text_select_handle_middle_material</item>
+        <item name="android:textSelectHandleRight">@drawable/custom_text_select_handle_right_material</item>
+        <!--行间距 默认间距的倍数-->
+        <!--android:lineSpacingMultiplier="20"-->
+        <!--行间距 固定值-->
+        <!--<item name="android:lineSpacingExtra">10dp</item>-->
+    </style>
+
+    <!--textView默认不获取焦点，所以点击不起作用-->
+    <style name="ClickableTextView">
+        <item name="android:textColor">@drawable/bg_hypertext</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
+
 </resources>

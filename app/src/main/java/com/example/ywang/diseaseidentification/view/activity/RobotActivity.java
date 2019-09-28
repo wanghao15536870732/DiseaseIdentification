@@ -55,7 +55,6 @@ public class RobotActivity extends AppCompatActivity implements View.OnClickList
     private TextView voiceTxt;
     //有动画效果
     private RecognizerDialog iatDialog;
-    private Button btnRecognizerDialog; //带窗口的语音识别
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,14 +83,6 @@ public class RobotActivity extends AppCompatActivity implements View.OnClickList
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle("农种小助手");
-
-
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//            Window window = getWindow();
-//            window.addFlags( WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-//            window.setStatusBarColor(getResources().getColor(android.R.color.white));
-//            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR|View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-//        }
     }
 
 
@@ -397,4 +388,9 @@ public class RobotActivity extends AppCompatActivity implements View.OnClickList
         }
     };
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mAIUIAgent.destroy();
+    }
 }

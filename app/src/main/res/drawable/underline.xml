@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:bottom="0dp" android:left="-5.0dp" android:right="-5.0dp"
+        android:top="-3.50dp">
+        <!--bottom表示从底部坐标开始，其它方向使用负数，表示从边界外指定位置开始绘制stroke线条，起到隐藏效果-->
+        <shape android:shape="rectangle">
+            <stroke android:width="1.0px" android:color="#8090df24"/>
+        </shape>
+    </item>
+
+</layer-list>
