@@ -3,9 +3,9 @@ package com.example.ywang.diseaseidentification.bean.baseData;
 public class UserBean {
     private String userId;
     private String userPassword;
-    public static boolean isLogin = false;
-    public static String isId = null;
-    public static String isPw = null;
+    public static   boolean isLogin = false;
+    private static String isId = null;
+    private static String isPw = null;
 
     public UserBean(String userId, String userPassword) {
         this.userId = userId;

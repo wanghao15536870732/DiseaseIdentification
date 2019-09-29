@@ -48,6 +48,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import me.panpf.swsv.CircularLayout;
 import me.panpf.swsv.SpiderWebScoreView;
 
@@ -84,7 +85,8 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
 
     private FlowingDrawer mDrawer;  //侧滑栏控件
     private Toolbar toolbar; //自定义Toolbar
-    private ImageView mMenu,mBack,mRobotBtn;  //菜单按钮
+    private ImageView mMenu,mBack,mRobotBtn;//菜单按钮
+    private CircleImageView album;
     private SpiderWebScoreView spiderWebScoreView;  //蛛网控件
     private CircularLayout circularLayout;
 
@@ -148,6 +150,8 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
         mMenu = (ImageView) findViewById(R.id.avatar);
         mBack = (ImageView) findViewById(R.id.back_menu);
         mRobotBtn = (ImageView) findViewById(R.id.robot);
+        album = (CircleImageView) findViewById(R.id.album);
+        album.setOnClickListener(this);
         //setSupportActionBar(toolbar);
         toolbar.setOnMenuItemClickListener(this);
         mMenu.setOnClickListener(this);
@@ -443,6 +447,9 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
                 break;
             case R.id.robot:
                 startActivity(new Intent(MainActivity.this,RobotActivity.class));
+                break;
+            case R.id.album:
+                startActivity(new Intent(MainActivity.this,AlbumActivity.class));
                 break;
             default:
                 break;

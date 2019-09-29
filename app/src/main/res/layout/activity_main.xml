@@ -115,11 +115,10 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <LinearLayout
+            <RelativeLayout
                 android:id="@+id/navigation_menu"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:background="@color/colorPrimary">
 
@@ -131,9 +130,20 @@
                     android:layout_marginStart="15dp"
                     android:layout_marginLeft="15dp"
                     android:src="@drawable/ic_back"
-                    tools:targetApi="lollipop" />
+                    tools:targetApi="lollipop"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"/>
 
-            </LinearLayout>
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/album"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_collections"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="10dp"/>
+
+            </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/relative_menu"
@@ -162,7 +172,18 @@
                     android:textColor="@color/white"
                     android:textSize="16sp" />
 
+
+
             </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+
+            </LinearLayout>
 
             <FrameLayout
                 android:layout_width="match_parent"
