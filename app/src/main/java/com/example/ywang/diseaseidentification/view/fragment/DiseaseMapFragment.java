@@ -1,12 +1,17 @@
 package com.example.ywang.diseaseidentification.view.fragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.Toast;
+
 import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 import com.baidu.location.LocationClient;
@@ -25,10 +30,20 @@ import com.baidu.mapapi.map.Overlay;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.map.PolylineOptions;
 import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.search.core.CityInfo;
+import com.baidu.mapapi.search.core.PoiInfo;
+import com.baidu.mapapi.search.core.SearchResult;
+import com.baidu.mapapi.search.poi.OnGetPoiSearchResultListener;
+import com.baidu.mapapi.search.poi.PoiCitySearchOption;
+import com.baidu.mapapi.search.poi.PoiDetailResult;
+import com.baidu.mapapi.search.poi.PoiDetailSearchOption;
+import com.baidu.mapapi.search.poi.PoiDetailSearchResult;
+import com.baidu.mapapi.search.poi.PoiIndoorResult;
+import com.baidu.mapapi.search.poi.PoiResult;
+import com.baidu.mapapi.search.poi.PoiSearch;
 import com.example.ywang.diseaseidentification.R;
 import com.example.ywang.diseaseidentification.utils.MyOrientationListener;
-import com.example.ywang.diseaseidentification.view.activity.AddDynamicActivity;
-import com.example.ywang.diseaseidentification.view.activity.MainActivity;
+import com.example.ywang.diseaseidentification.utils.PoiOverlay;
 import com.example.ywang.diseaseidentification.view.activity.PanoramaActivity;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
@@ -39,7 +54,7 @@ import java.util.List;
 /**
  * 地图fragment
  */
-public class SecondFragment extends Fragment implements BaiduMap.OnMarkerClickListener{
+public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerClickListener,OnGetPoiSearchResultListener{
 
     private MapView mMapView = null;
     private BaiduMap mBaiduMap = null;
@@ -57,13 +72,14 @@ public class SecondFragment extends Fragment implements BaiduMap.OnMarkerClickLi
     /*经度纬度*/
     private double mLatitude;
     private double mLongitude;
-
     private List<LatLng> points = new ArrayList<>();
+
+    private PoiSearch mPoiSearch = null;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_second, container, false);
+        View view = inflater.inflate(R.layout.fragment_map_disease, container, false);
         //获取地图控件引用
         mMapView = (MapView) view.findViewById(R.id.bmapView);
         mBaiduMap = mMapView.getMap();
@@ -72,6 +88,9 @@ public class SecondFragment extends Fragment implements BaiduMap.OnMarkerClickLi
         mBaiduMap.setIndoorEnable(true);
         initMap();
         initFloatButton(view);
+        // 初始化搜索模块，注册搜索事件监听
+        mPoiSearch = PoiSearch.newInstance();
+        mPoiSearch.setOnGetPoiSearchResultListener(this);
         return view;
     }
 
@@ -170,19 +189,114 @@ public class SecondFragment extends Fragment implements BaiduMap.OnMarkerClickLi
         });
 
         panoramaBtn = (FloatingActionButton) view.findViewById(R.id.position_panorama);
-        panoramaBtn.setIcon(R.drawable.map_panorama);
-        panoramaBtn.setTitle("全景图");
+        panoramaBtn.setIcon(R.drawable.ic_search);
+        panoramaBtn.setTitle("搜索全景图");
         panoramaBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(),PanoramaActivity.class);
-                intent.putExtra("latitude",mLatitude);
-                intent.putExtra("longitude",mLongitude);
-                startActivity(intent);
+                searchButtonProcess();
 //                addOverlaysToMap();
                 mFloatingActionsMenu.toggle();
             }
         });
+    }
+
+    /**
+     * 响应城市内搜索按钮点击事件
+     */
+    public void searchButtonProcess() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        View view = View.inflate(getContext(), R.layout.dialog_select_indoor, null);
+        final EditText city = (EditText) view.findViewById(R.id.et_city_indorr);
+        final EditText key = (EditText) view.findViewById(R.id.et_key_indoor);
+        builder.setView(view);
+        builder.setTitle("搜索地点");
+        builder.setPositiveButton("搜索", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                mPoiSearch.searchInCity((new PoiCitySearchOption())
+                        .city(city.getText().toString()).keyword(key.getText().toString()));
+            }
+        });
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+        builder.show();
+    }
+
+    @Override
+    public void onGetPoiResult(PoiResult result) {
+        if (result == null || result.error == SearchResult.ERRORNO.RESULT_NOT_FOUND) {
+            Toast.makeText(getContext(), "未找到结果", Toast.LENGTH_LONG)
+                    .show();
+            return;
+        }
+        if (result.error == SearchResult.ERRORNO.NO_ERROR) {
+            mBaiduMap.clear();
+            PoiOverlay overlay = new MyPoiOverlay(mBaiduMap);
+            mBaiduMap.setOnMarkerClickListener(overlay);
+            overlay.setData(result);
+            overlay.addToMap();
+            overlay.zoomToSpan();
+            return;
+        }
+        if (result.error == SearchResult.ERRORNO.AMBIGUOUS_KEYWORD) {
+            // 当输入关键字在本市没有找到，但在其他城市找到时，返回包含该关键字信息的城市列表
+            String strInfo = "在";
+            for (CityInfo cityInfo : result.getSuggestCityList()) {
+                strInfo += cityInfo.city;
+                strInfo += ",";
+            }
+            strInfo += "找到结果";
+            Toast.makeText(getContext(), strInfo, Toast.LENGTH_LONG)
+                    .show();
+        }
+    }
+
+    @Override
+    public void onGetPoiDetailResult(PoiDetailResult result) {
+        if (result.error != SearchResult.ERRORNO.NO_ERROR) {
+            Toast.makeText(getContext(), "抱歉，未找到结果", Toast.LENGTH_SHORT)
+                    .show();
+        } else {
+            LatLng latLng = result.getLocation();
+            double latitude = latLng.latitude;
+            double longitude = latLng.longitude;
+            Intent intent = new Intent(getContext(), PanoramaActivity.class);
+            intent.putExtra("latitude", latitude);
+            intent.putExtra("longitude", longitude);
+            intent.putExtra("uid",result.getUid());
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    public void onGetPoiDetailResult(PoiDetailSearchResult poiDetailSearchResult) {
+
+    }
+
+    @Override
+    public void onGetPoiIndoorResult(PoiIndoorResult poiIndoorResult) {
+
+    }
+
+    private class MyPoiOverlay extends PoiOverlay {
+
+        public MyPoiOverlay(BaiduMap baiduMap) {
+            super(baiduMap);
+        }
+
+        @Override
+        public boolean onPoiClick(int index) {
+            super.onPoiClick(index);
+            PoiInfo poi = getPoiResult().getAllPoi().get(index);
+            mPoiSearch.searchPoiDetail((new PoiDetailSearchOption())
+                    .poiUid(poi.uid));
+            return true;
+        }
     }
 
     public class MyLocationListener extends BDAbstractLocationListener{

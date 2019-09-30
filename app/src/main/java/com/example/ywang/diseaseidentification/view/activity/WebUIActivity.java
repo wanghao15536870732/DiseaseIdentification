@@ -49,7 +49,6 @@ public class WebUIActivity extends AppCompatActivity implements SwipeRefreshLayo
     private String VOICE = null;
     private ScrollView scrollView;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

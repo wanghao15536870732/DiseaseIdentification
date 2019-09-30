@@ -100,7 +100,7 @@ public class MainFragment extends Fragment {
 
     private void initDiseases(){
         mList.clear();
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 4; i++) {
             Random random = new Random();
             int index = random.nextInt(datas.length);
             mList.add(datas[index]);

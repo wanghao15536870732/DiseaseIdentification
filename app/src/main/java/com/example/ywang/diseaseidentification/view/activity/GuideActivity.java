@@ -8,8 +8,10 @@ import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -28,13 +30,26 @@ import android.widget.Toast;
 import com.example.ywang.diseaseidentification.R;
 import com.example.ywang.diseaseidentification.adapter.UserBeanAdapter;
 import com.example.ywang.diseaseidentification.bean.baseData.UserBean;
+import com.google.gson.JsonObject;
+import com.tencent.connect.common.Constants;
+import com.tencent.open.utils.HttpUtils;
+import com.tencent.tauth.IRequestListener;
+import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
+import com.tencent.tauth.UiError;
+
+import org.apache.http.conn.ConnectTimeoutException;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +59,7 @@ public class GuideActivity extends AppCompatActivity implements View.OnClickList
     private EditText mAccountView;
     private EditText mPasswordView;
     private ImageView mClearAccountView;
-    private ImageView mClearPasswordView;
+    private ImageView mClearPasswordView,mBtnQq,mBtnWeChat;
     private CheckBox mEyeView;
     private CheckBox mDropDownView;
     private Button mLoginView,mSkipView;
@@ -55,8 +70,8 @@ public class GuideActivity extends AppCompatActivity implements View.OnClickList
     private RelativeLayout mPasswordLayout;
     private List<View> mDropDownInvisibleViews;
 
-    private static String APP_ID = "";
-    private Tencent mTencent;
+    private static String APP_ID = "101801728";
+    private static Tencent mTencent;
     public static final int SHOW_RESPONSE = 1;
     private String account,password;
 
@@ -67,8 +82,7 @@ public class GuideActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_guide);
         findViewId();
         initDropDownGroup();
-        mTencent = Tencent.createInstance(APP_ID, this.getApplicationContext());
-
+        mTencent = Tencent.createInstance(APP_ID, GuideActivity.this);
         mPasswordView.setLetterSpacing(0.2f);
         mClearAccountView.setOnClickListener(this);
         mClearPasswordView.setOnClickListener(this);
@@ -149,6 +163,10 @@ public class GuideActivity extends AppCompatActivity implements View.OnClickList
         mTermsView = findViewById(R.id.tv_terms_of_service);
         mPasswordLayout = findViewById(R.id.rl_password_layout);
         mSkipView = findViewById(R.id.btn_skip);
+        mBtnQq = findViewById(R.id.login_qq);
+        mBtnWeChat = findViewById(R.id.login_we_chat);
+        mBtnQq.setOnClickListener(this);
+        mBtnWeChat.setOnClickListener(this);
     }
 
     private void initDropDownGroup() {
@@ -246,6 +264,12 @@ public class GuideActivity extends AppCompatActivity implements View.OnClickList
             case R.id.cb_login_drop_down:  //下拉点击
 
                 break;
+            case R.id.login_qq:  //QQ登录
+                login_qq();
+                break;
+            case R.id.login_we_chat:  //微信登录
+
+                break;
             default:
                 break;
         }
@@ -329,4 +353,108 @@ public class GuideActivity extends AppCompatActivity implements View.OnClickList
             }
         }
     };
+
+    private void login_qq(){
+        if(!mTencent.isSessionValid()){
+            mTencent.login(GuideActivity.this,"all",loginListener);
+        }
+    }
+
+
+    //新建BaseListener实例重写doComplete方法
+    IUiListener loginListener = new BaseUiListener(){
+        @Override
+        protected void doComplete(JSONObject values) {
+            initOpenidAndToken(values);
+            updateUserInfo();
+        }
+    };
+
+    private class BaseUiListener implements IUiListener {
+
+        protected void doComplete(JSONObject values) {
+            Log.e("result",values.toString());
+        }
+
+        @Override
+        public void onComplete(Object response) {
+            if (response == null){
+                Log.e("QQ ---> BaseListener","返回为空，登录失败");
+                return;
+            }
+            JSONObject jsonObject = (JSONObject) response;
+            if (jsonObject.length() == 0) {
+                Log.e("QQ ---> BaseListener","返回为空，登录失败2");
+                return;
+            }
+            Log.i("登陆成功",response.toString());
+            doComplete(jsonObject);
+        }
+
+        @Override
+        public void onError(UiError e) {
+            Log.e("onError:", "code:" + e.errorCode + ", msg:"
+                    + e.errorMessage + ", detail:" + e.errorDetail);
+        }
+        @Override
+        public void onCancel() {
+            Log.e("onCancel", "");
+        }
+    }
+
+    //获取用户信息
+    private void updateUserInfo(){
+        if(mTencent != null && mTencent.isSessionValid()){
+            IUiListener iUiListener = new IUiListener() {
+                @Override
+                public void onComplete(Object response) {
+                    Log.e("结果updateUserInfo","OnComplete成功");
+                    JSONObject jsonObject = (JSONObject) response;
+                    try{
+                        String usr = jsonObject.getString("nickname");
+                        String pic = jsonObject.getString("figureurl_qq_2");
+                        String sex = jsonObject.getString("gender");
+                        Toast.makeText(GuideActivity.this,"授权成功",Toast.LENGTH_SHORT).show();
+                    }catch (JSONException e){
+                        Log.e("JSON","解析用户信息失败");
+                    }
+                }
+
+                @Override
+                public void onError(UiError uiError) {
+                    Log.e("QQ ---> BaseListener","错误");
+                }
+
+                @Override
+                public void onCancel() {
+                    Log.e("QQ ---> BaseListener","取消");
+                }
+            };
+
+        }
+    }
+
+    //QQ获取用户OPENID和TOKEN
+    public static void initOpenidAndToken(JSONObject jsonObject) {
+        try {
+            String token = jsonObject.getString(Constants.PARAM_ACCESS_TOKEN);
+            String expires = jsonObject.getString(Constants.PARAM_EXPIRES_IN);
+            String openId = jsonObject.getString(Constants.PARAM_OPEN_ID);
+            if (!TextUtils.isEmpty(token) && !TextUtils.isEmpty(expires)
+                    && !TextUtils.isEmpty(openId)) {
+                mTencent.setAccessToken(token, expires);
+                mTencent.setOpenId(openId);
+                Log.i("OPENID",openId);
+            }
+        } catch(Exception e) {
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == Constants.REQUEST_LOGIN ||
+                requestCode == Constants.REQUEST_APPBAR) {
+            Tencent.onActivityResultData(requestCode,resultCode,data,loginListener);
+        }
+    }
 }

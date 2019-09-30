@@ -5,6 +5,7 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="back">#e29645</color>
+    <color name="colorAccentLight">#ef749e</color>
 
     //悬浮按钮
     <color name="blue_normal">#ff33b5e5</color>

@@ -60,7 +60,7 @@
 
     <!--textView默认不获取焦点，所以点击不起作用-->
     <style name="ClickableTextView">
-        <item name="android:textColor">@drawable/bg_hypertext</item>
+        <item name="android:textColor">#8087c6</item>
         <item name="android:clickable">true</item>
         <item name="android:focusable">true</item>
     </style>

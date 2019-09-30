@@ -195,12 +195,14 @@
         android:layout_marginTop="20dp">
 
         <ImageView
+            android:id="@+id/login_qq"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_weight="1"
             android:src="@mipmap/qq" />
 
         <ImageView
+            android:id="@+id/login_we_chat"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_weight="1"
@@ -251,8 +253,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="阅读并同意"
-            android:textColor="@android:color/white"
-            />
+            android:textColor="@android:color/white" />
 
         <TextView
             android:id="@+id/tv_terms_of_service"
@@ -260,7 +261,6 @@
             android:layout_height="wrap_content"
             android:gravity="start|center_vertical"
             android:text="服务条款"
-            android:textColor="@drawable/bg_hypertext"
             style="@style/ClickableTextView"/>
 
     </LinearLayout>

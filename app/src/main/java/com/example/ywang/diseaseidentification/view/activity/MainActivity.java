@@ -8,7 +8,6 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
@@ -35,7 +34,7 @@ import android.widget.Toast;
 import com.example.ywang.diseaseidentification.view.fragment.FourthFragment;
 import com.example.ywang.diseaseidentification.view.fragment.MainFragment;
 import com.example.ywang.diseaseidentification.R;
-import com.example.ywang.diseaseidentification.view.fragment.SecondFragment;
+import com.example.ywang.diseaseidentification.view.fragment.DiseaseMapFragment;
 import com.example.ywang.diseaseidentification.view.fragment.ThirdFragment;
 import com.example.ywang.diseaseidentification.view.KickBackAnimator;
 import com.mxn.soul.flowingdrawer_core.ElasticDrawer;
@@ -107,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
         fragmentManager = getSupportFragmentManager();
 
         fragments.add(new MainFragment());
-        fragments.add(new SecondFragment());
+        fragments.add(new DiseaseMapFragment());
         fragments.add(new ThirdFragment());
         fragments.add(FourthFragment.newInstance());
 

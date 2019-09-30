@@ -6,10 +6,10 @@
         android:id="@+id/item_copy"
         android:icon="@drawable/ic_copy"
         android:title="复制链接"
-        app:showAsAction="never" />
+        app:showAsAction="withText"/>
     <item
         android:id="@+id/item_browser"
         android:icon="@drawable/ic_browser"
         android:title="浏览器中打开"
-        app:showAsAction="never" />
+        app:showAsAction="withText" />
 </menu>

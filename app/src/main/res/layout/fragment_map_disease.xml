@@ -10,6 +10,7 @@
         android:layout_height="match_parent"
         android:clickable="true" />
 
+
     <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/map_actions_menu"
         android:layout_width="wrap_content"
@@ -62,13 +63,10 @@
             fab:fab_addButtonColorNormal="@color/fab_color"
             fab:fab_addButtonColorPressed="@color/blue_normal"
             fab:fab_size="mini"
-            fab:fab_colorNormal="@color/blue_normal"
-            fab:fab_colorPressed="@color/blue_pressed"
-            fab:fab_title="全景图"/>
-
+            fab:fab_colorNormal="@color/colorAccentLight"
+            fab:fab_colorPressed="@color/colorAccent"
+            fab:fab_title="搜索全景图"/>
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
-
-
 
 </android.support.design.widget.CoordinatorLayout>

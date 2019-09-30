@@ -50,6 +50,9 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <data android:scheme="tencent101801728" />
+            </intent-filter>
         </activity>
 
         <provider
@@ -84,7 +87,25 @@
         <activity android:name=".view.activity.WebUIActivity" />
         <activity android:name=".view.activity.RobotActivity" />
         <activity android:name=".view.activity.DisplayImageActivity" />
-        <activity android:name=".view.activity.AlbumActivity"></activity>
+        <activity android:name=".view.activity.AlbumActivity" />
+        <activity
+            android:name="com.tencent.tauth.AuthActivity"
+            android:launchMode="singleTask"
+            android:noHistory="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="tencent101801728" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.tencent.connect.common.AssistActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="behind"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
     </application>
 
 </manifest>
