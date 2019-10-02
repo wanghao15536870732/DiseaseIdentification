@@ -35,6 +35,7 @@ public class MyApplication extends Application {
         mInstance = this;
         initEngineManager(this);
         initImageLoader(this);
+        
     }
 
     public void initEngineManager(Context context) {

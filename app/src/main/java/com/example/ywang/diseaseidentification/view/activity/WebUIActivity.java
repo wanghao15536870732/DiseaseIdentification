@@ -272,8 +272,6 @@ public class WebUIActivity extends AppCompatActivity implements SwipeRefreshLayo
                     text_to_voice.setIcon( R.drawable.ic_pause);
                     text_to_voice.setTitle( "结束播报" );
                 }else {
-                    if (SpeechSynthesizer.getSynthesizer().isSpeaking())
-                        SpeechSynthesizer.getSynthesizer().pauseSpeaking();
                     text_to_voice.setIcon( R.drawable.ic_play );
                     text_to_voice.setTitle( "文字播报" );
                 }

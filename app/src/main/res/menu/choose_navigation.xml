@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/navigation_ar"
+        android:title="AR步行导航"
+        app:showAsAction="collapseActionView"
+        android:icon="@drawable/add_picture"/>
+
+    <item
+        android:id="@+id/navigation_walk"
+        android:title="普通步行导航"
+        app:showAsAction="collapseActionView"
+        android:icon="@drawable/map_panorama"/>
+
+    <item
+        android:id="@+id/navigation_bike"
+        android:title="骑行导航"
+        app:showAsAction="collapseActionView"
+        android:icon="@drawable/map_fence"/>
+
+    <item
+        android:id="@+id/cancel_chose"
+        android:title="@string/cancel"/>
+</menu>

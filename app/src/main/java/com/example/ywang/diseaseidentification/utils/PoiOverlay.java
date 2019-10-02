@@ -32,6 +32,11 @@ public class PoiOverlay extends OverlayManager {
         this.mPoiResult = poiResult;
     }
 
+    private int[] IconMarkers = new int[]{
+            R.mipmap.icon_mark1,R.mipmap.icon_mark2,R.mipmap.icon_mark3,R.mipmap.icon_mark4,
+            R.mipmap.icon_mark5,R.mipmap.icon_mark6,R.mipmap.icon_mark7,R.mipmap.icon_mark8
+    };
+
     @Override
     public final List<OverlayOptions> getOverlayOptions() {
         if (mPoiResult == null || mPoiResult.getAllPoi() == null) {
@@ -47,10 +52,17 @@ public class PoiOverlay extends OverlayManager {
             markerSize++;
             Bundle bundle = new Bundle();
             bundle.putInt("index", i);
-            markerList.add(new MarkerOptions()
-                    .icon(BitmapDescriptorFactory
-                            .fromResource(R.mipmap.icon_gcoding)).extraInfo(bundle)
-                    .position(mPoiResult.getAllPoi().get(i).location));
+
+            if(markerSize < 8){
+                markerList.add(new MarkerOptions()
+                        .icon(BitmapDescriptorFactory.fromResource(IconMarkers[markerSize])).extraInfo(bundle)
+                        .position(mPoiResult.getAllPoi().get(i).location));
+            }else{
+                markerList.add(new MarkerOptions()
+                        .icon(BitmapDescriptorFactory
+                                .fromResource(R.mipmap.icon_gcoding)).extraInfo(bundle)
+                        .position(mPoiResult.getAllPoi().get(i).location));
+            }
 
         }
         return markerList;

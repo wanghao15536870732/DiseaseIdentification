@@ -9,6 +9,10 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        ndk {
+            abiFilters "armeabi-v7a","x86"
+        }
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -16,6 +20,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
 }
 
 dependencies {
@@ -49,6 +54,7 @@ dependencies {
     implementation 'com.youth.banner:banner:1.4.10'
     implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     //底部弹出选项栏
-    implementation 'com.cocosw:bottomsheet:1.+@aar'
+    implementation 'com.cocosw:bottomsheet:1.4.0@aar'
     implementation 'com.cleveroad:fan-layout-manager:1.0.5'
+    implementation 'com.android.support:multidex:1.0.3'
 }

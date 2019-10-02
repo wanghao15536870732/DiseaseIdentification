@@ -26,9 +26,8 @@ public abstract class OverlayManager implements OnMarkerClickListener, OnPolylin
 
     /**
      * 通过一个BaiduMap 对象构造
-     *
-     * @param baiduMap
      */
+
     public OverlayManager(BaiduMap baiduMap) {
         mBaiduMap = baiduMap;
         // mBaiduMap.setOnMarkerClickListener(this);
@@ -42,14 +41,14 @@ public abstract class OverlayManager implements OnMarkerClickListener, OnPolylin
 
     /**
      * 覆写此方法设置要管理的Overlay列表
-     *
-     * @return 管理的Overlay列表
      */
+
     public abstract List<OverlayOptions> getOverlayOptions();
 
     /**
      * 将所有Overlay 添加到地图上
      */
+
     public final void addToMap() {
         if (mBaiduMap == null) {
             return;
@@ -69,6 +68,7 @@ public abstract class OverlayManager implements OnMarkerClickListener, OnPolylin
     /**
      * 将所有Overlay 从 地图上消除
      */
+
     public final void removeFromMap() {
         if (mBaiduMap == null) {
             return;
@@ -83,10 +83,6 @@ public abstract class OverlayManager implements OnMarkerClickListener, OnPolylin
 
     /**
      * 缩放地图，使所有Overlay都在合适的视野内
-     * <p>
-     * 注： 该方法只对Marker类型的overlay有效
-     * </p>
-     *
      */
     public void zoomToSpan() {
         if (mBaiduMap == null) {
