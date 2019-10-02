@@ -14,14 +14,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="区域标语："
-            android:textSize="20sp" />
+            android:textSize="16sp" />
 
         <EditText
             android:id="@+id/fence_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:maxLines="1"/>
     </LinearLayout>
 
@@ -34,14 +34,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="区域宽度："
-            android:textSize="20sp" />
+            android:textSize="16sp" />
 
         <EditText
             android:id="@+id/fence_width"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:inputType="number"
             android:maxLength="3"/>
 
@@ -49,14 +49,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="区域长度:"
-            android:textSize="20sp" />
+            android:textSize="16sp" />
 
         <EditText
             android:id="@+id/fence_length"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:inputType="number"
             android:maxLength="3"/>
 
@@ -71,7 +71,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="区域颜色:"
-            android:textSize="20sp" />
+            android:textSize="16sp" />
 
         <RadioGroup
             android:id="@+id/radio_group"
@@ -85,7 +85,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="红色(病害)"
+                android:text="红(病害)"
                 android:textSize="14sp"/>
 
             <RadioButton
@@ -94,7 +94,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textSize="14sp"
-                android:text="绿色(健康)"/>
+                android:text="绿(健康)"/>
 
             <RadioButton
                 android:id="@+id/radio_blue"
@@ -102,7 +102,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textSize="14sp"
-                android:text="蓝色(待测)"/>
+                android:text="蓝(待测)"/>
 
         </RadioGroup>
     </LinearLayout>

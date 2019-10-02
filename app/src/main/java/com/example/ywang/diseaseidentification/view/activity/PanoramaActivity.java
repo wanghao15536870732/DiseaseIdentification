@@ -44,7 +44,6 @@ public class PanoramaActivity extends AppCompatActivity {
         mLatitude = intent.getDoubleExtra("latitude",0);
         mLongitude = intent.getDoubleExtra("longitude",0);
         uid = intent.getStringExtra("uid");
-        Toast.makeText(app, uid, Toast.LENGTH_SHORT).show();
         Log.e("mLatitude:",String.valueOf(mLatitude));
         Log.e("mLongitude:",String.valueOf(mLongitude));
         mPanoramaView.setShowTopoLink(true); //是否显示邻接街景箭头（有邻接全景的时候）

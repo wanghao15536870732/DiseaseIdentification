@@ -79,6 +79,7 @@ import com.cocosw.bottomsheet.BottomSheet;
 import com.example.ywang.diseaseidentification.R;
 import com.example.ywang.diseaseidentification.utils.MyOrientationListener;
 import com.example.ywang.diseaseidentification.utils.PoiOverlay;
+import com.example.ywang.diseaseidentification.utils.SnackBarUtil;
 import com.example.ywang.diseaseidentification.utils.WalkingRouteOverlay;
 import com.example.ywang.diseaseidentification.view.activity.PanoramaActivity;
 import com.example.ywang.diseaseidentification.view.activity.WNavigationGuideActivity;
@@ -146,7 +147,7 @@ public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerCli
         mMapView.showZoomControls(false);
 
         //放大到标尺50m
-        MapStatusUpdate mapStatusUpdate = MapStatusUpdateFactory.zoomTo(18.0f);
+        MapStatusUpdate mapStatusUpdate = MapStatusUpdateFactory.zoomTo(20.0f);
         mBaiduMap.setMapStatus(mapStatusUpdate);
 
         //定位初始化
@@ -507,7 +508,6 @@ public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerCli
     }
 
     public static Bitmap decodeSampledBitmapFromFile(String filename, int reqWidth, int reqHeight) {
-
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(filename, options);
@@ -649,7 +649,15 @@ public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerCli
 //                    Toast.makeText(getContext(), "Click on InfoWindow", Toast.LENGTH_SHORT).show();
 //                }
 //            };
-            showTheWay(new LatLng(latitude,longitude));
+
+            if (latitude == mLatitude && longitude == mLongitude){
+
+                Toast.makeText(getContext(), "始末位置不能相同！", Toast.LENGTH_SHORT).show();
+            }else if (imagePath == null){
+                Toast.makeText(getContext(), "全景图", Toast.LENGTH_SHORT).show();
+            }else {
+                showTheWay(new LatLng(latitude,longitude));
+            }
         }
         return true;
     }

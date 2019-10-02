@@ -1,5 +1,6 @@
 package com.example.ywang.diseaseidentification.utils;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.baidu.mapapi.map.BaiduMap;
@@ -82,6 +83,7 @@ public class PoiOverlay extends OverlayManager {
             return false;
         }
         if (marker.getExtraInfo() != null) {
+            marker.getPosition();
             return onPoiClick(marker.getExtraInfo().getInt("index"));
         }
         return false;
