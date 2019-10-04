@@ -131,8 +131,8 @@ public abstract class BaseNineGridLayout extends ViewGroup{
             setLayoutParams(params);
             imageView.layout(0, 0, mSingleWidth, mSingleWidth);
 
-            boolean isShowDefualt = displayOneImage(imageView, url, mTotalWidth);
-            if (isShowDefualt) {
+            boolean isShowDefault = displayOneImage(imageView, url, mTotalWidth);
+            if (isShowDefault) {
                 layoutImageView(imageView, 0, url, false);
             } else {
                 addView(imageView);
@@ -275,7 +275,7 @@ public abstract class BaseNineGridLayout extends ViewGroup{
         imageView.layout(0, 0, width, height);
 
         LayoutParams params = getLayoutParams();
-        params.width = width;
+//        params.width = width;
         params.height = height;
         setLayoutParams(params);
     }

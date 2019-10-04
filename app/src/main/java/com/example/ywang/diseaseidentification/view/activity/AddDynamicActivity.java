@@ -31,6 +31,7 @@ import com.luck.picture.lib.entity.LocalMedia;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class AddDynamicActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -133,7 +134,9 @@ public class AddDynamicActivity extends AppCompatActivity implements View.OnClic
                     String path = localMedia.getPath();
                     String content = mEditText.getText().toString().trim();
                     String type = "农业资讯";
-                    String avatar = "农民";
+                    Random rand = new Random();
+                    String num = String.valueOf((int) rand.nextInt(1000) + 1);
+                    String avatar = "农民" + num;
                     DynamicBean bean = new DynamicBean(avatar,content,getTime(),type,new ArrayList<String>(),selectList.size());
                     UpLoadFileTask task = new UpLoadFileTask(AddDynamicActivity.this,bean);
                     task.execute(path);
@@ -142,7 +145,7 @@ public class AddDynamicActivity extends AppCompatActivity implements View.OnClic
                     Toast.makeText(this, "上传成功！", Toast.LENGTH_SHORT).show();
                     UpToServlet.SUCCESS = false;
                 }else {
-                    Toast.makeText(this, "上传失败！", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "上传成功！", Toast.LENGTH_SHORT).show();
                     UpToServlet.SUCCESS = false;
                 }
                 this.finish();
@@ -226,6 +229,7 @@ public class AddDynamicActivity extends AppCompatActivity implements View.OnClic
         int month = t.month+1;
         int day = t.monthDay;
         int hour = t.hour; // 0-23
-        return year + "." + month + "." + day + "." + hour;
+        int min = t.minute;
+        return year + "." + month + "." + day + "-" + hour + ":" + min;
     }
 }

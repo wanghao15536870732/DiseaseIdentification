@@ -1,5 +1,6 @@
 package com.example.ywang.diseaseidentification.adapter;
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,6 +11,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.ywang.diseaseidentification.R;
 import com.example.ywang.diseaseidentification.bean.NineGridModel;
+import com.example.ywang.diseaseidentification.view.CommentListTextView;
+
 import java.util.List;
 
 public class NineGridAdapter extends  RecyclerView.Adapter<NineGridAdapter.ViewHolder> {
@@ -66,6 +69,15 @@ public class NineGridAdapter extends  RecyclerView.Adapter<NineGridAdapter.ViewH
 
             }
         } );
+        holder.mCommentListTextView.setMaxlines (6);
+        holder.mCommentListTextView.setMoreStr ("查看更多");
+        holder.mCommentListTextView.setNameColor (Color.parseColor ("#fe671e"));
+        holder.mCommentListTextView.setCommentColor (Color.parseColor ("#242424"));
+        holder.mCommentListTextView.setTalkStr ("回复");
+        holder.mCommentListTextView.setTalkColor (Color.parseColor ("#242424"));
+        if(nineGridModel.mCommentInfos.size() != 0){
+            holder.mCommentListTextView.setData (nineGridModel.mCommentInfos);
+        }
     }
 
     @Override
@@ -77,6 +89,7 @@ public class NineGridAdapter extends  RecyclerView.Adapter<NineGridAdapter.ViewH
         NineGridLayout layout;
         ImageView mImageView,comment;
         TextView contact_name,time,question_detail;
+        CommentListTextView mCommentListTextView;
 
         public ViewHolder(View itemView) {
             super( itemView );
@@ -86,6 +99,7 @@ public class NineGridAdapter extends  RecyclerView.Adapter<NineGridAdapter.ViewH
             time = (TextView) itemView.findViewById( R.id.time );
             question_detail = (TextView) itemView.findViewById( R.id.detail);
             comment = (ImageView) itemView.findViewById( R.id.comment );
+            mCommentListTextView = (CommentListTextView) itemView.findViewById (R.id.commentlist);
         }
     }
 

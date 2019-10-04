@@ -255,7 +255,7 @@ public class GuideActivity extends AppCompatActivity implements View.OnClickList
             case R.id.tv_forget_password:  //忘记密码
 
                 break;
-            case R.id.iv_clear_account:  //清楚账号
+            case R.id.iv_clear_account:  //清除账号
                 mAccountView.setText("");
                 break;
             case R.id.iv_clear_password:  //清楚密码：
@@ -366,7 +366,10 @@ public class GuideActivity extends AppCompatActivity implements View.OnClickList
         @Override
         protected void doComplete(JSONObject values) {
             initOpenidAndToken(values);
-            updateUserInfo();
+            Log.e("结果updateUserInfo","OnComplete成功");
+            JSONObject jsonObject = values;
+            Toast.makeText(GuideActivity.this,"授权成功",Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(GuideActivity.this,MainActivity.class));
         }
     };
 
@@ -399,38 +402,6 @@ public class GuideActivity extends AppCompatActivity implements View.OnClickList
         @Override
         public void onCancel() {
             Log.e("onCancel", "");
-        }
-    }
-
-    //获取用户信息
-    private void updateUserInfo(){
-        if(mTencent != null && mTencent.isSessionValid()){
-            IUiListener iUiListener = new IUiListener() {
-                @Override
-                public void onComplete(Object response) {
-                    Log.e("结果updateUserInfo","OnComplete成功");
-                    JSONObject jsonObject = (JSONObject) response;
-                    try{
-                        String usr = jsonObject.getString("nickname");
-                        String pic = jsonObject.getString("figureurl_qq_2");
-                        String sex = jsonObject.getString("gender");
-                        Toast.makeText(GuideActivity.this,"授权成功",Toast.LENGTH_SHORT).show();
-                    }catch (JSONException e){
-                        Log.e("JSON","解析用户信息失败");
-                    }
-                }
-
-                @Override
-                public void onError(UiError uiError) {
-                    Log.e("QQ ---> BaseListener","错误");
-                }
-
-                @Override
-                public void onCancel() {
-                    Log.e("QQ ---> BaseListener","取消");
-                }
-            };
-
         }
     }
 

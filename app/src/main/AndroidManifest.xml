@@ -106,8 +106,9 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="behind"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-
-        <activity android:name=".view.activity.WNavigationGuideActivity"/>
+        <activity android:name=".view.activity.WNavigationGuideActivity" />
+        <activity android:name=".view.activity.DetectionActivity" />
+        <activity android:name=".view.activity.TimeRecordActivity"></activity>
     </application>
 
 </manifest>

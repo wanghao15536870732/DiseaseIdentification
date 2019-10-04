@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:id="@+id/album_card">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp">
+
+            <ImageView
+                android:id="@+id/weather"
+                android:layout_width="0dp"
+                android:layout_height="25dp"
+                android:src="@drawable/sunny"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:id="@+id/weather_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="晴"
+                android:textSize="12dp"
+                android:gravity="center_horizontal"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:id="@+id/tmp_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="8° - 16°"
+                android:gravity="center_horizontal"
+                android:layout_weight="1"
+                android:textSize="12sp"/>
+
+        </LinearLayout>
+
+
+        <ImageView
+            android:id="@+id/image_album"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/banner_default"
+            android:layout_margin="5dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                android:layout_weight="1"
+                android:src="@drawable/ic_location"/>
+
+            <TextView
+                android:id="@+id/album_location_city"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:text="太原"
+                android:textSize="12sp"/>
+
+            <TextView
+                android:id="@+id/album_location_detail"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:text="中北大学"
+                android:textSize="12sp"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:background="#F3F3F3"
+            android:padding="5dp"
+            android:id="@+id/text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="2019-9-14"
+            android:textColor="@color/color_orange"
+            android:layout_margin="5dp"/>
+
+        <TextView
+            android:id="@+id/content_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="今天的天气真好"/>
+
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

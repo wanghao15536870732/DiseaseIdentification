@@ -36,17 +36,17 @@ public class SynthesisManager {
         mTts.setParameter( SpeechConstant.VOICE_NAME,speechPeople.toString());
         return this;
     }
-    //设置语速 0-100 默认50
+    //设置语速 0-sunny 默认50
     public SynthesisManager setSpeed(String speed) {
         mTts.setParameter( SpeechConstant.SPEED,speed);
         return this;
     }
-    //设置音量 0-100 默认50
+    //设置音量 0-sunny 默认50
     public SynthesisManager setVolume(String volume) {
         mTts.setParameter( SpeechConstant.VOLUME,volume);
         return this;
     }
-    //设置合成音调 0-100 默认50
+    //设置合成音调 0-sunny 默认50
     public SynthesisManager setPitch(String pitch) {
         mTts.setParameter( SpeechConstant.PITCH,pitch);
         return this;
@@ -80,7 +80,7 @@ public class SynthesisManager {
                 onSepakingStateListen.onCompleted(error);
             }
             //缓冲进度回调
-            //percent为缓冲进度0~100，beginPos为缓冲音频在文本中开始位置，endPos表示缓冲音频在文本中结束位置，info为附加信息。
+            //percent为缓冲进度0~sunny，beginPos为缓冲音频在文本中开始位置，endPos表示缓冲音频在文本中结束位置，info为附加信息。
             public void onBufferProgress(int percent, int beginPos, int endPos, String info) {
                 Log.d(TAG,"缓冲进度" + percent);
                 listen.onBufferProgress(percent,beginPos,endPos, info);
@@ -98,7 +98,7 @@ public class SynthesisManager {
                 onSepakingStateListen.onSpeakPaused();
             }
             //播放进度回调
-            //percent为播放进度0~100,beginPos为播放音频在文本中开始位置，endPos表示播放音频在文本中结束位置.
+            //percent为播放进度0~sunny,beginPos为播放音频在文本中开始位置，endPos表示播放音频在文本中结束位置.
             public void onSpeakProgress(int percent, int beginPos, int endPos) {
                 Log.d(TAG,"播放进度" + percent);
                 listen.onSpeakProgress( percent,  beginPos,  endPos);
@@ -144,14 +144,14 @@ public class SynthesisManager {
         //会话结束回调接口，没有错误时，error为null
         void onCompleted(SpeechError error);
         //缓冲进度回调
-        //percent为缓冲进度0~100，beginPos为缓冲音频在文本中开始位置，endPos表示缓冲音频在文本中结束位置，info为附加信息。
+        //percent为缓冲进度0~sunny，beginPos为缓冲音频在文本中开始位置，endPos表示缓冲音频在文本中结束位置，info为附加信息。
         void onBufferProgress(int percent, int beginPos, int endPos, String info);
         //开始播放
         void onSpeakBegin();
         //暂停播放
         void onSpeakPaused();
         //播放进度回调
-        //percent为播放进度0~100,beginPos为播放音频在文本中开始位置，endPos表示播放音频在文本中结束位置.
+        //percent为播放进度0~sunny,beginPos为播放音频在文本中开始位置，endPos表示播放音频在文本中结束位置.
         void onSpeakProgress(int percent, int beginPos, int endPos);
         //恢复播放回调接口
         void onSpeakResumed();

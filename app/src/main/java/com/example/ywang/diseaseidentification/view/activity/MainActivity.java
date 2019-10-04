@@ -35,8 +35,9 @@ import com.example.ywang.diseaseidentification.view.fragment.FourthFragment;
 import com.example.ywang.diseaseidentification.view.fragment.MainFragment;
 import com.example.ywang.diseaseidentification.R;
 import com.example.ywang.diseaseidentification.view.fragment.DiseaseMapFragment;
-import com.example.ywang.diseaseidentification.view.fragment.ThirdFragment;
+import com.example.ywang.diseaseidentification.view.fragment.AgricultureNewsFragment;
 import com.example.ywang.diseaseidentification.view.KickBackAnimator;
+import com.example.zhouwei.library.CustomPopWindow;
 import com.mxn.soul.flowingdrawer_core.ElasticDrawer;
 import com.mxn.soul.flowingdrawer_core.FlowingDrawer;
 import com.next.easynavigation.constant.Anim;
@@ -53,7 +54,7 @@ import me.panpf.swsv.SpiderWebScoreView;
 
 public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuItemClickListener,View.OnClickListener{
 
-    private String[] tabText = {"首页", "发现", "","消息", "农业圈"};
+    private String[] tabText = {"首页", "地图", "","农讯", "农业圈"};
 
     private int[] normalIcon = {R.mipmap.index, R.mipmap.find,
             R.mipmap.add_image,R.mipmap.message, R.mipmap.me};
@@ -72,8 +73,8 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
     private View cancelImageView;
 
     //弹出窗口图片和文字集合
-    private int [] menuItems = {R.mipmap.menu_take_pic,R.mipmap.menu_select_pic,R.mipmap.ic_star};
-    private String [] menuTextItems = {"拍照","相册","动态"};
+    private int [] menuItems = {R.mipmap.menu_take_pic,R.mipmap.menu_select_pic};
+    private String [] menuTextItems = {"拍照","相册"};
     private Handler mHandler = new Handler();
 
     private static final int PERMISSION_CODE = 100;
@@ -84,10 +85,10 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
 
     private FlowingDrawer mDrawer;  //侧滑栏控件
     private Toolbar toolbar; //自定义Toolbar
-    private ImageView mMenu,mBack,mRobotBtn;//菜单按钮
-    private CircleImageView album;
+    private ImageView mMenu,mBack,album;
     private SpiderWebScoreView spiderWebScoreView;  //蛛网控件
     private CircularLayout circularLayout;
+    private CircleImageView avatar,addBtn;
 
     private Score[] scores = new Score[]{
             new Score(7.0f,R.drawable.corn,"玉米"),
@@ -98,6 +99,8 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
             new Score(2.0f,R.drawable.corn,"玉米"),
     };
 
+    private CustomPopWindow mCustomPopWindow;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
 
         fragments.add(new MainFragment());
         fragments.add(new DiseaseMapFragment());
-        fragments.add(new ThirdFragment());
+        fragments.add(new AgricultureNewsFragment());
         fragments.add(FourthFragment.newInstance());
 
         navigationBar.titleItems(tabText)
@@ -148,14 +151,16 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         mMenu = (ImageView) findViewById(R.id.avatar);
         mBack = (ImageView) findViewById(R.id.back_menu);
-        mRobotBtn = (ImageView) findViewById(R.id.robot);
-        album = (CircleImageView) findViewById(R.id.album);
+        album = (ImageView) findViewById(R.id.album);
+        addBtn = (CircleImageView) findViewById(R.id.add_main);
+        addBtn.setOnClickListener(this);
+        avatar = (CircleImageView) findViewById(R.id.menu_avatar);
+        avatar.setOnClickListener(this);
         album.setOnClickListener(this);
         //setSupportActionBar(toolbar);
         toolbar.setOnMenuItemClickListener(this);
         mMenu.setOnClickListener(this);
         mBack.setOnClickListener(this);
-        mRobotBtn.setOnClickListener(this);
         spiderWebScoreView = (SpiderWebScoreView) findViewById(R.id.spiderWeb);
         circularLayout = (CircularLayout) findViewById(R.id.layout_circular);
         setup(spiderWebScoreView,circularLayout,scores);
@@ -193,7 +198,7 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
                 closeAnimation();
             }
         });
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 2; i++) {
             View itemView = (ViewGroup) View.inflate(MainActivity.this,R.layout.item_icon,null);
             ImageView menuImage = (ImageView) itemView.findViewById(R.id.menu_icon_im);
             TextView menuText = (TextView) itemView.findViewById(R.id.menu_text_tx);
@@ -219,7 +224,7 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
                         }else {
                             takePicture();
                         }
-                    }else if (index == 1){
+                    }else{
                         //Toast.makeText(MainActivity.this, "你点击了相册！", Toast.LENGTH_SHORT).show();
                         if (ContextCompat.checkSelfPermission(MainActivity.this,
                                 Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
@@ -229,8 +234,6 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
                         }else{
                             openAlbum();
                         }
-                    }else {
-                        startActivity(new Intent(MainActivity.this,AddDynamicActivity.class));
                     }
                 }
             });
@@ -444,15 +447,47 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
             case R.id.back_menu:
                 mDrawer.closeMenu();
                 break;
-            case R.id.robot:
-                startActivity(new Intent(MainActivity.this,RobotActivity.class));
-                break;
             case R.id.album:
                 startActivity(new Intent(MainActivity.this,AlbumActivity.class));
+                break;
+            case R.id.add_main:
+                View contentView = LayoutInflater.from(this).inflate(R.layout.pop_menu,null);
+                //处理popWindow 显示内容
+                handleLogic(contentView);
+                //创建并显示popWindow
+                mCustomPopWindow= new CustomPopWindow.PopupWindowBuilder(this)
+                        .setView(contentView)
+                        .create()
+                        .showAsDropDown(addBtn,0,20);
                 break;
             default:
                 break;
         }
+    }
+
+    /**
+     * 处理弹出显示内容、点击事件等逻辑
+     * @param contentView
+     */
+    private void handleLogic(View contentView){
+        View.OnClickListener listener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mCustomPopWindow != null){
+                    mCustomPopWindow.dissmiss();
+                }
+                switch (v.getId()){
+                    case R.id.menu_robot:
+                        startActivity(new Intent(MainActivity.this,RobotActivity.class));
+                        break;
+                    case R.id.menu_dynamic:
+                        startActivity(new Intent(MainActivity.this,AddDynamicActivity.class));
+                        break;
+                }
+            }
+        };
+        contentView.findViewById(R.id.menu_robot).setOnClickListener(listener);
+        contentView.findViewById(R.id.menu_dynamic).setOnClickListener(listener);
     }
 
     //蛛网评分组件

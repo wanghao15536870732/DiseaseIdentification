@@ -15,10 +15,11 @@ public class WebUtil {
      * @param url
      */
 
-    public static void openWeb(Context context, String title, String url) {
+    public static void openWeb(Context context, String title, String url,String content) {
         Intent intent = new Intent(context, WebUIActivity.class);
         intent.putExtra("title", title);
         intent.putExtra("url", url);
+        intent.putExtra("content",content);
         context.startActivity(intent);
     }
 }

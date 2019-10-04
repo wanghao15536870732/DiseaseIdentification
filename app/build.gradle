@@ -4,13 +4,13 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.example.ywang.diseaseidentification"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
-            abiFilters "armeabi-v7a","x86"
+            abiFilters "armeabi-v7a", "x86"
         }
         multiDexEnabled true
     }
@@ -55,6 +55,11 @@ dependencies {
     implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     //底部弹出选项栏
     implementation 'com.cocosw:bottomsheet:1.4.0@aar'
-    implementation 'com.cleveroad:fan-layout-manager:1.0.5'
+    //65536方法数过多
     implementation 'com.android.support:multidex:1.0.3'
+    //瀑布时间轴
+    implementation 'com.vivian.widgets:TimeLineItemDecoration:1.5'
+    //问答框
+    implementation 'com.github.BakerJQ:Android-InfiniteCards:1.0.5'
+    implementation 'com.github.pinguo-zhouwei:CustomPopwindow:2.1.1'
 }

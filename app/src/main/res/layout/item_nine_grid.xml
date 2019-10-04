@@ -68,9 +68,8 @@
                 android:id="@+id/comment"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:layout_toRightOf="@+id/time"
-                android:layout_marginLeft="40dp"
-                android:src="@drawable/ic_comment" />
+                android:src="@drawable/im_comment"
+                android:layout_alignParentRight="true"/>
 
             <ImageView
                 android:id="@+id/transmit"
@@ -81,6 +80,13 @@
                 android:src="@drawable/ic_trans"/>
 
         </RelativeLayout>
+
+        <com.example.ywang.diseaseidentification.view.CommentListTextView
+            android:id="@+id/commentlist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:layout_marginTop="10dp"/>
 
 
     </LinearLayout>

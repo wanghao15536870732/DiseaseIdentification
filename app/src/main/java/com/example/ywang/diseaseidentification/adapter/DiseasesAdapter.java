@@ -1,5 +1,6 @@
 package com.example.ywang.diseaseidentification.adapter;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,6 +13,8 @@ import com.bumptech.glide.Glide;
 import com.example.ywang.diseaseidentification.R;
 import com.example.ywang.diseaseidentification.bean.baseData.DiseaseData;
 import com.example.ywang.diseaseidentification.utils.WebUtil;
+import com.example.ywang.diseaseidentification.view.activity.DetectionActivity;
+import com.example.ywang.diseaseidentification.view.activity.MainActivity;
 
 import java.util.List;
 
@@ -39,7 +42,7 @@ public class DiseasesAdapter extends RecyclerView.Adapter<DiseasesAdapter.ViewHo
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
         if (mContext == null){
             mContext = parent.getContext();
         }
@@ -48,9 +51,10 @@ public class DiseasesAdapter extends RecyclerView.Adapter<DiseasesAdapter.ViewHo
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int position = holder.getAdapterPosition();
-                DiseaseData data = mDiseaseList.get(position);
-                WebUtil.openWeb(mContext,data.getContent(),data.getLink());
+//                int position = holder.getAdapterPosition();
+//                DiseaseData data = mDiseaseList.get(position);
+//                WebUtil.openWeb(mContext,data.getContent(),data.getLink(),data.getContent());
+                mContext.startActivity(new Intent(mContext,DetectionActivity.class));
             }
         });
         return holder;
@@ -62,6 +66,7 @@ public class DiseasesAdapter extends RecyclerView.Adapter<DiseasesAdapter.ViewHo
         holder.fruitName.setText(data.getContent());
         //使用Glide来加载图片
         Glide.with(mContext).load(data.getImageUrl()).into(holder.fruitView);
+
     }
 
     @Override

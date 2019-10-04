@@ -1,5 +1,7 @@
 package com.example.ywang.diseaseidentification.bean;
 
+import com.example.ywang.diseaseidentification.view.CommentListTextView;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,4 +14,5 @@ public class NineGridModel {
     public String name;
     public String time;
     public String start;
+    public List<CommentListTextView.CommentInfo> mCommentInfos = new ArrayList<> ();
 }

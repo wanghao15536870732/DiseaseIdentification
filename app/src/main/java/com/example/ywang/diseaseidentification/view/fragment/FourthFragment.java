@@ -22,6 +22,7 @@ import com.example.ywang.diseaseidentification.R;
 import com.example.ywang.diseaseidentification.adapter.NineGridAdapter;
 import com.example.ywang.diseaseidentification.bean.NineGridModel;
 import com.example.ywang.diseaseidentification.bean.baseData.DynamicBean;
+import com.example.ywang.diseaseidentification.view.CommentListTextView;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -40,6 +41,7 @@ public class FourthFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private NineGridAdapter mAdapter;
     private List<NineGridModel> mList = new ArrayList<>();
     public boolean flag = false;
+    final List<DynamicBean> list = new ArrayList<>();
 
 
     public static FourthFragment newInstance(){
@@ -62,36 +64,31 @@ public class FourthFragment extends Fragment implements SwipeRefreshLayout.OnRef
         mRecyclerView = (RecyclerView) view.findViewById(R.id.dynamic_recycler_view);
         SwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.scrollView_dynamic);
         SwipeRefreshLayout.setOnRefreshListener(this);
+        SwipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                SwipeRefreshLayout.setRefreshing(true);
+                onRefresh();
+            }
+        });
         mLayoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,true);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new NineGridAdapter(getContext());
         mAdapter.setList(mList);
         mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL));
         mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.scrollToPosition(mLayoutManager.findLastCompletelyVisibleItemPosition());
+        mRecyclerView.scrollToPosition(mLayoutManager.findLastVisibleItemPosition());
 
     }
 
     private void initData(){
-        mList.clear();
-        List<DynamicBean> list = get_all();
-        for (int i = 0;i < list.size();i ++){
-            DynamicBean bean = list.get(i);
-            NineGridModel model = new NineGridModel();
-            for(int j = 0;j < bean.getImg_num();j++) {
-                model.urlList.add(bean.getUrl().get(j));
-            }
-            model.imageUri = "https://upload-images.jianshu.io/upload_images/9140378-2561c9ef7633683e.png";
-            model.time = bean.getTime();
-            model.name = bean.getUser();
+//        mList.clear();
+        get_all();
 
-            model.detail = bean.getContent();
-            mList.add(model);
-        }
     }
 
-    public List<DynamicBean> get_all(){
-        final List<DynamicBean> list = new ArrayList<>();
+    public void get_all(){
+
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -101,8 +98,6 @@ public class FourthFragment extends Fragment implements SwipeRefreshLayout.OnRef
                     URL url = new URL("http://101.37.79.26:8080/show/GetAllServlet");
                     connection = (HttpURLConnection)url.openConnection();
                     connection.setRequestMethod("POST");
-
-
                     //设置连接超时和读取超时的毫秒数
                     connection.setConnectTimeout(8000);
                     connection.setReadTimeout(8000);
@@ -110,7 +105,7 @@ public class FourthFragment extends Fragment implements SwipeRefreshLayout.OnRef
                     InputStream in = connection.getInputStream();
                     reader = new BufferedReader(new InputStreamReader(in));
                     String line;
-
+                    list.clear();
                     while ((line = reader.readLine()) != null) {
                         DynamicBean bean = new DynamicBean();
                         bean.setUser(line);
@@ -141,47 +136,51 @@ public class FourthFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 }
             }
         }).start();
-        while (true){
-            if(flag){
-                return list;
+        if(flag){
+            flag = false;
+            mList.clear();
+            for (int i = 0;i < list.size();i ++) {
+                DynamicBean bean = list.get(i);
+                NineGridModel model = new NineGridModel();
+                for (int j = 0; j < bean.getImg_num(); j++) {
+                    model.urlList.add(bean.getUrl().get(j));
+                }
+                model.imageUri = "https://upload-images.jianshu.io/upload_images/9140378-2561c9ef7633683e.png";
+                model.time = bean.getTime();
+                model.name = bean.getUser();
+                model.detail = bean.getContent();
+                List<CommentListTextView.CommentInfo> mCommentInfos = new ArrayList<> ();
+                if(i == list.size() - 1){
+                    mCommentInfos.add (new CommentListTextView.CommentInfo ().setID (1111).setComment ("你这个应该多浇水，我家的葡萄也这样").setNickname ("李建军").setTonickname ("赵四"));
+                    mCommentInfos.add (new CommentListTextView.CommentInfo ().setID (2222).setComment ("浇过水了，没有效果...").setNickname ("我"));
+                    mCommentInfos.add (new CommentListTextView.CommentInfo ().setID (3333).setComment ("应该不是这个问题").setNickname ("农民7436").setTonickname ("李建军"));
+                    model.mCommentInfos = mCommentInfos;
+                }else if (i == list.size() - 2){
+                    mCommentInfos.add (new CommentListTextView.CommentInfo ().setID (1111).setComment ("看照片上你这片玉米这是得了穗腐病了？").setNickname ("农民2501").setTonickname ("农民7436"));
+                    mCommentInfos.add (new CommentListTextView.CommentInfo ().setID (2222).setComment ("哎，一言难尽啊～这病传染太快了。").setNickname ("农民7436"));
+                    mCommentInfos.add (new CommentListTextView.CommentInfo ().setID (3333).setComment ("赶紧打药吧，成熟后记得及时采收").setNickname ("农民2501").setTonickname ("农民7436"));
+                    model.mCommentInfos = mCommentInfos;
+                }
+                mList.add(model);
             }
+
+
+
+
         }
     }
 
     @Override
     public void onRefresh() {
-        //mList.clear();
-        List<DynamicBean> list = get_all();
-        for (int i = 0;i < list.size();i ++){
-            DynamicBean bean = list.get(i);
-            NineGridModel model = new NineGridModel();
-            for(int j = 0;j < bean.getImg_num();j++) {
-                model.urlList.add(bean.getUrl().get(j));
-            }
-            model.imageUri = "https://upload-images.jianshu.io/upload_images/9140378-2561c9ef7633683e.png";
-            model.time = bean.getTime();
-            model.name = bean.getUser();
-
-            model.detail = bean.getContent();
-            mList.add(model);
-        }
+        mList.clear();
+        get_all();
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 mAdapter.notifyDataSetChanged();
                 SwipeRefreshLayout.setRefreshing(false);
+                mRecyclerView.smoothScrollToPosition(mList.size() + 1);
             }
         });
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                try{
-//
-//                }catch (Exception e){
-//                    e.printStackTrace();
-//                }
-//
-//            }
-//        }).start();
     }
 }

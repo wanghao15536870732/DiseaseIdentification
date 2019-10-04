@@ -23,11 +23,12 @@ import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.Transformer;
 import com.youth.banner.loader.ImageLoader;
+import com.youth.banner.transformer.CubeOutTransformer;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ThirdFragment extends Fragment {
+public class AgricultureNewsFragment extends Fragment {
 
     private ViewPager mViewPager;
     private TabLayout mTabLayout;
@@ -46,25 +47,30 @@ public class ThirdFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mFragments.add(new NewsFragment());
-        mFragments.add(new NewsFragment());
-        mFragments.add(new NewsFragment());
-        images.add("http://img8.agronet.com.cn/Users/100/189/915/2019911955414172.jpeg");
-        titles.add("互联网+消费扶贫助力国家级贫困县山西汾西脱贫攻坚（图）");
-        images.add("http://img8.agronet.com.cn/Users/100/189/915/2019911948581301.png");
-        titles.add("统计局：8月CPI同比增2.8% 猪肉价格上涨46.7%");
-        images.add("http://img8.agronet.com.cn/Users/100/617/663/2019911901105591.jpg");
-        titles.add("蔬果价格继续回落 保障充足供应中秋（图）");
+        mFragments.add(new NewsFragment("http://101.37.79.26:8080/show/GetNewsOneServlet"));
+        mFragments.add(new NewsFragment("http://101.37.79.26:8080/show/GetNewsTwoServlet"));
+        mFragments.add(new NewsFragment("http://101.37.79.26:8080/show/GetNewsThreeServlet"));
+        images.add("http://img8.agronet.com.cn/Users/100/616/407/20199301420538304.jpg");
+        titles.add("巴南发展“稻田养蛙” 带领村民走上致富路（图）");
+        images.add("http://img8.agronet.com.cn/Users/100/616/407/2019930152841634.jpg");
+        titles.add("我国农民合作社和家庭农场持续健康发展（图）");
+        images.add("http://img8.agronet.com.cn/Users/100/616/407/20199301524244597.jpg");
+        titles.add("商务部：国庆节前再投放储备猪肉1万吨（图）");
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_third,container,false);
+        View view = inflater.inflate(R.layout.fragment_news_agriculture,container,false);
         mViewPager = (ViewPager) view.findViewById( R.id.news_home_viewpager );
         mTabLayout = (TabLayout) view.findViewById( R.id.tab_layout);
         mAdapter = new TitleAdapter(getChildFragmentManager(), mFragments, mTitles);
         mViewPager.setAdapter(mAdapter);
+        //CubeInTransformer 内旋
+        //FlipHorizontalTransformer 像翻书一样
+        //AccordionTransformer  风琴 拉压
+        mViewPager.setPageTransformer(true,new CubeOutTransformer());
+        mViewPager.setCurrentItem(0);
         mTabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
         mTabLayout.setupWithViewPager(mViewPager);
         mFloatingActionButton = (FloatingActionButton) view.findViewById( R.id.fab_news );
@@ -96,6 +102,7 @@ public class ThirdFragment extends Fragment {
 
     class TitleAdapter extends FragmentPagerAdapter {
 
+        private FragmentManager fragmentManager;
         private List<Fragment> fragments;
         private String[] titles;
 
@@ -103,10 +110,23 @@ public class ThirdFragment extends Fragment {
             super(fm);
             this.fragments = fragments;
             this.titles = titles;
+            this.fragmentManager = fm;
         }
 
         public Fragment getItem(int position){
             return fragments.get( position );
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            Fragment fragment = (Fragment) super.instantiateItem(container, position);
+            this.fragmentManager.beginTransaction().show(fragment).commit();
+            return fragment;
+        }
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            Fragment fragment = fragments.get(position);
+            fragmentManager.beginTransaction().hide(fragment).commit();
         }
 
         @Override
