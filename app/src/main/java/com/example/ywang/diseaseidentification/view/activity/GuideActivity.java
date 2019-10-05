@@ -2,6 +2,7 @@ package com.example.ywang.diseaseidentification.view.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
@@ -14,6 +15,7 @@ import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -69,6 +71,7 @@ public class GuideActivity extends AppCompatActivity implements View.OnClickList
     private TextView mTermsView;
     private RelativeLayout mPasswordLayout;
     private List<View> mDropDownInvisibleViews;
+    private TextView name,title;
 
     private static String APP_ID = "101801728";
     private static Tencent mTencent;
@@ -144,7 +147,7 @@ public class GuideActivity extends AppCompatActivity implements View.OnClickList
         mSkipView.setOnClickListener(this);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);//设置透明状态栏
+            getWindow().addFlags( WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);//设置透明状态栏
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);//设置透明导航栏
         }
     }
@@ -164,9 +167,14 @@ public class GuideActivity extends AppCompatActivity implements View.OnClickList
         mPasswordLayout = findViewById(R.id.rl_password_layout);
         mSkipView = findViewById(R.id.btn_skip);
         mBtnQq = findViewById(R.id.login_qq);
+        name = findViewById(R.id.main_name);
+        title = findViewById(R.id.main_title);
         mBtnWeChat = findViewById(R.id.login_we_chat);
         mBtnQq.setOnClickListener(this);
         mBtnWeChat.setOnClickListener(this);
+        Typeface typeface = Typeface.createFromAsset(this.getAssets(),"fly.ttf");
+        name.setTypeface(typeface);
+        title.setTypeface(typeface);
     }
 
     private void initDropDownGroup() {

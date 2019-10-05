@@ -53,6 +53,7 @@
             <intent-filter>
                 <data android:scheme="tencent101801728" />
             </intent-filter>
+
         </activity>
 
         <provider
@@ -106,9 +107,11 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="behind"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <activity android:name=".view.activity.WNavigationGuideActivity" />
+        <activity android:name=".view.activity.WNavigationGuideActivity"
+            android:clipToPadding="true"
+            android:fitsSystemWindows="true"/>
         <activity android:name=".view.activity.DetectionActivity" />
-        <activity android:name=".view.activity.TimeRecordActivity"></activity>
+        <activity android:name=".view.activity.TimeRecordActivity"/>
     </application>
 
 </manifest>

@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fitsSystemWindows="true"
     android:background="@drawable/background2">
 
     <LinearLayout
@@ -11,41 +11,34 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginStart="25dp"
-        android:layout_marginTop="80dp"
-        android:layout_marginLeft="25dp">
-
-        <android.support.v7.widget.CardView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="2dp">
-
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:src="@drawable/logo"/>
-
-        </android.support.v7.widget.CardView>
+        android:layout_marginTop="100dp"
+        android:layout_marginLeft="25dp"
+        android:layout_centerHorizontal="true"
+        android:fitsSystemWindows="true">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center"
-            android:layout_marginLeft="10dp">
+            android:layout_marginLeft="10dp"
+            android:fitsSystemWindows="true">
 
             <TextView
+                android:id="@+id/main_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="智农有道"
                 android:textColor="@android:color/white"
-
-                android:textSize="24sp" />
+                android:textSize="46sp"/>
 
             <TextView
+                android:id="@+id/main_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:text="科学防害  智慧农种"
+                android:textSize="24sp"
+                android:text="科学防害        智慧农种"
+                android:layout_marginTop="10dp"
                 android:textColor="@color/white"/>
 
         </LinearLayout>
@@ -59,7 +52,9 @@
         android:layout_marginStart="25dp"
         android:layout_marginEnd="25dp"
         android:orientation="vertical"
-        android:layout_above="@id/other_login_api">
+        android:layout_above="@id/other_login_api"
+        android:gravity="center_horizontal"
+        android:fitsSystemWindows="true">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -161,26 +156,27 @@
 
         <Button
             android:id="@+id/btn_login"
-            android:layout_width="match_parent"
-            android:layout_height="38dp"
+            android:layout_width="300dp"
+            android:layout_height="45dp"
             android:layout_marginTop="22dp"
             android:text="登 录"
             android:textColor="@android:color/black"
             android:textSize="20sp"
             android:background="@drawable/bg_btn_login"
-            style="?android:attr/borderlessButtonStyle" />
+            style="?android:attr/borderlessButtonStyle"
+            android:gravity="center_horizontal|center_vertical"/>
 
         <Button
             android:id="@+id/btn_skip"
-            android:layout_width="match_parent"
-            android:layout_height="38dp"
+            android:layout_width="300dp"
+            android:layout_height="45dp"
             android:layout_marginTop="22dp"
             android:text="跳  过"
             android:textColor="@android:color/black"
             android:textSize="20sp"
             android:background="@drawable/bg_btn_login"
-            style="?android:attr/borderlessButtonStyle" />
-
+            style="?android:attr/borderlessButtonStyle"
+            android:gravity="center_horizontal|center_vertical"/>
 
     </LinearLayout>
 

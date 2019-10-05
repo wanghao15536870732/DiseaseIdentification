@@ -13,10 +13,12 @@ import com.baidu.platform.comapi.walknavi.widget.ArCameraView;
 import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 
@@ -47,13 +49,12 @@ public class WNavigationGuideActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         mNaviHelper = WalkNavigateHelper.getInstance();
-
         try {
             View view = mNaviHelper.onCreate(WNavigationGuideActivity.this);
             if (view != null) {
                 setContentView(view);
+                view.setFitsSystemWindows(true);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -85,9 +86,7 @@ public class WNavigationGuideActivity extends Activity {
 
         mNaviHelper.setRouteGuidanceListener(this, new IWRouteGuidanceListener() {
             @Override
-            public void onRouteGuideIconUpdate(Drawable icon) {
-
-            }
+            public void onRouteGuideIconUpdate(Drawable icon) { }
 
             @Override
             public void onRouteGuideKind(RouteGuideKind routeGuideKind) {
@@ -98,64 +97,52 @@ public class WNavigationGuideActivity extends Activity {
             public void onRoadGuideTextUpdate(CharSequence charSequence, CharSequence charSequence1) {
                 Log.d(TAG, "onRoadGuideTextUpdate   charSequence=: " + charSequence + "   charSequence1 = : " +
                         charSequence1);
-
             }
 
             @Override
             public void onRemainDistanceUpdate(CharSequence charSequence) {
                 Log.d(TAG, "onRemainDistanceUpdate: charSequence = :" + charSequence);
-
             }
 
             @Override
             public void onRemainTimeUpdate(CharSequence charSequence) {
                 Log.d(TAG, "onRemainTimeUpdate: charSequence = :" + charSequence);
-
             }
 
             @Override
             public void onGpsStatusChange(CharSequence charSequence, Drawable drawable) {
                 Log.d(TAG, "onGpsStatusChange: charSequence = :" + charSequence);
-
             }
 
             @Override
             public void onRouteFarAway(CharSequence charSequence, Drawable drawable) {
                 Log.d(TAG, "onRouteFarAway: charSequence = :" + charSequence);
-
             }
 
             @Override
             public void onRoutePlanYawing(CharSequence charSequence, Drawable drawable) {
                 Log.d(TAG, "onRoutePlanYawing: charSequence = :" + charSequence);
-
             }
 
             @Override
-            public void onReRouteComplete() {
-
-            }
+            public void onReRouteComplete() { }
 
             @Override
-            public void onArriveDest() {
-
-            }
+            public void onArriveDest() { }
 
             @Override
-            public void onIndoorEnd(Message msg) {
-
-            }
+            public void onIndoorEnd(Message msg) { }
 
             @Override
-            public void onFinalEnd(Message msg) {
-
-            }
+            public void onFinalEnd(Message msg) { }
 
             @Override
-            public void onVibrate() {
-
-            }
+            public void onVibrate() { }
         });
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);//设置透明状态栏
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);//设置透明导航栏
+        }
     }
 
     @Override

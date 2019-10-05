@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.example.ywang.diseaseidentification.R;
 import com.example.ywang.diseaseidentification.adapter.DisplayImageAdapter;
@@ -24,6 +25,7 @@ public class DisplayImageActivity extends AppCompatActivity {
     private DisplayImageAdapter adapter;
     private List<String> Urls = new ArrayList<>();
     private TextView mImageCount;
+    private ImageView back;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -63,6 +65,13 @@ public class DisplayImageActivity extends AppCompatActivity {
                 window.setStatusBarColor( getResources().getColor( R.color.black) );
                 window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
             }
+            back = findViewById(R.id.page_back);
+            back.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    finish();
+                }
+            });
         }
     }
 }

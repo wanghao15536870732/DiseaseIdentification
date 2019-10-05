@@ -27,7 +27,8 @@
             <ImageView
                 android:id="@+id/player"
                 android:layout_width="match_parent"
-                android:layout_height="300dp" />
+                android:layout_height="320dp"
+                android:fitsSystemWindows="true"/>
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/live_toolbar"
