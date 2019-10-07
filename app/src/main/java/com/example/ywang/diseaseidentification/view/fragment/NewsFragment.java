@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+@SuppressLint("ValidFragment")
 public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
 
     private RecyclerView recyclerView;
@@ -42,12 +43,16 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private Boolean flag = false;
     private String main_content;
 
-    @SuppressLint("ValidFragment")
-    public NewsFragment(String mUrl) {
-        this.mUrl = mUrl;
+
+    public static NewsFragment newInstance(String mUrl){
+        Bundle bundle = new Bundle();
+        bundle.putString("url",mUrl);
+        NewsFragment fragment = new NewsFragment();
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
-    private final String mUrl;
+    private String mUrl;
     private boolean mIsRefreshing = false;
 
     //    private NewsBean[] news = {
@@ -66,23 +71,33 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_news,container,false);
+        Bundle bundle = getArguments();
+        if(bundle != null){
+            mUrl = bundle.getString("url");
+        }
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView_news);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout_news);
-//        Toast.makeText(getContext(), mUrl, Toast.LENGTH_SHORT).show();
+        swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary,
+                R.color.colorPrimaryDark, R.color.colorAccent);
+        swipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(true);
+                onRefresh();
+            }
+        });
         initData();
         while (true){
             if(flag){
                 break;
             }
         }
-
         adapter = new NewsListAdapter(mNewsBeans);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(container.getContext()));
 //        recyclerView.addItemDecoration(new DividerItemDecoration(container.getContext(), DividerItemDecoration.VERTICAL));
-        swipeRefreshLayout.setOnRefreshListener(this);
-        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary,
-                R.color.colorPrimaryDark, R.color.colorAccent);
+
         recyclerView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {

@@ -1,12 +1,17 @@
 package com.example.ywang.diseaseidentification.view.activity;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -77,6 +82,7 @@ public class GuideActivity extends AppCompatActivity implements View.OnClickList
     private static Tencent mTencent;
     public static final int SHOW_RESPONSE = 1;
     private String account,password;
+    private static final int PERMISSION_CODE = 100;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -84,6 +90,7 @@ public class GuideActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guide);
         findViewId();
+
         initDropDownGroup();
         mTencent = Tencent.createInstance(APP_ID, GuideActivity.this);
         mPasswordView.setLetterSpacing(0.2f);
@@ -149,6 +156,29 @@ public class GuideActivity extends AppCompatActivity implements View.OnClickList
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             getWindow().addFlags( WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);//设置透明状态栏
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);//设置透明导航栏
+        }
+        requestPermission();
+    }
+
+    //所有权限统一申请
+    private void requestPermission(){
+        String[] permissions = new String[]{
+                Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.RECORD_AUDIO,Manifest.permission.READ_PHONE_STATE
+
+        };
+        try{
+            for (int i = 0; i < permissions.length; i++) {
+                if(ContextCompat.checkSelfPermission(this,permissions[i]) != PackageManager.PERMISSION_GRANTED){
+                    int permission = ActivityCompat.checkSelfPermission(this,permissions[i]);
+                    if (permission != PackageManager.PERMISSION_GRANTED){
+                        ActivityCompat.requestPermissions(this,permissions,PERMISSION_CODE);
+                    }
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
@@ -434,6 +464,27 @@ public class GuideActivity extends AppCompatActivity implements View.OnClickList
         if (requestCode == Constants.REQUEST_LOGIN ||
                 requestCode == Constants.REQUEST_APPBAR) {
             Tencent.onActivityResultData(requestCode,resultCode,data,loginListener);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch(requestCode){
+            case 100:  //所有权限
+                if (grantResults.length > 0){
+                    //循环遍历
+                    for(int result : grantResults){
+                        if (result != PackageManager.PERMISSION_GRANTED){
+                            Toast.makeText(this, "必须同意所有权限才能使用该功能", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }else {
+                    Toast.makeText(this, "发生未知错误", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            default:
+                break;
+
         }
     }
 }

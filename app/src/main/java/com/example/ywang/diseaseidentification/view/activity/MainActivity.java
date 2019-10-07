@@ -31,6 +31,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.ywang.diseaseidentification.view.HorizontalChart;
 import com.example.ywang.diseaseidentification.view.fragment.FourthFragment;
 import com.example.ywang.diseaseidentification.view.fragment.MainFragment;
 import com.example.ywang.diseaseidentification.R;
@@ -100,17 +102,20 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
     };
 
     private CustomPopWindow mCustomPopWindow;
+    private HorizontalChart horizontalChart;
+    private ArrayList<Float> monthCountList = new ArrayList<Float>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         navigationBar = (EasyNavigationBar) findViewById(R.id.navigationBar);
         fragmentManager = getSupportFragmentManager();
 
         fragments.add(new MainFragment());
         fragments.add(new DiseaseMapFragment());
-        fragments.add(new AgricultureNewsFragment());
+        fragments.add(AgricultureNewsFragment.newInstance());
         fragments.add(FourthFragment.newInstance());
 
         navigationBar.titleItems(tabText)
@@ -148,6 +153,7 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
 
             }
         });
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         mMenu = (ImageView) findViewById(R.id.avatar);
         mBack = (ImageView) findViewById(R.id.back_menu);
@@ -155,6 +161,18 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
         addBtn = (CircleImageView) findViewById(R.id.add_main);
         addBtn.setOnClickListener(this);
         avatar = (CircleImageView) findViewById(R.id.menu_avatar);
+        horizontalChart = (HorizontalChart) findViewById(R.id.horizontal_chart);
+        horizontalChart.setRefresh(true);
+        monthCountList.clear();
+        monthCountList.add(10f);
+        monthCountList.add(30f);
+        monthCountList.add(20f);
+        monthCountList.add(60f);
+        monthCountList.add(45f);
+        horizontalChart.SetDate(monthCountList);
+        horizontalChart.invalidate();
+        horizontalChart.requestLayout();
+
         avatar.setOnClickListener(this);
         album.setOnClickListener(this);
         //setSupportActionBar(toolbar);
@@ -164,6 +182,7 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
         spiderWebScoreView = (SpiderWebScoreView) findViewById(R.id.spiderWeb);
         circularLayout = (CircularLayout) findViewById(R.id.layout_circular);
         setup(spiderWebScoreView,circularLayout,scores);
+        requestPermission();
 
     }
 
@@ -345,7 +364,10 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
     //所有权限统一申请
     private void requestPermission(){
         String[] permissions = new String[]{
-                Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE
+                Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.RECORD_AUDIO,Manifest.permission.READ_PHONE_STATE
+
         };
         try{
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
@@ -401,12 +423,10 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
                     for(int result : grantResults){
                         if (result != PackageManager.PERMISSION_GRANTED){
                             Toast.makeText(this, "必须同意所有权限才能使用该功能", Toast.LENGTH_SHORT).show();
-                            finish();
                         }
                     }
                 }else {
                     Toast.makeText(this, "发生未知错误", Toast.LENGTH_SHORT).show();
-                    finish();
                 }
                 break;
             case 1: //拍照权限

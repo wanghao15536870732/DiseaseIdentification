@@ -24,6 +24,9 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <!-- 获取手机录音机使用权限，听写、识别、语义理解需要用到此权限 -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission
+        android:name="android.permission.WRITE_APN_SETTINGS"
+        tools:ignore="ProtectedPermissions" />
 
     <supports-screens
         android:anyDensity="true"
@@ -53,7 +56,6 @@
             <intent-filter>
                 <data android:scheme="tencent101801728" />
             </intent-filter>
-
         </activity>
 
         <provider
@@ -107,11 +109,13 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="behind"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <activity android:name=".view.activity.WNavigationGuideActivity"
+        <activity
+            android:name=".view.activity.WNavigationGuideActivity"
             android:clipToPadding="true"
-            android:fitsSystemWindows="true"/>
+            android:fitsSystemWindows="true" />
         <activity android:name=".view.activity.DetectionActivity" />
-        <activity android:name=".view.activity.TimeRecordActivity"/>
+        <activity android:name=".view.activity.TimeRecordActivity" />
+        <activity android:name=".view.activity.CropDetailActivity"></activity>
     </application>
 
 </manifest>

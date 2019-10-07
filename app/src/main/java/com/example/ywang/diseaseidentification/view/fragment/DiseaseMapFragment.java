@@ -476,12 +476,11 @@ public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerCli
         LatLng point = new LatLng(mLatitude,mLongitude);
         OverlayOptions textOptions = new TextOptions()
                 .text(title)
-                .bgColor(0xAAFFFF00)
+                .bgColor(0xFFFFFFFF)
                 .fontSize(70)
-                .fontColor(0xFFFF00FF)
+                .fontColor(0xFF1b4560)
                 .position(point);
         mBaiduMap.addOverlay(textOptions);
-
     }
 
     /*

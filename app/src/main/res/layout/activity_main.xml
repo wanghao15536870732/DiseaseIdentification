@@ -157,26 +157,50 @@
                 android:layout_height="220dp"
                 android:background="@color/colorPrimary">
 
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/menu_avatar"
+                <RelativeLayout
+                    android:id="@+id/avatar_top"
                     android:layout_width="130dp"
-                    android:layout_height="130dp"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="30dp"
-                    android:clickable="true"
-                    android:src="@drawable/avatar" />
-
-                <TextView
-                    android:id="@+id/info_name"
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/menu_avatar"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="8dp"
-                    android:text=""
-                    android:textColor="@color/white"
-                    android:textSize="16sp" />
+                    android:layout_marginLeft="20dp">
+
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/menu_avatar"
+                        android:layout_width="110dp"
+                        android:layout_height="110dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="30dp"
+                        android:clickable="true"
+                        android:src="@drawable/avatar" />
+
+                    <TextView
+                        android:id="@+id/info_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/menu_avatar"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="8dp"
+                        android:text="Agricultural Workers"
+                        android:textColor="@color/white"
+                        android:textSize="14sp" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/avatar_top">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_account"
+                        android:layout_alignParentRight="true"
+                        android:layout_margin="14dp"
+                        android:background="?android:attr/selectableItemBackgroundBorderless"
+                        tools:ignore="NewApi" />
+
+                </RelativeLayout>
 
             </RelativeLayout>
 
@@ -185,28 +209,34 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_height="180dp"
+                    android:clipChildren="false">
+
+                    <me.panpf.swsv.SpiderWebScoreView
+                        android:id="@+id/spiderWeb"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_gravity="center" />
+
+                    <me.panpf.swsv.CircularLayout
+                        android:id="@+id/layout_circular"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_gravity="center"
+                        android:clipChildren="false"/>
+
+                </FrameLayout>
+
+                <com.example.ywang.diseaseidentification.view.HorizontalChart
+                    android:id="@+id/horizontal_chart"
+                    android:layout_width="match_parent"
+                    android:layout_height="180dp"
+                    android:layout_marginTop="10dp" />
+
             </LinearLayout>
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_marginTop="10dp"
-                android:layout_height="180dp"
-                android:clipChildren="false">
-
-                <me.panpf.swsv.SpiderWebScoreView
-                    android:id="@+id/spiderWeb"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_gravity="center" />
-
-                <me.panpf.swsv.CircularLayout
-                    android:id="@+id/layout_circular"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_gravity="center"
-                    android:clipChildren="false"/>
-
-            </FrameLayout>
 
         </LinearLayout>
 

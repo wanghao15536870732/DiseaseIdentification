@@ -44,12 +44,19 @@ public class AgricultureNewsFragment extends Fragment {
     private List<String> images = new ArrayList<>();
     private List<String> titles = new ArrayList<>();
 
+    public static AgricultureNewsFragment newInstance(){
+        Bundle bundle = new Bundle();
+        AgricultureNewsFragment fragment = new AgricultureNewsFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mFragments.add(new NewsFragment("http://101.37.79.26:8080/show/GetNewsOneServlet"));
-        mFragments.add(new NewsFragment("http://101.37.79.26:8080/show/GetNewsTwoServlet"));
-        mFragments.add(new NewsFragment("http://101.37.79.26:8080/show/GetNewsThreeServlet"));
+        mFragments.add(NewsFragment.newInstance("http://101.37.79.26:8080/show/GetNewsOneServlet"));
+        mFragments.add(NewsFragment.newInstance("http://101.37.79.26:8080/show/GetNewsTwoServlet"));
+        mFragments.add(NewsFragment.newInstance("http://101.37.79.26:8080/show/GetNewsThreeServlet"));
         images.add("http://img8.agronet.com.cn/Users/100/616/407/20199301420538304.jpg");
         titles.add("巴南发展“稻田养蛙” 带领村民走上致富路（图）");
         images.add("http://img8.agronet.com.cn/Users/100/616/407/2019930152841634.jpg");
