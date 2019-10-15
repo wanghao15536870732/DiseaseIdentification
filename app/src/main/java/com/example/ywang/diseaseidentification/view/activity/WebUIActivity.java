@@ -95,6 +95,10 @@ public class WebUIActivity extends AppCompatActivity implements SwipeRefreshLayo
         webView.getSettings().setGeolocationEnabled(true);
         //设置定位的数据库路径
         webView.getSettings().setGeolocationDatabasePath(dir);
+        //自适应屏幕
+        webView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+        webView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
+        webView.getSettings().setLoadWithOverviewMode(true);
 
         webView.setWebViewClient(new WebViewClient() {
             @Override

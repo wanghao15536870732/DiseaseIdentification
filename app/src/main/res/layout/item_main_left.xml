@@ -2,22 +2,25 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:layout_margin="5dp">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/left_image"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:padding="8dp"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
         <TextView
             android:id="@+id/item_main_left_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_gravity="center"
-            android:paddingBottom="17dp"
-            android:paddingTop="17dp"
             android:text="常见疾病"
+            android:layout_centerInParent="true"
             android:textSize="14sp" />
 
         <View

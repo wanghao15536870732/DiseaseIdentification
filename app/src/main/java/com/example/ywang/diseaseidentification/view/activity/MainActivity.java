@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
         horizontalChart.SetDate(monthCountList);
         horizontalChart.invalidate();
         horizontalChart.requestLayout();
-
+        horizontalChart.setRefresh(false);
         avatar.setOnClickListener(this);
         album.setOnClickListener(this);
         //setSupportActionBar(toolbar);

@@ -113,9 +113,10 @@
             android:name=".view.activity.WNavigationGuideActivity"
             android:clipToPadding="true"
             android:fitsSystemWindows="true" />
-        <activity android:name=".view.activity.DetectionActivity" />
         <activity android:name=".view.activity.TimeRecordActivity" />
-        <activity android:name=".view.activity.CropDetailActivity"></activity>
+        <activity android:name=".view.activity.CropDetailActivity" />
+        <activity android:name=".view.activity.LearnActivity" />
+        <activity android:name=".view.activity.LearnCropActivity"/>
     </application>
 
 </manifest>

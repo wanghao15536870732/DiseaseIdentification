@@ -4,7 +4,16 @@ import java.util.List;
 
 public class CropBean {
     private String title;
+    private String url;
     private List<CropItem> mList;
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
     public String getTitle() {
         return title;

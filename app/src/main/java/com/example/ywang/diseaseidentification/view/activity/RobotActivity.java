@@ -123,7 +123,7 @@ public class RobotActivity extends AppCompatActivity implements View.OnClickList
                     }else{
                         //4.清空输入框
                         et_chat_text.setText("");
-                        //5.添加你输入的内容到right item
+                        //5.添加你输入的内容到right item_album
                         addRightItem(text);
 
                         if(checkAIUIAgent()){

@@ -46,10 +46,10 @@ public class RightAdapter extends RecyclerView.Adapter<RightAdapter.ViewHolder>{
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, CropDetailActivity.class);
-                intent.putExtra(CropDetailActivity.EXTRA_NAME,cropItem.getTitle());
-                intent.putExtra(CropDetailActivity.EXTRA_IMG,cropItem.getUrl());
-                context.startActivity( intent );
+//                Intent intent = new Intent(context, CropDetailActivity.class);
+//                intent.putExtra(CropDetailActivity.EXTRA_NAME,cropItem.getTitle());
+//                intent.putExtra(CropDetailActivity.EXTRA_IMG,cropItem.getUrl());
+//                context.startActivity( intent );
             }
         });
     }

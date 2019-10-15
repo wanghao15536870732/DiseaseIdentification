@@ -47,7 +47,7 @@
         <item name="android:backgroundTint" tools:ignore="NewApi">@color/transparent</item>
         <!--选中文本的背景颜色-->
         <item name="android:textColorHighlight">#8090df24</item>
-        <!--<item name="android:textSelectHandle">@color/alpha90_green</item>-->
+        <!--<item_album name="android:textSelectHandle">@color/alpha90_green</item_album>-->
         <!--小水滴图标-->
         <item name="android:textSelectHandleLeft">@drawable/custom_text_select_handle_left_material</item>
         <item name="android:textColorHighlightInverse">@drawable/custom_text_select_handle_middle_material</item>
@@ -55,7 +55,7 @@
         <!--行间距 默认间距的倍数-->
         <!--android:lineSpacingMultiplier="20"-->
         <!--行间距 固定值-->
-        <!--<item name="android:lineSpacingExtra">10dp</item>-->
+        <!--<item_album name="android:lineSpacingExtra">10dp</item_album>-->
     </style>
 
     <!--textView默认不获取焦点，所以点击不起作用-->

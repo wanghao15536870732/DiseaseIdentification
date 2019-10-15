@@ -3,12 +3,15 @@ package com.example.ywang.diseaseidentification.adapter;
 
 import android.graphics.Color;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.example.ywang.diseaseidentification.R;
 import com.example.ywang.diseaseidentification.bean.CropBean;
 
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class  LeftAdapter extends BaseQuickAdapter<CropBean> {
     private int selectPos = 0;
@@ -28,6 +31,8 @@ public class  LeftAdapter extends BaseQuickAdapter<CropBean> {
             helper.setVisible(R.id.item_main_left_bg,false);
         }
         helper.setText(R.id.item_main_left_type,bean.getTitle());
+        CircleImageView circleImageView = helper.convertView.findViewById(R.id.left_image);
+        Glide.with(helper.getConvertView().getContext()).load(bean.getUrl()).into(circleImageView);
     }
 
 

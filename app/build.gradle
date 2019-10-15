@@ -59,8 +59,7 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
     //瀑布时间轴
     implementation 'com.vivian.widgets:TimeLineItemDecoration:1.5'
-    //问答框
-    implementation 'com.github.BakerJQ:Android-InfiniteCards:1.0.5'
+    //加载更多
     implementation 'com.github.pinguo-zhouwei:CustomPopwindow:2.1.1'
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.1.3'
 }
