@@ -20,10 +20,10 @@ import java.util.List;
 
 public class RightAdapter extends RecyclerView.Adapter<RightAdapter.ViewHolder>{
 
-    private List<CropItem> mDrugItems;
+    private List<CropItem> mCropItems;
 
     public RightAdapter(List<CropItem> items){
-        mDrugItems = items;
+        mCropItems = items;
     }
     private Context context;
 
@@ -39,37 +39,31 @@ public class RightAdapter extends RecyclerView.Adapter<RightAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
-        final CropItem cropItem = mDrugItems.get( i );
+        final CropItem cropItem = mCropItems.get( i );
         Glide.with(context).load(cropItem.getUrl()).into(viewHolder.mImageView);
         viewHolder.title.setText( cropItem.getTitle() );
-        viewHolder.content.setText( cropItem.getContent() );
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(context, CropDetailActivity.class);
-//                intent.putExtra(CropDetailActivity.EXTRA_NAME,cropItem.getTitle());
-//                intent.putExtra(CropDetailActivity.EXTRA_IMG,cropItem.getUrl());
-//                context.startActivity( intent );
+
             }
         });
     }
 
-
     @Override
     public int getItemCount() {
-        return mDrugItems.size();
+        return mCropItems.size();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder{
 
-        private TextView title,content;
+        private TextView title;
         private ImageView mImageView;
 
         public ViewHolder(@NonNull View itemView) {
             super( itemView );
-            title = (TextView) itemView.findViewById( R.id.drug_title );
-            content = (TextView) itemView.findViewById( R.id.drug_info );
-            mImageView = (ImageView) itemView.findViewById( R.id.drug_src);
+            title = (TextView) itemView.findViewById( R.id.crop_text );
+            mImageView = (ImageView) itemView.findViewById( R.id.crop_src);
         }
     }
 }

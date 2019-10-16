@@ -149,6 +149,7 @@ public class LearnCropActivity extends AppCompatActivity {
         mList4.add(new DiseaseData("绿豆","https://cn.bing.com/th?id=OIP.TGNgu0X_WDX0ZOOHRttNQQHaGU&pid=Api&rs=1","lvdou"));
         mList4.add(new DiseaseData("蚕豆","https://cn.bing.com/th?id=OIP._6280Hq3xW9viFKxTKzemAHaFQ&pid=Api&rs=1","candou"));
         mList4.add(new DiseaseData("荞麦","https://static.baicaolu.com/uploads/201507/1436285026i8NwYdcR.jpg","qiaomai"));
+        mList4.add(new DiseaseData("麻类","http://n.sinaimg.cn/translate/88/w500h388/20181201/Vlp1-hpevhcm5855739.jpg","malei"));
 
     }
 }

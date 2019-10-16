@@ -1,16 +1,14 @@
 package com.example.ywang.diseaseidentification.bean;
 
 public class CropItem {
-    private String url;
 
+    private String url;
     private int img;
     private String title;
-    private String content;
 
-    public CropItem(String url, String title, String content) {
+    public CropItem(String url, String title) {
         this.url = url;
         this.title = title;
-        this.content = content;
     }
 
     public String getUrl() {
@@ -27,14 +25,6 @@ public class CropItem {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
     }
 
     public int getImg() {
