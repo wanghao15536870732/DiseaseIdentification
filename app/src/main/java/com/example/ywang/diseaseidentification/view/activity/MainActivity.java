@@ -475,7 +475,7 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
                 //处理popWindow 显示内容
                 handleLogic(contentView);
                 //创建并显示popWindow
-                mCustomPopWindow= new CustomPopWindow.PopupWindowBuilder(this)
+                mCustomPopWindow = new CustomPopWindow.PopupWindowBuilder(this)
                         .setView(contentView)
                         .create()
                         .showAsDropDown(addBtn,0,20);

@@ -1,11 +1,9 @@
-package com.example.ywang.diseaseidentification.utils;
+package com.example.ywang.diseaseidentification.utils.network;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.widget.ProgressBar;
-import android.widget.Toast;
+
 import com.example.ywang.diseaseidentification.bean.baseData.DynamicBean;
 import java.io.File;
 

@@ -1,33 +1,25 @@
-package com.example.ywang.diseaseidentification.adapter;
+package com.example.ywang.diseaseidentification.adapter.disease;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.ywang.diseaseidentification.R;
 import com.example.ywang.diseaseidentification.bean.baseData.DiseaseData;
-import com.example.ywang.diseaseidentification.utils.CSVFile;
-import com.example.ywang.diseaseidentification.utils.ConstantUtils;
-import com.example.ywang.diseaseidentification.utils.WebUtil;
+import com.example.ywang.diseaseidentification.utils.file.ConstantUtils;
 import com.example.ywang.diseaseidentification.view.activity.CropDetailActivity;
 
-import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class DiseasesAdapter2 extends RecyclerView.Adapter<DiseasesAdapter2.ViewHolder> {
+public class CropAdapter extends RecyclerView.Adapter<CropAdapter.ViewHolder> {
 
     private Context mContext;
     private List<DiseaseData> mDiseaseList;
@@ -35,19 +27,19 @@ public class DiseasesAdapter2 extends RecyclerView.Adapter<DiseasesAdapter2.View
     static class ViewHolder extends RecyclerView.ViewHolder{
 
         LinearLayout layout;
-        CircleImageView fruitView;
+        CircleImageView cropView;
         TextView name;
         String pinYin;
 
         public ViewHolder(View itemView) {
             super(itemView);
             layout = (LinearLayout) itemView.findViewById(R.id.linear_crop);
-            fruitView = (CircleImageView) itemView.findViewById(R.id.crop_image);
+            cropView = (CircleImageView) itemView.findViewById(R.id.crop_image);
             name = (TextView) itemView.findViewById(R.id.crop_name);
         }
     }
 
-    public DiseasesAdapter2(List<DiseaseData> fruitList){
+    public CropAdapter(List<DiseaseData> fruitList){
         mDiseaseList = fruitList;
     }
 
@@ -56,7 +48,7 @@ public class DiseasesAdapter2 extends RecyclerView.Adapter<DiseasesAdapter2.View
         if (mContext == null){
             mContext = parent.getContext();
         }
-        View view = LayoutInflater.from(mContext).inflate(R.layout.disease_item2,parent,false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.crop_item,parent,false);
         final ViewHolder holder = new ViewHolder(view);
         holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,7 +96,7 @@ public class DiseasesAdapter2 extends RecyclerView.Adapter<DiseasesAdapter2.View
         holder.pinYin = data.getLink();
         holder.name.setText(data.getContent());
         //使用Glide来加载图片
-        Glide.with(mContext).load(data.getImageUrl()).into(holder.fruitView);
+        Glide.with(mContext).load(data.getImageUrl()).into(holder.cropView);
 
     }
 

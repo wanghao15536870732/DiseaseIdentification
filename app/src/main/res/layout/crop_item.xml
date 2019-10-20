@@ -1,26 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:id="@+id/linear_crop"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:layout_margin="5dp"
+    android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/crop_src"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:scaleType="centerInside"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"/>
-
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/crop_image"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/avatar"/>
+    <!--scaleType这个属性 ，可以让照片保持原有比例填充满ImageView-->
     <TextView
-        android:id="@+id/crop_text"
+        android:id="@+id/crop_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:text="叶"
-        android:textSize="22dp"
-        android:layout_marginLeft="6dp" />
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="5dp"
+        android:textSize="16sp"/>
 
 </LinearLayout>

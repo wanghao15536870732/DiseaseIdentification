@@ -1,7 +1,6 @@
-package com.example.ywang.diseaseidentification.adapter;
+package com.example.ywang.diseaseidentification.adapter.disease;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,7 +12,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.ywang.diseaseidentification.R;
 import com.example.ywang.diseaseidentification.bean.baseData.DiseaseData;
-import com.example.ywang.diseaseidentification.utils.WebUtil;
+import com.example.ywang.diseaseidentification.utils.network.WebUtil;
 import java.util.List;
 
 public class DiseasesAdapter extends RecyclerView.Adapter<DiseasesAdapter.ViewHolder> {
@@ -24,14 +23,14 @@ public class DiseasesAdapter extends RecyclerView.Adapter<DiseasesAdapter.ViewHo
     static class ViewHolder extends RecyclerView.ViewHolder{
 
         CardView cardView;
-        ImageView fruitView;
-        TextView fruitName;
+        ImageView diseaseView;
+        TextView diseaseName;
 
         public ViewHolder(View itemView) {
             super(itemView);
             cardView = (CardView) itemView;
-            fruitView= (ImageView) itemView.findViewById(R.id.fruit_image);
-            fruitName = (TextView) itemView.findViewById(R.id.fruit_name);
+            diseaseView= (ImageView) itemView.findViewById(R.id.disease_image);
+            diseaseName = (TextView) itemView.findViewById(R.id.disease_name);
         }
     }
 
@@ -60,9 +59,9 @@ public class DiseasesAdapter extends RecyclerView.Adapter<DiseasesAdapter.ViewHo
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         DiseaseData data = mDiseaseList.get(position);
-        holder.fruitName.setText(data.getContent());
+        holder.diseaseName.setText(data.getContent());
         //使用Glide来加载图片
-        Glide.with(mContext).load(data.getImageUrl()).into(holder.fruitView);
+        Glide.with(mContext).load(data.getImageUrl()).into(holder.diseaseView);
 
     }
 

@@ -1,5 +1,6 @@
-package com.example.ywang.diseaseidentification.adapter;
+package com.example.ywang.diseaseidentification.adapter.agricultural;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -12,6 +13,7 @@ import android.widget.ImageView;
 
 import com.example.ywang.diseaseidentification.R;
 
+@SuppressLint("AppCompatCustomView")
 public class RatioImageView extends ImageView {
 
     /**

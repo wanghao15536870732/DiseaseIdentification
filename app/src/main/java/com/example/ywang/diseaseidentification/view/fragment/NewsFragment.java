@@ -16,12 +16,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.ywang.diseaseidentification.R;
 import com.example.ywang.diseaseidentification.bean.baseData.NewsBean;
-import com.example.ywang.diseaseidentification.utils.WebUtil;
+import com.example.ywang.diseaseidentification.utils.network.WebUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -31,7 +30,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 @SuppressLint("ValidFragment")
 public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{

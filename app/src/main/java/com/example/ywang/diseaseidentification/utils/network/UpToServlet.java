@@ -1,4 +1,4 @@
-package com.example.ywang.diseaseidentification.utils;
+package com.example.ywang.diseaseidentification.utils.network;
 import android.util.Log;
 import android.widget.Toast;
 

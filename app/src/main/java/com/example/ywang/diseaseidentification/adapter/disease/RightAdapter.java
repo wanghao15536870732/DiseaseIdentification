@@ -1,11 +1,9 @@
-package com.example.ywang.diseaseidentification.adapter;
+package com.example.ywang.diseaseidentification.adapter.disease;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -14,7 +12,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.ywang.diseaseidentification.R;
 import com.example.ywang.diseaseidentification.bean.CropItem;
-import com.example.ywang.diseaseidentification.view.activity.CropDetailActivity;
 
 import java.util.List;
 
@@ -31,7 +28,7 @@ public class RightAdapter extends RecyclerView.Adapter<RightAdapter.ViewHolder>{
     @Override
     public ViewHolder onCreateViewHolder(@NonNull final ViewGroup viewGroup, int i) {
         final View view = LayoutInflater.from( viewGroup.getContext())
-                .inflate( R.layout.crop_item,viewGroup,false);
+                .inflate( R.layout.crop_part_item,viewGroup,false);
         context = viewGroup.getContext();
         final ViewHolder holder = new ViewHolder( view );
         return holder;

@@ -1,4 +1,4 @@
-package com.example.ywang.diseaseidentification.utils;
+package com.example.ywang.diseaseidentification.utils.baidumap;
 
 import android.graphics.Color;
 import android.os.Bundle;

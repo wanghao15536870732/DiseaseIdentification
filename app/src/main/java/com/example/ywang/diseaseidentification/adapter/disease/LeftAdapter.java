@@ -1,4 +1,4 @@
-package com.example.ywang.diseaseidentification.adapter;
+package com.example.ywang.diseaseidentification.adapter.disease;
 
 
 import android.graphics.Color;

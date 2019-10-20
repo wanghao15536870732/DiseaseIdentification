@@ -13,13 +13,13 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:id="@+id/fruit_image"
+            android:id="@+id/disease_image"
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:scaleType="centerCrop"/>
         <!--scaleType这个属性 ，可以让照片保持原有比例填充满ImageView-->
         <TextView
-            android:id="@+id/fruit_name"
+            android:id="@+id/disease_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"

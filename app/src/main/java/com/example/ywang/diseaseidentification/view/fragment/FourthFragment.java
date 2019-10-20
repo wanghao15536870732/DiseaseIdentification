@@ -1,7 +1,6 @@
 package com.example.ywang.diseaseidentification.view.fragment;
 
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,16 +9,12 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
 
 import com.example.ywang.diseaseidentification.R;
-import com.example.ywang.diseaseidentification.adapter.NineGridAdapter;
+import com.example.ywang.diseaseidentification.adapter.agricultural.NineGridAdapter;
 import com.example.ywang.diseaseidentification.bean.NineGridModel;
 import com.example.ywang.diseaseidentification.bean.baseData.DynamicBean;
 import com.example.ywang.diseaseidentification.view.CommentListTextView;

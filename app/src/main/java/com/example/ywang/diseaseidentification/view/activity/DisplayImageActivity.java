@@ -13,7 +13,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.example.ywang.diseaseidentification.R;
-import com.example.ywang.diseaseidentification.adapter.DisplayImageAdapter;
+import com.example.ywang.diseaseidentification.adapter.agricultural.DisplayImageAdapter;
 import com.example.ywang.diseaseidentification.bean.ThumbViewInfo;
 import java.util.ArrayList;
 import java.util.List;

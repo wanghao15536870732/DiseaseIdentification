@@ -1,4 +1,4 @@
-package com.example.ywang.diseaseidentification.adapter;
+package com.example.ywang.diseaseidentification.adapter.agricultural;
 
 import android.content.Context;
 import android.view.ViewGroup;
@@ -8,7 +8,6 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 

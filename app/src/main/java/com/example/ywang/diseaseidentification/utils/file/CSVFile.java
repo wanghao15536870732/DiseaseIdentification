@@ -1,4 +1,4 @@
-package com.example.ywang.diseaseidentification.utils;
+package com.example.ywang.diseaseidentification.utils.file;
 
 import java.io.BufferedReader;
 import java.io.IOException;

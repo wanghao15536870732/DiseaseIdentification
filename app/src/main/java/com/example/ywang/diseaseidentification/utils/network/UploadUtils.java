@@ -1,6 +1,5 @@
-package com.example.ywang.diseaseidentification.utils;
+package com.example.ywang.diseaseidentification.utils.network;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.example.ywang.diseaseidentification.bean.baseData.DynamicBean;
 import java.io.BufferedReader;
@@ -15,7 +14,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 /**

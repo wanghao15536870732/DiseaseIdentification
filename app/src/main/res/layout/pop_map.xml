@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="350dp"
+    android:layout_height="600dp"
+    android:background="@drawable/menu_pop_bg"
+    android:padding="10dp">
+
+    <com.luck.picture.lib.photoview.PhotoView
+        android:id="@+id/crop_resource"
+        android:layout_width="350dp"
+        android:layout_height="300dp"
+        android:scaleType="centerCrop"/>
+
+    <ImageView
+        android:id="@+id/crop_density"
+        android:layout_width="350dp"
+        android:layout_height="300dp"
+        android:scaleType="centerCrop"/>
+
+</LinearLayout>

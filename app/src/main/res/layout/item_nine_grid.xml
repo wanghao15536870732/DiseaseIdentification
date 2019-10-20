@@ -44,7 +44,7 @@
             android:textSize="14sp"
             android:text="今天的天气是真的好" />
 
-        <com.example.ywang.diseaseidentification.adapter.NineGridLayout
+        <com.example.ywang.diseaseidentification.adapter.agricultural.NineGridLayout
             android:id="@+id/layout_nine_grid"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

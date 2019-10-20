@@ -19,7 +19,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.ywang.diseaseidentification.R;
 import com.example.ywang.diseaseidentification.bean.baseData.NewsBean;
-import com.example.ywang.diseaseidentification.utils.WebUtil;
+import com.example.ywang.diseaseidentification.utils.network.WebUtil;
 import com.example.ywang.diseaseidentification.view.activity.LearnActivity;
 import com.example.ywang.diseaseidentification.view.activity.LearnCropActivity;
 import com.youth.banner.Banner;

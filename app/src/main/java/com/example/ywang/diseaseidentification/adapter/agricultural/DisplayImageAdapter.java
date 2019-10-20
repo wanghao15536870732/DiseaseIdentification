@@ -1,4 +1,4 @@
-package com.example.ywang.diseaseidentification.adapter;
+package com.example.ywang.diseaseidentification.adapter.agricultural;
 
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.AppCompatActivity;

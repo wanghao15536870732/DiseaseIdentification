@@ -17,12 +17,12 @@ import android.widget.Toast;
 
 import com.donkingliang.labels.LabelsView;
 import com.example.ywang.diseaseidentification.R;
-import com.example.ywang.diseaseidentification.adapter.FullyGridLayoutManager;
-import com.example.ywang.diseaseidentification.adapter.GridImageAdapter;
+import com.example.ywang.diseaseidentification.adapter.agricultural.FullyGridLayoutManager;
+import com.example.ywang.diseaseidentification.adapter.agricultural.GridImageAdapter;
 import com.example.ywang.diseaseidentification.bean.baseData.DynamicBean;
 import com.example.ywang.diseaseidentification.bean.baseData.TabBean;
-import com.example.ywang.diseaseidentification.utils.UpLoadFileTask;
-import com.example.ywang.diseaseidentification.utils.UpToServlet;
+import com.example.ywang.diseaseidentification.utils.network.UpLoadFileTask;
+import com.example.ywang.diseaseidentification.utils.network.UpToServlet;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;

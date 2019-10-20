@@ -1,4 +1,4 @@
-package com.example.ywang.diseaseidentification.utils;
+package com.example.ywang.diseaseidentification.utils.iflytek;
 
 import android.content.Context;
 import android.os.Bundle;

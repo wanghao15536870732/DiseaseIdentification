@@ -65,4 +65,10 @@
         <item name="android:focusable">true</item>
     </style>
 
+    <!--checkbox的style-->
+    <style name="MyCheckBox" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">@color/selected</item>
+        <item name="colorControlActivated">@color/normal</item>
+    </style>
+
 </resources>

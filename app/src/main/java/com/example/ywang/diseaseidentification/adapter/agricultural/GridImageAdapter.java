@@ -1,4 +1,4 @@
-package com.example.ywang.diseaseidentification.adapter;
+package com.example.ywang.diseaseidentification.adapter.agricultural;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;

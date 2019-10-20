@@ -11,7 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.example.ywang.diseaseidentification.R;
-import com.example.ywang.diseaseidentification.adapter.DiseasesAdapter2;
+import com.example.ywang.diseaseidentification.adapter.disease.CropAdapter;
 import com.example.ywang.diseaseidentification.bean.baseData.DiseaseData;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,7 @@ import java.util.List;
 public class CropFragment extends Fragment {
 
     private RecyclerView recyclerView;
-    private DiseasesAdapter2 adapter;
+    private CropAdapter adapter;
     private List<DiseaseData> mList = new ArrayList<>();
 
     public static CropFragment newInstance(List<DiseaseData> list){
@@ -43,7 +43,7 @@ public class CropFragment extends Fragment {
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(),3);
         //让recyclerView的布局采用网格式布局
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new DiseasesAdapter2(mList);
+        adapter = new CropAdapter(mList);
         recyclerView.setAdapter(adapter);
         return view;
     }

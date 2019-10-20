@@ -1,18 +1,14 @@
-package com.example.ywang.diseaseidentification.adapter;
+package com.example.ywang.diseaseidentification.adapter.agricultural;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.Toast;
 
-import com.example.ywang.diseaseidentification.R;
 import com.example.ywang.diseaseidentification.bean.ThumbViewInfo;
-import com.example.ywang.diseaseidentification.utils.ImageLoaderUtil;
+import com.example.ywang.diseaseidentification.utils.network.ImageLoaderUtil;
 import com.example.ywang.diseaseidentification.view.activity.DisplayImageActivity;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
