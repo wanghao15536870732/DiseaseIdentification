@@ -1,6 +1,7 @@
 package com.example.ywang.diseaseidentification.adapter.disease;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,16 +14,17 @@ import com.bumptech.glide.Glide;
 import com.example.ywang.diseaseidentification.R;
 import com.example.ywang.diseaseidentification.bean.CropItem;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class RightAdapter extends RecyclerView.Adapter<RightAdapter.ViewHolder>{
 
+    private Context context;
     private List<CropItem> mCropItems;
 
     public RightAdapter(List<CropItem> items){
         mCropItems = items;
     }
-    private Context context;
 
     @NonNull
     @Override
@@ -35,13 +37,13 @@ public class RightAdapter extends RecyclerView.Adapter<RightAdapter.ViewHolder>{
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull final ViewHolder viewHolder,final int i) {
         final CropItem cropItem = mCropItems.get( i );
         Glide.with(context).load(cropItem.getUrl()).into(viewHolder.mImageView);
         viewHolder.title.setText( cropItem.getTitle() );
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
 
             }
         });

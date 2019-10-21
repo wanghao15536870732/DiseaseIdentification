@@ -20,6 +20,7 @@ import com.example.ywang.diseaseidentification.bean.baseData.DiseaseData;
 import com.example.ywang.diseaseidentification.utils.file.ConstantUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class LearnActivity extends AppCompatActivity {
@@ -31,12 +32,12 @@ public class LearnActivity extends AppCompatActivity {
 
     private List<CropBean> cropBeanList;
     private List<CropItem> cropItemList;
-    private ImageView back;
 
     private RecyclerView mRecyclerView;
     private List<String> allData;
     private List<String> selectData = new ArrayList<>();
     private MultiAdapter mAdapter;
+    private List<DiseaseData> mList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,9 +59,8 @@ public class LearnActivity extends AppCompatActivity {
                     mAdapter.isSelected.put(position, true); // 修改map的值保存状态
                     mAdapter.notifyItemChanged(position);
                     selectData.add(allData.get(position));
-
                 }else {
-                    mAdapter.isSelected.put(position, false); // 修改map的值保存状态
+                    mAdapter.isSelected.put(position,false); // 修改map的值保存状态
                     mAdapter.notifyItemChanged(position);
                     selectData.remove(allData.get(position));
                 }
@@ -79,12 +79,13 @@ public class LearnActivity extends AppCompatActivity {
         GridLayoutManager manager = new GridLayoutManager(this,3);
         mRightRvRecyclerView.setLayoutManager(manager);
 
+
         mLeftRvRecyclerView.addOnItemTouchListener(new SimpleClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
-                CropBean drugBean = cropBeanList.get(i);
+                CropBean cropBean = cropBeanList.get(i);
                 cropItemList.clear();
-                cropItemList.addAll(drugBean.getmList());
+                cropItemList.addAll(cropBean.getmList());
                 leftAdapter.setSelectPos(i);
                 leftAdapter.notifyDataSetChanged();
                 rightAdapter.notifyDataSetChanged();
@@ -105,7 +106,7 @@ public class LearnActivity extends AppCompatActivity {
 
             }
         });
-        back = (ImageView) findViewById(R.id.back);
+        ImageView back = (ImageView) findViewById(R.id.back);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -117,22 +118,43 @@ public class LearnActivity extends AppCompatActivity {
 
     private void initData(){
         cropBeanList = new ArrayList<>();
-        for(int i = 0;i < ConstantUtils.mList.size(); i++ ){
-            DiseaseData data = ConstantUtils.mList.get(i);
+        mList = new ArrayList<>();
+        mList.addAll(Arrays.asList(ConstantUtils.CropList1));
+        mList.addAll(Arrays.asList(ConstantUtils.CropList2));
+        mList.addAll(Arrays.asList(ConstantUtils.CropList3));
+        mList.addAll(Arrays.asList(ConstantUtils.CropList4));
+        for(int i = 0;i < mList.size(); i++ ){
+            DiseaseData data = mList.get(i);
             CropBean crop = new CropBean();
             crop.setUrl(data.getImageUrl());
             crop.setTitle(data.getContent());
             cropItemList = new ArrayList<>();
-            cropItemList.add(new CropItem("https://upload-images.jianshu.io/upload_images/9140378-a5428a598e98769d.png","叶"));
-            cropItemList.add(new CropItem("https://upload-images.jianshu.io/upload_images/9140378-be3f3fef607e7526.png","花"));
-            cropItemList.add(new CropItem("https://upload-images.jianshu.io/upload_images/9140378-404409164ec6d8d1.png","根"));
-            cropItemList.add(new CropItem("https://upload-images.jianshu.io/upload_images/9140378-523faa0544cb8971.png","茎"));
-            cropItemList.add(new CropItem("https://upload-images.jianshu.io/upload_images/9140378-b5fdc46a7bc0b7bd.png","果"));
-            cropItemList.add(new CropItem("https://upload-images.jianshu.io/upload_images/9140378-6528a63eee161045.png","植株"));
+            cropItemList.addAll(Arrays.asList(ConstantUtils.items));
             crop.setmList(cropItemList);
             cropBeanList.add(crop);
         }
         allData = new ArrayList<>();
+        allData.add("病斑");
+        allData.add("黑褐色");
+        allData.add("枯死");
+        allData.add("水渍状斑点");
+        allData.add("暗绿色");
+        allData.add("坏死大斑");
+        allData.add("脱落");
+        allData.add("畸形");
+        allData.add("轮纹状");
+        allData.add("灰褐色霉");
+        allData.add("黄褐色病斑");
+        allData.add("圆形或近圆形病斑");
+        allData.add("油渍状");
+        allData.add("枯萎");
+        allData.add("破裂病斑");
+        allData.add("病斑密布");
+        allData.add("粘液");
+        allData.add("不规则病斑");
+        allData.add("褐色病斑");
+        allData.add("凹陷病斑");
+        allData.add("棉絮状菌丝体");
         for (int i = 0; i < 20; i++) {
             allData.add("测试" + i);
         }

@@ -1,24 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:layout_margin="5dp">
+    android:layout_marginTop="1dp"
+    android:layout_marginBottom="1dp"
+    android:layout_marginRight="2dp"
+    android:layout_marginLeft="2dp">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/left_image"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:padding="8dp"/>
-
-    <TextView
-        android:id="@+id/item_main_left_type"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/left_relative"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="常见疾病"
-        android:textSize="14sp"
-        android:layout_toRightOf="@+id/left_image"
-        android:layout_marginTop="10dp"/>
+        android:orientation="horizontal">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/left_image"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="8dp"/>
+
+        <TextView
+            android:id="@+id/item_main_left_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="白菜"
+            android:textSize="18sp"
+            android:layout_toRightOf="@+id/left_image"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="5dp"
+            android:textColor="@color/black"/>
+
+    </RelativeLayout>
 
     <View
         android:id="@+id/item_main_left_bg"
@@ -27,5 +40,4 @@
         android:layout_alignParentLeft="true"
         android:background="#40a5f3" />
 
-
-</RelativeLayout>
+</android.support.v7.widget.CardView>

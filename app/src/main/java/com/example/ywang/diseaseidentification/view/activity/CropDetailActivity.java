@@ -21,6 +21,7 @@ import com.example.ywang.diseaseidentification.adapter.disease.DiseasesAdapter;
 import com.example.ywang.diseaseidentification.bean.baseData.DiseaseData;
 import com.example.ywang.diseaseidentification.utils.file.ConstantUtils;
 import com.example.zhouwei.library.CustomPopWindow;
+import com.luck.picture.lib.photoview.PhotoView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,6 @@ public class CropDetailActivity extends AppCompatActivity {
     private List<DiseaseData> mList = new ArrayList<>();
     private String name;
     private Toolbar toolbar;
-    private boolean isShow = true;
     private CustomPopWindow mCustomPopWindow;
 
     @SuppressLint("ResourceAsColor")
@@ -149,13 +149,12 @@ public class CropDetailActivity extends AppCompatActivity {
                 }
             }
         };
-        ImageView resource = contentView.findViewById(R.id.crop_resource);
+        PhotoView resource = contentView.findViewById(R.id.crop_resource);
         resource.setOnClickListener(listener);
-        ImageView density = contentView.findViewById(R.id.crop_density);
+        PhotoView density = contentView.findViewById(R.id.crop_density);
         density.setOnClickListener(listener);
         Glide.with(this).load("http://www.cgris.net/cropmap/food.gif").into(resource);
         Glide.with(this).load("http://www.cgris.net/cropmap/food.gif").into(density);
-
     }
 
     @Override

@@ -23,12 +23,12 @@ public class  LeftAdapter extends BaseQuickAdapter<CropBean> {
     protected void convert(BaseViewHolder helper, CropBean bean) {
         if(selectPos == helper.getAdapterPosition()){
             helper.setVisible(R.id.item_main_left_bg,true);
-            helper.convertView.setBackgroundColor( Color.parseColor("#FFFFFF"));
+            helper.convertView.findViewById(R.id.left_relative).setBackgroundColor( Color.parseColor("#FFFFFF"));
             helper.setTextColor(R.id.item_main_left_type, Color.parseColor("#40a5f3"));
         }else{
-            helper.convertView.setBackgroundColor(Color.parseColor("#f7f7f7"));
-            helper.setTextColor(R.id.item_main_left_type, Color.parseColor("#333333"));
             helper.setVisible(R.id.item_main_left_bg,false);
+            helper.convertView.findViewById(R.id.left_relative).setBackgroundColor(Color.parseColor("#f7f7f7"));
+            helper.setTextColor(R.id.item_main_left_type, Color.parseColor("#333333"));
         }
         helper.setText(R.id.item_main_left_type,bean.getTitle());
         CircleImageView circleImageView = helper.convertView.findViewById(R.id.left_image);

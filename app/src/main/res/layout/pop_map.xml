@@ -12,7 +12,7 @@
         android:layout_height="300dp"
         android:scaleType="centerCrop"/>
 
-    <ImageView
+    <com.luck.picture.lib.photoview.PhotoView
         android:id="@+id/crop_density"
         android:layout_width="350dp"
         android:layout_height="300dp"
