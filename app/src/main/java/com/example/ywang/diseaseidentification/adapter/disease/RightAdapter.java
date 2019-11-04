@@ -11,58 +11,43 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseViewHolder;
 import com.example.ywang.diseaseidentification.R;
+import com.example.ywang.diseaseidentification.bean.CropBean;
 import com.example.ywang.diseaseidentification.bean.CropItem;
 
 import java.util.HashMap;
 import java.util.List;
 
-public class RightAdapter extends RecyclerView.Adapter<RightAdapter.ViewHolder>{
+import de.hdodenhof.circleimageview.CircleImageView;
 
-    private Context context;
-    private List<CropItem> mCropItems;
+public class RightAdapter extends BaseQuickAdapter<CropItem>{
 
-    public RightAdapter(List<CropItem> items){
-        mCropItems = items;
-    }
-
-    @NonNull
-    @Override
-    public ViewHolder onCreateViewHolder(@NonNull final ViewGroup viewGroup, int i) {
-        final View view = LayoutInflater.from( viewGroup.getContext())
-                .inflate( R.layout.crop_part_item,viewGroup,false);
-        context = viewGroup.getContext();
-        final ViewHolder holder = new ViewHolder( view );
-        return holder;
+    private int selectPos = 0;
+    public RightAdapter(List<CropItem> data) {
+        super( R.layout.crop_part_item, data);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ViewHolder viewHolder,final int i) {
-        final CropItem cropItem = mCropItems.get( i );
-        Glide.with(context).load(cropItem.getUrl()).into(viewHolder.mImageView);
-        viewHolder.title.setText( cropItem.getTitle() );
-        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-    }
-
-    @Override
-    public int getItemCount() {
-        return mCropItems.size();
-    }
-
-    static class ViewHolder extends RecyclerView.ViewHolder{
-
-        private TextView title;
-        private ImageView mImageView;
-
-        public ViewHolder(@NonNull View itemView) {
-            super( itemView );
-            title = (TextView) itemView.findViewById( R.id.crop_text );
-            mImageView = (ImageView) itemView.findViewById( R.id.crop_src);
+    protected void convert(BaseViewHolder helper, CropItem cropItem) {
+        if(selectPos == helper.getAdapterPosition()){
+            helper.convertView.setBackgroundColor( Color.parseColor("#FFFFFF"));
+            helper.setTextColor(R.id.crop_text, Color.parseColor("#40a5f3"));
+        }else{
+            helper.convertView.setBackgroundColor(Color.parseColor("#F4F4F4"));
+            helper.setTextColor(R.id.crop_text, Color.parseColor("#333333"));
         }
+        helper.setText(R.id.crop_text,cropItem.getTitle());
+        ImageView imageView = helper.convertView.findViewById(R.id.crop_src);
+        Glide.with(helper.getConvertView().getContext()).load(cropItem.getUrl()).into(imageView);
+    }
+
+    public int getSelectPos() {
+        return selectPos;
+    }
+
+    public void setSelectPos(int selectPos) {
+        this.selectPos = selectPos;
     }
 }

@@ -7,6 +7,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.SimpleClickListener;
@@ -36,8 +38,10 @@ public class LearnActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private List<String> allData;
     private List<String> selectData = new ArrayList<>();
-    private MultiAdapter mAdapter;
+    private MultiAdapter mMultiAdapter;
     private List<DiseaseData> mList;
+    private TextView submit;
+    private CropBean cropBean;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,19 +53,31 @@ public class LearnActivity extends AppCompatActivity {
         initData();
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter = new MultiAdapter(allData);
-        mRecyclerView.setAdapter(mAdapter);
 
-        mAdapter.setOnItemClickListener(new MultiAdapter.OnItemClickListener() {
+        mMultiAdapter = new MultiAdapter(allData);
+        mRecyclerView.setAdapter(mMultiAdapter);
+
+        leftAdapter = new LeftAdapter(cropBeanList);
+        rightAdapter = new RightAdapter(cropItemList);
+        mLeftRvRecyclerView.setAdapter(leftAdapter);
+        mRightRvRecyclerView.setAdapter(rightAdapter);
+        mLeftRvRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        GridLayoutManager manager = new GridLayoutManager(this,3);
+        mRightRvRecyclerView.setLayoutManager(manager);
+        initRecyclerView();
+
+        //最终的多选条目
+        mMultiAdapter.setOnItemClickListener(new MultiAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                if(!mAdapter.isSelected.get(position)){
-                    mAdapter.isSelected.put(position, true); // 修改map的值保存状态
-                    mAdapter.notifyItemChanged(position);
+                if(!mMultiAdapter.isSelected.get(position)){
+                    mMultiAdapter.isSelected.put(position, true); // 修改map的值保存状态
+                    mMultiAdapter.notifyItemChanged(position);
                     selectData.add(allData.get(position));
                 }else {
-                    mAdapter.isSelected.put(position,false); // 修改map的值保存状态
-                    mAdapter.notifyItemChanged(position);
+                    mMultiAdapter.isSelected.put(position,false); // 修改map的值保存状态
+                    mMultiAdapter.notifyItemChanged(position);
                     selectData.remove(allData.get(position));
                 }
             }
@@ -71,24 +87,34 @@ public class LearnActivity extends AppCompatActivity {
 
             }
         });
-        leftAdapter = new LeftAdapter(cropBeanList);
-        rightAdapter = new RightAdapter(cropItemList);
-        mLeftRvRecyclerView.setAdapter(leftAdapter);
-        mRightRvRecyclerView.setAdapter(rightAdapter);
-        mLeftRvRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        GridLayoutManager manager = new GridLayoutManager(this,3);
-        mRightRvRecyclerView.setLayoutManager(manager);
 
+        ImageView back = (ImageView) findViewById(R.id.back);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+        submit = (TextView) findViewById(R.id.submit);
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(LearnActivity.this,selectData.toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
+    private void initRecyclerView(){
         mLeftRvRecyclerView.addOnItemTouchListener(new SimpleClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
-                CropBean cropBean = cropBeanList.get(i);
+                cropBean = cropBeanList.get(i);
                 cropItemList.clear();
                 cropItemList.addAll(cropBean.getmList());
                 leftAdapter.setSelectPos(i);
                 leftAdapter.notifyDataSetChanged();
                 rightAdapter.notifyDataSetChanged();
+                mMultiAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -106,11 +132,32 @@ public class LearnActivity extends AppCompatActivity {
 
             }
         });
-        ImageView back = (ImageView) findViewById(R.id.back);
-        back.setOnClickListener(new View.OnClickListener() {
+
+        mRightRvRecyclerView.addOnItemTouchListener(new SimpleClickListener() {
             @Override
-            public void onClick(View view) {
-                finish();
+            public void onItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
+                rightAdapter.setSelectPos(i);
+                allData.clear();
+                allData.addAll(Arrays.asList(ConstantUtils.Disease[i]));
+                mMultiAdapter.init();
+                mMultiAdapter.notifyDataSetChanged();
+                rightAdapter.notifyDataSetChanged();
+                leftAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onItemLongClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
+
+            }
+
+            @Override
+            public void onItemChildClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
+
+            }
+
+            @Override
+            public void onItemChildLongClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
+
             }
         });
     }
@@ -118,45 +165,24 @@ public class LearnActivity extends AppCompatActivity {
 
     private void initData(){
         cropBeanList = new ArrayList<>();
+        //加载左列表的全部数据
         mList = new ArrayList<>();
         mList.addAll(Arrays.asList(ConstantUtils.CropList1));
         mList.addAll(Arrays.asList(ConstantUtils.CropList2));
         mList.addAll(Arrays.asList(ConstantUtils.CropList3));
         mList.addAll(Arrays.asList(ConstantUtils.CropList4));
+
         for(int i = 0;i < mList.size(); i++ ){
-            DiseaseData data = mList.get(i);
-            CropBean crop = new CropBean();
+            DiseaseData data = mList.get(i);  //获取左边列表的单个作物
+            CropBean crop = new CropBean(); // 转化为CropBean
             crop.setUrl(data.getImageUrl());
             crop.setTitle(data.getContent());
             cropItemList = new ArrayList<>();
             cropItemList.addAll(Arrays.asList(ConstantUtils.items));
             crop.setmList(cropItemList);
-            cropBeanList.add(crop);
+            cropBeanList.add(crop);  //添加到
         }
         allData = new ArrayList<>();
-        allData.add("病斑");
-        allData.add("黑褐色");
-        allData.add("枯死");
-        allData.add("水渍状斑点");
-        allData.add("暗绿色");
-        allData.add("坏死大斑");
-        allData.add("脱落");
-        allData.add("畸形");
-        allData.add("轮纹状");
-        allData.add("灰褐色霉");
-        allData.add("黄褐色病斑");
-        allData.add("圆形或近圆形病斑");
-        allData.add("油渍状");
-        allData.add("枯萎");
-        allData.add("破裂病斑");
-        allData.add("病斑密布");
-        allData.add("粘液");
-        allData.add("不规则病斑");
-        allData.add("褐色病斑");
-        allData.add("凹陷病斑");
-        allData.add("棉絮状菌丝体");
-        for (int i = 0; i < 20; i++) {
-            allData.add("测试" + i);
-        }
+        allData.addAll(Arrays.asList(ConstantUtils.Disease[0]));
     }
 }

@@ -29,10 +29,10 @@ public class MultiAdapter extends RecyclerView.Adapter {
         }
     }
 
-    private OnItemClickListener mOnItemClickLitener;
+    private OnItemClickListener mOnItemClickListener;
 
     public void setOnItemClickListener(OnItemClickListener mOnItemClickListener) {
-        this.mOnItemClickLitener = mOnItemClickListener;
+        this.mOnItemClickListener = mOnItemClickListener;
     }
 
     @Override
@@ -49,11 +49,11 @@ public class MultiAdapter extends RecyclerView.Adapter {
             viewHolder.mTvName.setText(name);
             viewHolder.itemView.setSelected(isSelected.get(position));
 
-            if (mOnItemClickLitener != null) {
+            if (mOnItemClickListener != null) {
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOnItemClickLitener.onItemClick(viewHolder.itemView, viewHolder.getAdapterPosition());
+                        mOnItemClickListener.onItemClick(viewHolder.itemView, viewHolder.getAdapterPosition());
                     }
                 });
             }

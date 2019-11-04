@@ -20,8 +20,10 @@ import com.bumptech.glide.Glide;
 import com.example.ywang.diseaseidentification.R;
 import com.example.ywang.diseaseidentification.bean.baseData.NewsBean;
 import com.example.ywang.diseaseidentification.utils.network.WebUtil;
+import com.example.ywang.diseaseidentification.view.activity.AddDynamicActivity;
 import com.example.ywang.diseaseidentification.view.activity.LearnActivity;
 import com.example.ywang.diseaseidentification.view.activity.LearnCropActivity;
+import com.example.ywang.diseaseidentification.view.activity.RobotActivity;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.Transformer;
@@ -58,6 +60,18 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             @Override
             public void onClick(View view) {
                 getContext().startActivity(new Intent(getActivity(), LearnActivity.class));
+            }
+        });
+        view.findViewById(R.id.online).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getContext().startActivity(new Intent(getActivity(), RobotActivity.class));
+            }
+        });
+        view.findViewById(R.id.dynamic).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getContext().startActivity(new Intent(getActivity(), AddDynamicActivity.class));
             }
         });
         banner = (Banner) view.findViewById(R.id.banner);

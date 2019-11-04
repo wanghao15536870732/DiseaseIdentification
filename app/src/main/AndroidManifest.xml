@@ -116,7 +116,8 @@
         <activity android:name=".view.activity.TimeRecordActivity" />
         <activity android:name=".view.activity.CropDetailActivity" />
         <activity android:name=".view.activity.LearnActivity" />
-        <activity android:name=".view.activity.LearnCropActivity"/>
+        <activity android:name=".view.activity.LearnCropActivity" />
+        <activity android:name=".view.activity.ExcelActivity"></activity>
     </application>
 
 </manifest>

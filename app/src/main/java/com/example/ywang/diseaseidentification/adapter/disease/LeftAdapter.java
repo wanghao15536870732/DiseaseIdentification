@@ -15,7 +15,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class  LeftAdapter extends BaseQuickAdapter<CropBean> {
     private int selectPos = 0;
-    public LeftAdapter( List<CropBean> data) {
+    public LeftAdapter(List<CropBean> data) {
         super( R.layout.item_main_left, data);
     }
 

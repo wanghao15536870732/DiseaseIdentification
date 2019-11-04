@@ -7,6 +7,7 @@ public class DiseaseData implements Parcelable{
     private String content;
     private String imageUrl;
     private String link;
+
     public DiseaseData(){};
 
     public DiseaseData(String content, String imageUrl, String link) {

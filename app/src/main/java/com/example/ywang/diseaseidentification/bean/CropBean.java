@@ -5,7 +5,8 @@ import java.util.List;
 public class CropBean {
     private String title;
     private String url;
-    private List<CropItem> mList;
+    private List<CropItem> mList; //植株部分
+
 
     public String getUrl() {
         return url;
