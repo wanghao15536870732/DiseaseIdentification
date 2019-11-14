@@ -1,5 +1,6 @@
 package com.example.ywang.diseaseidentification.view.activity;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -99,7 +100,7 @@ public class LearnActivity extends AppCompatActivity {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(LearnActivity.this,selectData.toString(), Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(LearnActivity.this,SelfResultActivity.class));
             }
         });
     }
@@ -167,10 +168,10 @@ public class LearnActivity extends AppCompatActivity {
         cropBeanList = new ArrayList<>();
         //加载左列表的全部数据
         mList = new ArrayList<>();
-        mList.addAll(Arrays.asList(ConstantUtils.CropList1));
+        mList.addAll(Arrays.asList(ConstantUtils.CropList4));
         mList.addAll(Arrays.asList(ConstantUtils.CropList2));
         mList.addAll(Arrays.asList(ConstantUtils.CropList3));
-        mList.addAll(Arrays.asList(ConstantUtils.CropList4));
+        mList.addAll(Arrays.asList(ConstantUtils.CropList1));
 
         for(int i = 0;i < mList.size(); i++ ){
             DiseaseData data = mList.get(i);  //获取左边列表的单个作物

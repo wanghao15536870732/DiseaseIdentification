@@ -6,18 +6,21 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.content.ContentUris;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -32,6 +35,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.baidu.aip.imageclassify.AipImageClassify;
+import com.example.ywang.diseaseidentification.application.MyApplication;
 import com.example.ywang.diseaseidentification.view.HorizontalChart;
 import com.example.ywang.diseaseidentification.view.fragment.FourthFragment;
 import com.example.ywang.diseaseidentification.view.fragment.MainFragment;
@@ -40,14 +45,22 @@ import com.example.ywang.diseaseidentification.view.fragment.DiseaseMapFragment;
 import com.example.ywang.diseaseidentification.view.fragment.AgricultureNewsFragment;
 import com.example.ywang.diseaseidentification.view.KickBackAnimator;
 import com.example.zhouwei.library.CustomPopWindow;
+import com.luck.picture.lib.PictureSelector;
+import com.luck.picture.lib.config.PictureConfig;
+import com.luck.picture.lib.config.PictureMimeType;
+import com.luck.picture.lib.entity.LocalMedia;
+import com.mingle.widget.ShapeLoadingDialog;
 import com.mxn.soul.flowingdrawer_core.ElasticDrawer;
 import com.mxn.soul.flowingdrawer_core.FlowingDrawer;
 import com.next.easynavigation.constant.Anim;
 import com.next.easynavigation.utils.NavigationUtil;
 import com.next.easynavigation.view.EasyNavigationBar;
+
+import org.json.JSONObject;
+
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -84,13 +97,14 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
     private static final int SELECT_PICTURE = 2;
 
     private Uri imageUri;
-
+    private File outputImage;
     private FlowingDrawer mDrawer;  //侧滑栏控件
     private Toolbar toolbar; //自定义Toolbar
     private ImageView mMenu,mBack,album;
     private SpiderWebScoreView spiderWebScoreView;  //蛛网控件
     private CircularLayout circularLayout;
     private CircleImageView avatar,addBtn;
+    private List<LocalMedia> selectList = new ArrayList<>();
 
     private Score[] scores = new Score[]{
             new Score(7.0f,R.drawable.corn,"玉米"),
@@ -104,6 +118,7 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
     private CustomPopWindow mCustomPopWindow;
     private HorizontalChart horizontalChart;
     private ArrayList<Float> monthCountList = new ArrayList<Float>();
+    private ShapeLoadingDialog shapeLoadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -384,28 +399,32 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
     }
 
     private void takePicture(){
-        File outputImage = new File(getExternalCacheDir(),"take_image.jpg");
-        try{
-            if (outputImage.exists()){
-                outputImage.delete();
-            }
-            outputImage.createNewFile();
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-        //如果Android版本高于7.0
-        if (Build.VERSION.SDK_INT >= 24){
-            //调用FileProvider的getUriForFile()方法将照片解析成Uri对象
-            imageUri = FileProvider.getUriForFile(MainActivity.this,
-                    "com.example.ywang.diseaseidentification.fileprovider",outputImage);
-        }else {
-            imageUri = Uri.fromFile(outputImage);
-        }
-
-        //启动相机程序
-        Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-        intent.putExtra(MediaStore.EXTRA_OUTPUT,imageUri);
-        startActivityForResult(intent,TAKE_PICTURE);
+        // 单独拍照
+        PictureSelector.create(MainActivity.this)
+                .openGallery(PictureMimeType.ofAll())// 全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()、音频.ofAudio()
+                .minSelectNum(1)// 最小选择数量
+                .imageSpanCount(3)// 每行显示个数
+                .selectionMode(
+                        PictureConfig.SINGLE)// 多选 or 单选
+                .previewImage(true)// 是否可预览图片
+                .previewVideo(true)// 是否可预览视频
+                .enablePreviewAudio(true) // 是否可播放音频
+                .isCamera(true)// 是否显示拍照按钮
+                .isZoomAnim(true)// 图片列表点击 缩放效果 默认true
+                .enableCrop(true)// 是否裁剪
+                .compress(true)// 是否压缩
+                .synOrAsy(true)//同步true或异步false 压缩 默认同步
+                .glideOverride(160, 160)// glide 加载宽高，越小图片列表越流畅，但会影响列表图片浏览的清晰度
+                .withAspectRatio(0, 0)// 裁剪比例 如16:9 3:2 3:4 1:1 可自定义
+                .hideBottomControls(true)// 是否显示uCrop工具栏，默认不显示
+                .isGif(true)// 是否显示gif图片
+                .freeStyleCropEnabled(true)// 裁剪框是否可拖拽
+                .circleDimmedLayer(false)// 是否圆形裁剪
+                .showCropFrame(true)// 是否显示裁剪矩形边框 圆形裁剪时建议设为false
+                .showCropGrid(true)// 是否显示裁剪矩形网格 圆形裁剪时建议设为false
+                .minimumCompressSize(100)// 小于100kb的图片不压缩
+                .selectionMedia(selectList)// 是否传入已选图片
+                .forResult(PictureConfig.CHOOSE_REQUEST);//结果回调onActivityResult code
     }
 
     private void openAlbum(){
@@ -447,6 +466,180 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
                 break;
 
         }
+    }
+
+    @Override
+    protected void onActivityResult(final int requestCode, int resultCode, final Intent data) {
+        closeAnimation();
+        switch (requestCode){
+            case TAKE_PICTURE:
+                if(resultCode == RESULT_OK){
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            AipImageClassify client = new AipImageClassify(MyApplication.APP_ID, MyApplication.API_KEY, MyApplication.SECRET_KEY);
+                            // 可选：设置网络连接参数
+                            client.setConnectionTimeoutInMillis(2000);
+                            client.setSocketTimeoutInMillis(60000);
+
+                            // 传入可选参数调用接口
+                            HashMap<String, String> options = new HashMap<String, String>();
+                            options.put("baike_num", "5");
+                            final JSONObject res = client.plantDetect(outputImage.getPath(), options);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(MainActivity.this, res.toString(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    }).start();
+                }
+                break;
+            case SELECT_PICTURE:
+                shapeLoadingDialog = new ShapeLoadingDialog(this);
+                shapeLoadingDialog.setLoadingText("正在识别中...");
+                if(resultCode == RESULT_OK){
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    shapeLoadingDialog.show();
+                                }
+                            });
+                            String path = "";
+                            if(Build.VERSION.SDK_INT >= 19){
+                                path = handleImageOnKitKat(data);
+                            }else {
+                                path = handleImageBeforeKitkat(data);
+                            }
+                            Log.e("result",path);
+                            AipImageClassify client = new AipImageClassify(MyApplication.APP_ID, MyApplication.API_KEY, MyApplication.SECRET_KEY);
+                            // 可选：设置网络连接参数
+                            client.setConnectionTimeoutInMillis(2000);
+                            client.setSocketTimeoutInMillis(60000);
+
+                            // 传入可选参数调用接口
+                            HashMap<String, String> options = new HashMap<String, String>();
+                            options.put("baike_num", "5");
+                            final JSONObject res = client.plantDetect(path, options);
+                            Log.e("res",res.toString());
+                            Intent intent = new Intent(MainActivity.this,ResultActivity.class);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    shapeLoadingDialog.dismiss();
+                                }
+                            });
+                            if(Build.VERSION.SDK_INT >= 19){
+                                intent.putExtra("imagePath",handleImageOnKitKat(data));
+                            }else {
+                                intent.putExtra("imagePath",handleImageBeforeKitkat(data));
+                            }
+                            intent.putExtra("result",res.toString());
+                            startActivity(intent);
+                        }
+                    }).start();
+                }
+                break;
+            case PictureConfig.CHOOSE_REQUEST:
+                if(resultCode == RESULT_OK) {
+                    shapeLoadingDialog = new ShapeLoadingDialog(this);
+                    shapeLoadingDialog.setLoadingText("正在识别中...");
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    shapeLoadingDialog.show();
+                                }
+                            });
+                            // 图片选择结果回调
+                            selectList = PictureSelector.obtainMultipleResult(data);
+                            LocalMedia media = selectList.get(0);
+                            Log.i("图片-----》", media.getPath());
+                            Log.e("result",media.getPath());
+                            AipImageClassify client = new AipImageClassify(MyApplication.APP_ID, MyApplication.API_KEY, MyApplication.SECRET_KEY);
+                            // 可选：设置网络连接参数
+                            client.setConnectionTimeoutInMillis(2000);
+                            client.setSocketTimeoutInMillis(60000);
+
+                            // 传入可选参数调用接口
+                            HashMap<String, String> options = new HashMap<String, String>();
+                            options.put("baike_num", "5");
+                            final JSONObject res = client.plantDetect(media.getPath(), options);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    shapeLoadingDialog.dismiss();
+                                }
+                            });
+                            Intent intent = new Intent(MainActivity.this,ResultActivity.class);
+                            intent.putExtra("imagePath",media.getPath());
+                            intent.putExtra("result",res.toString());
+                            startActivity(intent);
+                        }
+                    }).start();
+
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    //4.4版本以上,选择相册中的图片不在返回图片真是的Uri了
+    @TargetApi(19)
+    private String handleImageOnKitKat(Intent data){
+        String imagePath = null;
+        Uri uri = data.getData();
+        if (DocumentsContract.isDocumentUri(this,uri)){
+            //如果是Document类型的Uri,则通过document id 进行处理
+            String docId = DocumentsContract.getDocumentId(uri);
+            if ("com.android.providers.media.documents".equals(uri.getAuthority())){
+                String id = docId.split(":")[1];//解析出数字格式的id
+                String selection = MediaStore.Images.Media._ID + "=" + id;
+                imagePath = getImagePath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,selection);
+            }else if ("com.android.providers.downloads.documents".equals(uri.getAuthority())){
+                Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"),Long.valueOf(docId));
+                imagePath = getImagePath(contentUri,null);
+            }
+        }else if ("content".equalsIgnoreCase(uri.getScheme())){
+            //如果是content类型的Uri,则使用普通方式处理
+            imagePath = getImagePath(uri,null);
+        }else if ("file".equalsIgnoreCase(uri.getScheme())){
+
+            //如果是file类型的Uri,直接获取图片路径即可
+            imagePath = uri.getPath();
+        }
+        return imagePath;
+    }
+
+    //4.4版本以下的，选择相册的图片返回真实的Uri
+    private String handleImageBeforeKitkat(Intent data){
+        Uri uri = data.getData();
+        String imagePath = getImagePath(uri,null);
+        return imagePath;
+    }
+
+    private String getImagePath(Uri uri,String selection){
+        String path = null;
+        //通过Uri和selection来获取真实的图片路径
+        Cursor cursor = getContentResolver().query(uri,null,selection,null,null);
+        if (cursor != null){
+            //如果是从第一个开始查起的
+            if (cursor.moveToFirst()){
+                //获取储存下的所有图片
+                path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+            }
+            //关闭查找
+            cursor.close();
+        }
+        //返回路径
+        return path;
     }
 
     @Override

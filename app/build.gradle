@@ -63,4 +63,5 @@ dependencies {
     //加载更多
     implementation 'com.github.pinguo-zhouwei:CustomPopwindow:2.1.1'
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.1.3'
+    implementation 'com.github.zzz40500:android-shapeLoadingView:1.0.3.2'
 }

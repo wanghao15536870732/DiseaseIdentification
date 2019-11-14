@@ -19,6 +19,12 @@ public class ConstantUtils {
         scoreList = csvFile.read();
     }
 
+    public static List<String[]> getCSVFile(Context mContext,int source){
+        InputStream inputStream = mContext.getResources().openRawResource(source);
+        CSVFile csvFile = new CSVFile(inputStream);
+        return csvFile.read();
+    }
+
     /*默认显示玉米的少量疾病*/
     public static DiseaseData[] datas = {
             new DiseaseData("玉米圆斑病","http://www.cgris.net/disease/03%EF%BC%8D%E7%8E%89%E7%B1%B3/images/0224%20%E7%8E%89%E7%B1%B3%E5%9C%86%E6%96%91%E7%97%85%E7%A9%97%E8%85%90%E7%97%87%E7%8A%B6.jpg",
@@ -135,7 +141,7 @@ public class ConstantUtils {
     public static String[][] Disease = {
             {"病斑","病斑","黑褐色","枯死","水渍状斑点","暗绿色","坏死大斑","脱落","畸形","轮纹状","灰褐色霉", "黄褐色病斑", "圆形或近圆形病斑", "油渍状", "枯萎", "破裂病斑", "病斑密布", "粘液", "不规则病斑","褐色病斑","凹陷病斑","棉絮状菌丝体"},
             {"膨大","肿胀","歪扭","绿叶变态","白色霉","孢子","圆形或近圆形病斑","畸形","弯曲","肥大","纺锤形病斑","梭形丙班","灰白色病斑","灰褐色病斑","不规则病斑","绿色","长菱形病斑","黑色病斑","黑色霉","破裂","椭圆形病斑","软化","腐烂"},
-            {"膨大","孢子","芽管","黄色孢子","球形孢子","肿瘤","矮小","黄色","维管束变褐色","长条形病斑","枯萎","肿胀","刘状物",""},
+            {"膨大","孢子","芽管","黄色孢子","球形孢子","肿瘤","矮小","黄色","维管束变褐色","长条形病斑","枯萎","肿胀","瘤状物",""},
             {"膨大","孢子","芽管"},
             {"膨大","孢子","芽管"},
             {"膨大","孢子","芽管"},

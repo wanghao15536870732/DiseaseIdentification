@@ -22,6 +22,11 @@ public class MyApplication extends Application {
     public BMapManager mBMapManager;
     private static MyApplication mInstance = null;
 
+    //设置APPID/AK/SK
+    public static final String APP_ID = "17747286";
+    public static final String API_KEY = "cjWrIRKGpcwLM4AUfW8LTopn";
+    public static final String SECRET_KEY = "VPeZ3SNXgM2p9NdIgOuFdSUEPQUtzQ9q";
+
     @Override
     public void onCreate() {
         super.onCreate();

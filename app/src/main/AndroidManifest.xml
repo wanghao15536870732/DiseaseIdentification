@@ -46,7 +46,7 @@
         android:theme="@style/AppTheme"
         tools:targetApi="n">
         <activity
-            android:name=".view.activity.GuideActivity"
+            android:name=".view.activity.MainActivity"
             android:windowSoftInputMode="stateHidden|stateUnchanged">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -82,10 +82,6 @@
             android:name=".view.activity.PanoramaActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="sensor" />
-        <activity
-            android:name=".view.activity.RegisterActivity"
-            android:windowSoftInputMode="stateHidden|stateUnchanged" />
-        <activity android:name=".view.activity.MainActivity" />
         <activity android:name=".view.activity.AddDynamicActivity" />
         <activity android:name=".view.activity.WebUIActivity" />
         <activity android:name=".view.activity.RobotActivity" />
@@ -117,7 +113,9 @@
         <activity android:name=".view.activity.CropDetailActivity" />
         <activity android:name=".view.activity.LearnActivity" />
         <activity android:name=".view.activity.LearnCropActivity" />
-        <activity android:name=".view.activity.ExcelActivity"></activity>
+        <activity android:name=".view.activity.SelfResultActivity" />
+        <activity android:name=".view.activity.ResultActivity"
+            />
     </application>
 
 </manifest>
