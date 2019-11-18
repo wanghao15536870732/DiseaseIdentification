@@ -37,7 +37,7 @@ public class AgricultureNewsFragment extends Fragment {
 
     private List<Fragment> mFragments = new ArrayList<>(  );
 
-    private String[] mTitles = {"农业头条","疾病防治","养殖技巧"};
+    private String[] mTitles = {"农业头条","疾病防治","种植技巧"};
 
     private TitleAdapter mAdapter;
     private Banner banner;

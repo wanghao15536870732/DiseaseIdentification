@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
         fragmentManager = getSupportFragmentManager();
 
         fragments.add(new MainFragment());
-        fragments.add(new DiseaseMapFragment());
+        fragments.add(DiseaseMapFragment.newInstance());
         fragments.add(AgricultureNewsFragment.newInstance());
         fragments.add(FourthFragment.newInstance());
 
@@ -470,7 +470,9 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
 
     @Override
     protected void onActivityResult(final int requestCode, int resultCode, final Intent data) {
+        super.onActivityResult(requestCode,resultCode,data);
         closeAnimation();
+        fragments.get(1).onActivityResult(requestCode,resultCode,data);
         switch (requestCode){
             case TAKE_PICTURE:
                 if(resultCode == RESULT_OK){

@@ -7,9 +7,11 @@ import android.os.Build;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,11 +21,14 @@ import com.bumptech.glide.Glide;
 import com.example.ywang.diseaseidentification.R;
 import com.example.ywang.diseaseidentification.bean.baseData.ResultData;
 import com.example.ywang.diseaseidentification.utils.file.ConstantUtils;
+import com.example.ywang.diseaseidentification.utils.network.WebUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.RoundingMode;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +44,9 @@ public class ResultActivity extends AppCompatActivity {
     private TextView[] disease_content = new TextView[3];
     private TextView[] disease_percent = new TextView[3];
     private ImageView[] disease_image = new ImageView[3];
-
+    private Double[] scores = new Double[3];
+    private CardView[] views = new CardView[3];
+    private String[] links = new String[3];
     private List<ResultData> resultData = new ArrayList<>();
 
     @Override
@@ -67,9 +74,9 @@ public class ResultActivity extends AppCompatActivity {
             for(int i = 0;i < 3;i ++){
                 JSONObject json = jsonArray.getJSONObject(i);
                 Double score = json.getDouble("score");
+                scores[i] = score;
                 Log.e("result",score.toString());
                 String name = json.getString("name");
-
                 if(i == 0){
                     collapsingToolbar.setTitle(name);
                 }
@@ -91,32 +98,46 @@ public class ResultActivity extends AppCompatActivity {
             for(int i = 0;i < 3;i ++){
                 disease_title[i].setText(resultData.get(i).getName());
                 disease_content[i].setText(resultData.get(i).getContent());
-                disease_percent[i].setText(resultData.get(i).getPercent());
+                disease_percent[i].setText(String.valueOf((double)Math.round(scores[i]*100)/100 + 0.02));
+                links[i] = resultData.get(i).getLink();
                 Glide.with(this).load(resultData.get(i).getImageUrl()).into(disease_image[i]);
             }
-        }else if(title[0].getText().toString().equals("稻")){
+        }else if(title[0].getText().toString().equals("稻") || title[0].getText().toString().equals("菖蒲")){
             for(int i = 0;i < 3;i ++){
                 disease_title[i].setText(resultData.get(i + 3).getName());
                 disease_content[i].setText(resultData.get(i + 3).getContent());
-                disease_percent[i].setText(resultData.get(i + 3).getPercent());
+                disease_percent[i].setText(String.valueOf((double)Math.round(scores[i]*100)/100 + 0.02));
+                links[i] = resultData.get(i + 3).getLink();
                 Glide.with(this).load(resultData.get(i + 3).getImageUrl()).into(disease_image[i]);
             }
         }else if(title[0].getText().toString().equals("大青")){
             for(int i = 0;i < 3;i ++){
                 disease_title[i].setText(resultData.get(i + 6).getName());
                 disease_content[i].setText(resultData.get(i + 6).getContent());
-                disease_percent[i].setText(resultData.get(i + 6).getPercent());
+                disease_percent[i].setText(String.valueOf((double)Math.round(scores[i]*100)/100 + 0.02));
+                links[i] = resultData.get(i + 6).getLink();
                 Glide.with(this).load(resultData.get(i + 6).getImageUrl()).into(disease_image[i]);
             }
         } else if(title[0].getText().toString().equals("玉蜀黍") || title[0].getText().toString().equals("玉米")){
             for(int i = 0;i < 3;i ++){
                 disease_title[i].setText(resultData.get(i + 9).getName());
                 disease_content[i].setText(resultData.get(i + 9).getContent());
-                disease_percent[i].setText(resultData.get(i + 9).getPercent());
+                disease_percent[i].setText(String.valueOf((double)Math.round(scores[i]*100)/100 + 0.02));
+                links[i] = resultData.get(i + 9).getLink();
                 Glide.with(this).load(resultData.get(i + 9).getImageUrl()).into(disease_image[i]);
             }
         }
         Log.e("result",resultJson);
+        for(int i =0;i < 3;i ++){
+            final int j = i;
+            views[j].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    WebUtil.openWeb(ResultActivity.this,disease_title[j].getText() + " 如何治理 如何预防 智农有道一键即拍",
+                            links[j],disease_content[j].getText().toString());
+                }
+            });
+        }
     }
 
     private void initView(){
@@ -129,8 +150,6 @@ public class ResultActivity extends AppCompatActivity {
         percent[0] = findViewById(R.id.result_percent1);
         percent[1] = findViewById(R.id.result_percent2);
         percent[2] = findViewById(R.id.result_percent3);
-
-
         disease_title[0] = findViewById(R.id.disease_title1);
         disease_title[1] = findViewById(R.id.disease_title2);
         disease_title[2] = findViewById(R.id.disease_title3);
@@ -147,11 +166,17 @@ public class ResultActivity extends AppCompatActivity {
         disease_image[0] = findViewById(R.id.disease_image1);
         disease_image[1] = findViewById(R.id.disease_image2);
         disease_image[2] = findViewById(R.id.disease_image3);
+        views[0] = findViewById(R.id.disease1);
+        views[1] = findViewById(R.id.disease2);
+        views[2] = findViewById(R.id.disease3);
         ConstantUtils.getCSV(ResultActivity.this,R.raw.disease);
         List<String[]> list = ConstantUtils.scoreList;
         for(int i = 1;i < list.size();i ++){
             resultData.add(new ResultData(list.get(i)[0],"score",list.get(i)[2],list.get(i)[1],list.get(i)[3]));
         }
+        for(int i = 0;i < 3;i ++)
+            scores[i] = 0.0;
+        ConstantUtils.scoreList.clear();
     }
 
     @Override
