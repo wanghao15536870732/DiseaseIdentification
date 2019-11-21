@@ -1,2 +1,10 @@
 # DiseaseIdentification
-农乐  农作物病虫害识别APP
+智农有道  农作物病虫害识别APP
+
+
+|||||
+|:--|:--|:--|:--|
+|“拍照识别病虫害”：用户可以对发病的作物叶片或者果实进行拍照，裁剪对应发病区域，等待2~3秒即可以返回匹配率最高的三个疾病，并将识别率标记到对应的疾病卡片上，显示在照片的上方。用户可以通过拍照识别结构卡片，会显示对应疾病的具体信息、危害病症、传播途径、发病条件和治理方法。帮助用户快速找到解决方法，对症下药。|![image.png](https://upload-images.jianshu.io/upload_images/9140378-a0a2173a33baefae.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/640)|![image.png](https://upload-images.jianshu.io/upload_images/9140378-e186dcee6484d2cc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/640)||
+|“大数据 农技学习”：该界面罗列了100多种蔬菜、粮棉油、水果、经济作物等几类常见的农作物，并使用TabLayout + Fragment滑动布局加载这些农作物。可以使大量数据流畅的展示给用户。用户通过点击对应疾病的卡片，获取当前病虫害的典型照片以及具体信息，包括：对应症状、病原、传播途径和发病条件、防治方法等等。为解决大多数农民用户不会拼音、难以识字的问题，该界面也配备了多方言的语音朗读，解决南北语言差异问题的同时也构成了良好的交互界面，方便用户使用。 |![image.png](https://upload-images.jianshu.io/upload_images/9140378-bc033ccec789facf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/640)|![image.png](https://upload-images.jianshu.io/upload_images/9140378-6a13e9c80c0b3819.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/640)|![image.png](https://upload-images.jianshu.io/upload_images/9140378-f3a896621006523f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/640)|
+|“病害区域规划”：农户可以对特定种植区域进行标记划分，我们分为了绿色(作物长势良好)、红色(作物患病较多)、蓝色(作物成熟待收)三种特定围栏。用户只需点击“创建围栏”按钮并输入标题、长(m)和宽(m)，确认后会根据算法将实际距离转换为地图LatLng距离标记到地图上，当用户下一次进入该区域时，app会产生震动并播报“您已进入**区域”，为用户方便、精确、高效的管理区域化种植提供一份保障。|![image.png](https://upload-images.jianshu.io/upload_images/9140378-80b74522238204aa.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/640)|![image.png](https://upload-images.jianshu.io/upload_images/9140378-983fb817fc2ab35b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/640)|![image.png](https://upload-images.jianshu.io/upload_images/9140378-fd15f4589a005885.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/640)||
+|“农业实时资讯”： 用户在这个界面查看最新的农业头条、农业政策、会展以及一些疾病防治和养殖技巧。使用户可以方便快速的掌握一些有关农耕的政策、技巧，及时做好农作物疾病预防的准备。点开每一条新闻，会进入到新闻的详情界面，我们在这里设计了顶部轮播标题和三个可以折叠的悬浮按钮，呈现一个Material Design的设计感。并且内置了“语音播报”的功能，可以在文章的任意文字位置进行播报，并且同时提供多方言选择。|![image.png](https://upload-images.jianshu.io/upload_images/9140378-31b0d26bd3734d95.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/640)|![image.png](https://upload-images.jianshu.io/upload_images/9140378-7c29b6fad4f18f2f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/640)||
