@@ -3,15 +3,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DynamicBean {
-    public String user = null;
+    private String dynamic_id;
+    private String user = null;
     public String content = null;
     public String time = null;
     public String type = null;
     public List<String> url = new ArrayList<>();
-    public int img_num = 0;
+    private int img_num = 0;
     public static List<String> mUrl = new ArrayList<>();
 
     public DynamicBean(){}
+
+    public String getDynamic_id() {
+        return dynamic_id;
+    }
+
+    public void setDynamic_id(String dynamic_id) {
+        this.dynamic_id = dynamic_id;
+    }
 
     public DynamicBean(String user, String content, String time, String type, List<String> url, int img_num) {
         this.user = user;

@@ -75,9 +75,6 @@ public class NineGridAdapter extends  RecyclerView.Adapter<NineGridAdapter.ViewH
         holder.mCommentListTextView.setCommentColor (Color.parseColor ("#242424"));
         holder.mCommentListTextView.setTalkStr ("回复");
         holder.mCommentListTextView.setTalkColor (Color.parseColor ("#242424"));
-        if(nineGridModel.mCommentInfos.size() != 0){
-            holder.mCommentListTextView.setData (nineGridModel.mCommentInfos);
-        }
     }
 
     @Override
@@ -93,13 +90,13 @@ public class NineGridAdapter extends  RecyclerView.Adapter<NineGridAdapter.ViewH
 
         public ViewHolder(View itemView) {
             super( itemView );
-            layout = (NineGridLayout) itemView.findViewById( R.id.layout_nine_grid);
-            mImageView = (ImageView) itemView.findViewById( R.id.image );
-            contact_name = (TextView) itemView.findViewById( R.id.name );
-            time = (TextView) itemView.findViewById( R.id.time );
-            question_detail = (TextView) itemView.findViewById( R.id.detail);
-            comment = (ImageView) itemView.findViewById( R.id.comment );
-            mCommentListTextView = (CommentListTextView) itemView.findViewById (R.id.commentlist);
+            layout = itemView.findViewById( R.id.layout_nine_grid);
+            mImageView = itemView.findViewById( R.id.image );
+            contact_name = itemView.findViewById( R.id.name );
+            time = itemView.findViewById( R.id.time );
+            question_detail = itemView.findViewById( R.id.detail);
+            comment = itemView.findViewById( R.id.comment );
+            mCommentListTextView = itemView.findViewById (R.id.commentList);
         }
     }
 

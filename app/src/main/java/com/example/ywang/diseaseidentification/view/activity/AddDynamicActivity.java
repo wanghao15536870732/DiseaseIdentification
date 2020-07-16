@@ -129,26 +129,35 @@ public class AddDynamicActivity extends AppCompatActivity implements View.OnClic
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.toolbar_send:
-                for (int i = 0;i < selectList.size();i ++){
-                    LocalMedia localMedia = selectList.get(i);
-                    String path = localMedia.getPath();
+                if(mEditText.getText().toString().equals("")){
+                    Toast.makeText(this, "输入信息为空！请完善内容！", Toast.LENGTH_SHORT).show();
+                }else{
+                    List<String> pathList = new ArrayList<>();
+                    for (int i = 0;i < selectList.size();i ++){
+                        LocalMedia localMedia = selectList.get(i);
+                        String path = localMedia.getPath();
+                        pathList.add(path);
+                    }
+
                     String content = mEditText.getText().toString().trim();
-                    String type = "农业资讯";
-                    Random rand = new Random();
-                    String num = String.valueOf((int) rand.nextInt(1000) + 1);
+                    String type = labelsView.getSelectLabels().toString();
+                    String num = String.valueOf(new Random().nextInt(1000) + 1);
                     String avatar = "农民" + num;
                     DynamicBean bean = new DynamicBean(avatar,content,getTime(),type,new ArrayList<String>(),selectList.size());
                     UpLoadFileTask task = new UpLoadFileTask(AddDynamicActivity.this,bean);
-                    task.execute(path);
+                    task.execute(pathList);
+                    if(UpToServlet.SUCCESS){
+                        Toast.makeText(this, "上传成功！", Toast.LENGTH_SHORT).show();
+                        UpToServlet.SUCCESS = false;
+                    }else {
+                        Toast.makeText(this, "上传成功！", Toast.LENGTH_SHORT).show();
+                        UpToServlet.SUCCESS = false;
+                    }
+                    Intent intent = new Intent();
+                    intent.putExtra("dynamic", true);
+                    setResult(111, intent);
+                    finish();
                 }
-                if(UpToServlet.SUCCESS){
-                    Toast.makeText(this, "上传成功！", Toast.LENGTH_SHORT).show();
-                    UpToServlet.SUCCESS = false;
-                }else {
-                    Toast.makeText(this, "上传成功！", Toast.LENGTH_SHORT).show();
-                    UpToServlet.SUCCESS = false;
-                }
-                this.finish();
                 break;
             case R.id.toolbar_back:
                 finish();

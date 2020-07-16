@@ -38,9 +38,6 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private SwipeRefreshLayout swipeRefreshLayout;
     private NewsListAdapter adapter;
     private List<NewsBean> mNewsBeans = new ArrayList<>();
-    private Boolean flag = false;
-    private String main_content;
-
 
     public static NewsFragment newInstance(String mUrl){
         Bundle bundle = new Bundle();
@@ -52,16 +49,6 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     private String mUrl;
     private boolean mIsRefreshing = false;
-
-    //    private NewsBean[] news = {
-//            new NewsBean(1,"农业网","2019/9/11 9:01:00","蔬果价格继续回落 保障充足供应中秋",
-//                    "随着中秋佳节的临近，政府和大众关心的“菜篮子”保障供应如何？物价又上涨了吗？",
-//                    "http://img8.agronet.com.cn/Users/100/617/663/2019911901105591.jpg",
-//                    "http://news.1nongjing.com/201909/252620.html"),
-//            new NewsBean(2,"中国农业网 　","2019-07-12 14:28:27","江山代有“良品”出丨挖掘品牌黄瓜背",
-//                    "","http://www.zgny.com.cn/ifm/consultation/images/2019718947.jpg",
-//                    "http://www.zgny.com.cn/ifm/consultation/2019-7-12/559259.shtml"),
-//    };
     private NewsBean[] news = new NewsBean[100];
 
     @SuppressLint("ClickableViewAccessibility")
@@ -73,37 +60,27 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         if(bundle != null){
             mUrl = bundle.getString("url");
         }
-        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView_news);
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout_news);
+        recyclerView = view.findViewById(R.id.recyclerView_news);
+        swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout_news);
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary,
                 R.color.colorPrimaryDark, R.color.colorAccent);
+
         swipeRefreshLayout.post(new Runnable() {
             @Override
             public void run() {
+                initData();
                 swipeRefreshLayout.setRefreshing(true);
                 onRefresh();
             }
         });
-        initData();
-        while (true){
-            if(flag){
-                break;
-            }
-        }
         adapter = new NewsListAdapter(mNewsBeans);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(container.getContext()));
-//        recyclerView.addItemDecoration(new DividerItemDecoration(container.getContext(), DividerItemDecoration.VERTICAL));
-
         recyclerView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                if(mIsRefreshing){
-                    return true;
-                }else {
-                    return false;
-                }
+                return mIsRefreshing;
             }
         });
         return view;
@@ -130,20 +107,18 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                     mIsRefreshing = true;
                     Log.e("newsbean ",String.valueOf(mNewsBeans.size()) );
                     while ((line = reader.readLine())!=null) {
-                        int  num = line.charAt(0)-'0';
+                        int num = line.charAt(0)-'0';
                         String author = reader.readLine();
                         String time = reader.readLine();
                         String title = reader.readLine();
                         String content = reader.readLine();
                         String img_url = reader.readLine();
                         String main_url = reader.readLine();
-                        main_content = content;
                         NewsBean newsBean = new NewsBean(num,author,time,title,content,img_url,main_url);
                         news[num-1] = newsBean;
                         mNewsBeans.add(newsBean);
                     }
-                    Log.e("newsbean ",String.valueOf(mNewsBeans.size()) );
-                    flag = true;
+                    Log.e("newsbean",String.valueOf(mNewsBeans.size()) );
                     mIsRefreshing = false;
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -197,8 +172,9 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             this.mNewsList = items;
         }
 
+        @NonNull
         @Override
-        public NewsListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public NewsListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_news,parent,false);
             final ViewHolder holder = new ViewHolder(view);
             mContext = parent.getContext();
@@ -214,7 +190,7 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         }
 
         @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             NewsBean newsBean = mNewsList.get(position);
             holder.time.setText( newsBean.getTime() );
             holder.author.setText( newsBean.getAuthor() );
@@ -231,12 +207,12 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             private TextView title,time,author;
             private ImageView mImageView;
 
-            public ViewHolder(View itemView) {
+            ViewHolder(View itemView) {
                 super(itemView);
-                title = (TextView) itemView.findViewById( R.id.item_news_title );
-                author = (TextView) itemView.findViewById( R.id.item_news_source );
-                time = (TextView) itemView.findViewById( R.id.item_news_date );
-                mImageView = (ImageView) itemView.findViewById( R.id.img_news);
+                title = itemView.findViewById( R.id.item_news_title );
+                author = itemView.findViewById( R.id.item_news_source );
+                time = itemView.findViewById( R.id.item_news_date );
+                mImageView = itemView.findViewById( R.id.img_news);
             }
         }
     }

@@ -8,4 +8,10 @@
     <declare-styleable name="BaseNineGridLayout">
         <attr name="spacing" format="dimension"/>
     </declare-styleable>
+
+    <declare-styleable name="MiuiWeatherView">
+        <attr name="line_interval" format="dimension"/>
+        <attr name="min_point_height" format="dimension"/>
+        <attr name="background_color" format="color"/>
+    </declare-styleable>
 </resources>

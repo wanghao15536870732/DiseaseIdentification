@@ -10,7 +10,7 @@
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/crop_image"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="50dp"
         android:scaleType="centerCrop"
         android:src="@drawable/avatar"/>
     <!--scaleType这个属性 ，可以让照片保持原有比例填充满ImageView-->
@@ -20,6 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_margin="5dp"
+        android:textColor="@color/black"
         android:textSize="16sp"/>
 
 </LinearLayout>

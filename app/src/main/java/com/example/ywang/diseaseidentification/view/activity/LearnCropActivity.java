@@ -36,19 +36,20 @@ public class LearnCropActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_learn_crop);
-        toolbar = (Toolbar) findViewById(R.id.toolbar_crop);
+        toolbar = findViewById(R.id.toolbar_crop);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
         actionBar.setTitle("农作物病害一览");
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
         initCrops();
-        mFragments.add(CropFragment.newInstance(mList));
-        mFragments.add(CropFragment.newInstance(mList4));
-        mFragments.add(CropFragment.newInstance(mList3));
-        mFragments.add(CropFragment.newInstance(mList2));
-        mViewPager = (ViewPager) findViewById( R.id.viewPager_crop );
-        mTabLayout = (TabLayout) findViewById( R.id.tabLayout_crop);
+        mFragments.add(CropFragment.newInstance(mList,3));
+        mFragments.add(CropFragment.newInstance(mList4,3));
+        mFragments.add(CropFragment.newInstance(mList3,3));
+        mFragments.add(CropFragment.newInstance(mList2,3));
+        mViewPager = findViewById( R.id.viewPager_crop );
+        mTabLayout = findViewById( R.id.tabLayout_crop);
         mTabLayout.setTabMode(TabLayout.MODE_FIXED);
         mTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         mAdapter = new TitleAdapter(getSupportFragmentManager(), mFragments, mTitles);

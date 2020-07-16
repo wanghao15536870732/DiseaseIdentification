@@ -47,14 +47,13 @@
                 android:layout_alignParentRight="true"
                 app:cardCornerRadius="4dp"
                 android:elevation="6dp"
-                android:layout_marginTop="5dp"
-                android:layout_margin="10dp">
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="10dp">
 
                 <Button
                     android:id="@+id/toolbar_send"
                     android:layout_width="56dp"
                     android:layout_height="28dp"
-                    android:layout_marginTop="5dp"
                     android:text="发表"
                     android:textSize="18sp"
                     android:background="@color/colorPrimary"

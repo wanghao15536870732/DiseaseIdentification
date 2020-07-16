@@ -89,18 +89,24 @@ public class LearnActivity extends AppCompatActivity {
             }
         });
 
-        ImageView back = (ImageView) findViewById(R.id.back);
+        ImageView back = findViewById(R.id.back);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
             }
         });
-        submit = (TextView) findViewById(R.id.submit);
+        submit = findViewById(R.id.submit);
+
+
+
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(LearnActivity.this,SelfResultActivity.class));
+                CropBean bean = cropBeanList.get(leftAdapter.getSelectPos());
+                Intent intent = new Intent(LearnActivity.this,SelfResultActivity.class);
+                intent.putExtra("name",bean.getPinyin());
+                startActivity(intent);
             }
         });
     }
@@ -176,6 +182,7 @@ public class LearnActivity extends AppCompatActivity {
         for(int i = 0;i < mList.size(); i++ ){
             DiseaseData data = mList.get(i);  //获取左边列表的单个作物
             CropBean crop = new CropBean(); // 转化为CropBean
+            crop.setPinyin(data.getCSVName());
             crop.setUrl(data.getImageUrl());
             crop.setTitle(data.getContent());
             cropItemList = new ArrayList<>();

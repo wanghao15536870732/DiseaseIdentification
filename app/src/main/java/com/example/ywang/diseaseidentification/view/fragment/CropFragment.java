@@ -1,5 +1,6 @@
 package com.example.ywang.diseaseidentification.view.fragment;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -18,34 +19,38 @@ import java.util.List;
 
 public class CropFragment extends Fragment {
 
-    private RecyclerView recyclerView;
-    private CropAdapter adapter;
     private List<DiseaseData> mList = new ArrayList<>();
+    private int spanCount;
 
-    public static CropFragment newInstance(List<DiseaseData> list){
+    public static CropFragment newInstance(List<DiseaseData> list,int spanCount){
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList("list", (ArrayList<? extends Parcelable>) list);
-        CropFragment fragment = new CropFragment();
+        CropFragment fragment = new CropFragment(spanCount);
         fragment.setArguments(bundle);
         return fragment;
     }
 
+    @SuppressLint("ValidFragment")
+    public CropFragment(int spanCount){
+        this.spanCount = spanCount;
+    }
+
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.layout_crop,container,false);
-        recyclerView = (RecyclerView) view.findViewById(R.id.crop_list);
+        RecyclerView recyclerView = view.findViewById(R.id.crop_list);
         Bundle bundle = getArguments();
         if (bundle != null){
             mList = bundle.getParcelableArrayList("list");
         }
-        //网格式布局，产生2列数据
-        GridLayoutManager layoutManager = new GridLayoutManager(getContext(),3);
+        //网格式布局，产生3列数据
+        GridLayoutManager layoutManager = new GridLayoutManager(getContext(),spanCount);
         //让recyclerView的布局采用网格式布局
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new CropAdapter(mList);
+        CropAdapter adapter = new CropAdapter(mList);
         recyclerView.setAdapter(adapter);
         return view;
     }
-
 }

@@ -1,6 +1,7 @@
 package com.example.ywang.diseaseidentification.utils.file;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 
 import com.example.ywang.diseaseidentification.bean.CropItem;
 import com.example.ywang.diseaseidentification.bean.baseData.DiseaseData;
@@ -11,7 +12,7 @@ import java.util.List;
 
 public class ConstantUtils {
 
-    public static List<String[]> scoreList = new ArrayList<>();
+    public static List scoreList = new ArrayList<>();
 
     public static void getCSV(Context mContext,int source){
         InputStream inputStream = mContext.getResources().openRawResource(source);
@@ -19,39 +20,11 @@ public class ConstantUtils {
         scoreList = csvFile.read();
     }
 
-    public static List<String[]> getCSVFile(Context mContext,int source){
+    public static List getCSVFile(Context mContext, int source){
         InputStream inputStream = mContext.getResources().openRawResource(source);
         CSVFile csvFile = new CSVFile(inputStream);
         return csvFile.read();
     }
-
-    /*默认显示玉米的少量疾病*/
-    public static DiseaseData[] datas = {
-            new DiseaseData("玉米圆斑病","http://www.cgris.net/disease/03%EF%BC%8D%E7%8E%89%E7%B1%B3/images/0224%20%E7%8E%89%E7%B1%B3%E5%9C%86%E6%96%91%E7%97%85%E7%A9%97%E8%85%90%E7%97%87%E7%8A%B6.jpg",
-                    "http://www.cgris.net/disease/03%EF%BC%8D%E7%8E%89%E7%B1%B3/0224%20%E7%8E%89%E7%B1%B3%E5%9C%86%E6%96%91%E7%97%85.htm"),
-            new DiseaseData("玉米干腐病","http://www.cgris.net/disease/03%EF%BC%8D%E7%8E%89%E7%B1%B3/images/0225%20%E7%8E%89%E7%B1%B3%E5%B9%B2%E8%85%90%E7%97%85%E6%9E%9C%E7%A9%97%E5%8F%97%E5%AE%B3%E7%8A%B6.jpg",
-                    "http://www.cgris.net/disease/03%EF%BC%8D%E7%8E%89%E7%B1%B3/0225%20%E7%8E%89%E7%B1%B3%E5%B9%B2%E8%85%90%E7%97%85.htm"),
-            new DiseaseData("玉米丝核菌穗腐病","http://www.cgris.net/disease/03%EF%BC%8D%E7%8E%89%E7%B1%B3/images/0226%20%E7%8E%89%E7%B1%B3%E4%B8%9D%E6%A0%B8%E8%8F%8C%E7%A9%97%E8%85%90%E7%97%85%E5%8F%8A%E5%A4%96%E8%8B%9E%E5%8F%B6%E4%B8%8A%E5%B0%8F%E8%8F%8C%E6%A0%B8.jpg",
-                    "http://www.cgris.net/disease/03%EF%BC%8D%E7%8E%89%E7%B1%B3/0226%20%E7%8E%89%E7%B1%B3%E4%B8%9D%E6%A0%B8%E8%8F%8C%E7%A9%97%E8%85%90%E7%97%85.htm"),
-            new DiseaseData("玉米镰刀菌穗粒腐病","http://www.cgris.net/disease/03%EF%BC%8D%E7%8E%89%E7%B1%B3/images/0227%20%E7%8E%89%E7%B1%B3%E8%B5%A4%E9%9C%89%E8%8F%8C%E7%A9%97%E8%85%90%EF%BC%88%E5%B7%A6%EF%BC%89%E5%92%8C%E9%95%B0%E5%88%80%E8%8F%8C%E7%A9%97%E8%85%90%E7%97%85.jpg",
-                    "http://www.cgris.net/disease/03%EF%BC%8D%E7%8E%89%E7%B1%B3/0227(%E5%8F%B3)%20%E7%8E%89%E7%B1%B3%E9%95%B0%E5%88%80%E8%8F%8C%E7%A9%97%E7%B2%92%E8%85%90%E7%97%85.htm"),
-            new DiseaseData("玉米赤霉病","http://www.cgris.net/disease/03%EF%BC%8D%E7%8E%89%E7%B1%B3/images/0227%20%E7%8E%89%E7%B1%B3%E8%B5%A4%E9%9C%89%E8%8F%8C%E7%A9%97%E8%85%90%EF%BC%88%E5%B7%A6%EF%BC%89%E5%92%8C%E9%95%B0%E5%88%80%E8%8F%8C%E7%A9%97%E8%85%90%E7%97%85.jpg",
-                    "http://www.cgris.net/disease/03%EF%BC%8D%E7%8E%89%E7%B1%B3/0227(%E5%B7%A6)%20%E7%8E%89%E7%B1%B3%E8%B5%A4%E9%9C%89%E7%97%85.htm"),
-            new DiseaseData("玉米枝孢穗腐病","http://www.cgris.net/disease/03%EF%BC%8D%E7%8E%89%E7%B1%B3/images/0228%20%E7%8E%89%E7%B1%B3%E6%9E%9D%E5%AD%A2%E8%8F%8C%E7%A9%97%E8%85%90%E7%97%85.jpg",
-                    "http://www.cgris.net/disease/03%EF%BC%8D%E7%8E%89%E7%B1%B3/0228%20%E7%8E%89%E7%B1%B3%E6%9E%9D%E5%AD%A2%E7%A9%97%E8%85%90%E7%97%85.htm"),
-            new DiseaseData("玉米斑枯病","http://www.cgris.net/disease/03%EF%BC%8D%E7%8E%89%E7%B1%B3/images/0233%20%E7%8E%89%E7%B1%B3%E6%96%91%E6%9E%AF%E7%97%85%E7%97%85%E5%8F%B6.jpg",
-                    "http://www.cgris.net/disease/03%EF%BC%8D%E7%8E%89%E7%B1%B3/0233%20%E7%8E%89%E7%B1%B3%E6%96%91%E6%9E%AF%E7%97%85.htm"),
-            new DiseaseData("玉米全蚀病","http://www.cgris.net/disease/03%EF%BC%8D%E7%8E%89%E7%B1%B3/images/0234%20%E7%8E%89%E7%B1%B3%E5%85%A8%E8%9A%80%E7%97%85%E6%A0%B9%E9%83%A8%E7%97%87%E7%8A%B6.jpg",
-                    "http://www.cgris.net/disease/03%EF%BC%8D%E7%8E%89%E7%B1%B3/0234-0235%20%E7%8E%89%E7%B1%B3%E5%85%A8%E8%9A%80%E7%97%85.htm"),
-            new DiseaseData("玉米线虫病","http://www.cgris.net/disease/03%EF%BC%8D%E7%8E%89%E7%B1%B3/images/0245%20%E7%8E%89%E7%B1%B3-%E7%BA%BF%E8%99%AB%E4%B8%BA%E5%AE%B3%E7%8E%89%E7%B1%B3%E7%94%B0%E9%97%B4%E5%8F%97%E5%AE%B3%E7%8A%B6.jpg",
-                    "http://www.cgris.net/disease/03%EF%BC%8D%E7%8E%89%E7%B1%B3/0245-0247%20%E7%8E%89%E7%B1%B3%E7%BA%BF%E8%99%AB%E7%97%85.htm"),
-            new DiseaseData("玉米缺素症","http://www.cgris.net/disease/03%EF%BC%8D%E7%8E%89%E7%B1%B3/images/0249%20%E7%8E%89%E7%B1%B3%E6%88%90%E6%A0%AA%E7%BC%BA%E6%B0%AE%E7%97%87%E7%8A%B6%E7%8A%B6.jpg",
-                    "http://www.cgris.net/disease/03%EF%BC%8D%E7%8E%89%E7%B1%B3/0248-0262%20%E7%8E%89%E7%B1%B3%E7%BC%BA%E7%B4%A0%E7%97%87.htm"),
-            new DiseaseData("玉米空秆","http://www.cgris.net/disease/03%EF%BC%8D%E7%8E%89%E7%B1%B3/images/0263%20%E7%8E%89%E7%B1%B3%E7%A9%BA%E7%A7%86.jpg",
-                    "http://www.cgris.net/disease/03%EF%BC%8D%E7%8E%89%E7%B1%B3/0263%20%E7%8E%89%E7%B1%B3%E7%A9%BA%E7%A7%86.htm"),
-            new DiseaseData("玉米倒伏","http://www.cgris.net/disease/03%EF%BC%8D%E7%8E%89%E7%B1%B3/images/0264%20%E7%8E%89%E7%B1%B3%E5%80%92%E4%BC%8F.jpg",
-                    "http://www.cgris.net/disease/03%EF%BC%8D%E7%8E%89%E7%B1%B3/0264%20%E7%8E%89%E7%B1%B3%E5%80%92%E4%BC%8F.htm"),
-    };
 
     /*所有农作物*/
     public static DiseaseData[] CropList1 = {
@@ -67,14 +40,14 @@ public class ConstantUtils {
             new DiseaseData("韭菜","https://image.tcmwiki.com/image/%E9%9F%AD%E8%8F%9C/%E9%9F%AD%E8%8F%9C.jpg","jiucai"),
             new DiseaseData("苦瓜","https://cn.bing.com/th?id=OIP.Vra2ca7lhgQVK_8va2dKOgHaE7&pid=Api&rs=1","kugua"),
             new DiseaseData("辣椒","http://pic47.nipic.com/20140905/10395918_204118362000_2.jpg","lajiao"),
-            new DiseaseData("芦荟","https://cn.bing.com/th?id=OIP.vSwxH5iwvTgznzeX-x-AOwHaFj&pid=Api&rs=1","luhui"),
+            new DiseaseData("扁豆","http://www.114nz.com/all_images/tuku/fl/200909281658185273.jpg","biandou"),
             new DiseaseData("萝卜","http://s1.cdn.xiangha.com/shicai/201508/071034157627.jpg/MTAwMHgw","luobo"),
-            new DiseaseData("南瓜","http://pic8.nipic.com/20100623/2419558_212717027825_2.jpg","nangua"),
+            new DiseaseData("南瓜","http://www.114nz.com/all_images/tuku/fl/200909281658327975.jpg","nangua"),
             new DiseaseData("茄子","https://cn.bing.com/th?id=OIP.W7wtukTpIHdOzkWPQHML-QHaEz&pid=Api&rs=1","qiezi"),
             new DiseaseData("芹菜","https://img3.utuku.china.com/500x0/ent/20180330/842389a7-e797-4d52-a35f-7b2bc3b297b9.jpg","qincai"),
             new DiseaseData("丝瓜","https://cn.bing.com/th?id=OIP.peqdszbb-5l8HoEoE4TPWgHaE7&pid=Api&rs=1","sigua"),
             new DiseaseData("蒜","http://pichk.daydaycook.com/production/images/20171204/146d0211-ebd6-444e-b315-77ac69bdc607","suan"),
-            new DiseaseData("甜椒","https://cn.bing.com/th?id=OIP.tkS02qLWVhpIkr0EuSZHdgHaFj&pid=Api&rs=1","tianjiao"),
+            new DiseaseData("甜椒","http://www.114nz.com/all_images/tuku/fl/200909281703553699.jpg","tianjiao"),
             new DiseaseData("豌豆","http://img.juimg.com/tuku/yulantu/130805/328505-130P5222T277.jpg","wandou"),
             new DiseaseData("莴苣","https://cn.bing.com/th?id=OIP.4LqxEDsg_7PJ9L137qCHFQHaFE&pid=Api&rs=1","woju"),
             new DiseaseData("西葫芦","https://www.zhifure.com/upload/images/2018/1/12155342782.jpg","xihulu"),
@@ -97,7 +70,12 @@ public class ConstantUtils {
             new DiseaseData("烟草","https://cn.bing.com/th?id=OIP.e-GBr6tb7QxIYCs17zi7GAHaFj&pid=Api&rs=1","yancao"),
             new DiseaseData("甘薯","http://a4.att.hudong.com/54/12/01300000180919121697121473963.jpg","ganshu"),
             new DiseaseData("向日葵","http://a4.att.hudong.com/66/91/01000000000000119089130220666.jpg","xiangrikui"),
-            new DiseaseData("木薯","https://image.tcmwiki.com/image/%E6%9C%A8%E8%96%AF/%E6%9C%A8%E8%96%AF.jpg","mushu")
+            new DiseaseData("木薯","https://image.tcmwiki.com/image/%E6%9C%A8%E8%96%AF/%E6%9C%A8%E8%96%AF.jpg","mushu"),
+            new DiseaseData("桑树","http://www.114nz.com/all_images/tuku/fl/200909290904597902.jpg","sangshu"),
+            new DiseaseData("花类药材","http://www.114nz.com/all_images/tuku/fl/200912301644032610.jpg","hualeiyaocai"),
+            new DiseaseData("根茎类药材","http://www.114nz.com/all_images/tuku/fl/200912301646281135.jpg","genjigenjingleiyaocai"),
+            new DiseaseData("叶用药材","http://www.114nz.com/all_images/tuku/fl/200912301651595845.jpg","caoleiyaocaijiyeyongyaocai"),
+            new DiseaseData("皮类药材","http://www.114nz.com/all_images/tuku/fl/200912301655472810.jpg","pileiyaocaibinghai"),
     };
 
     public static DiseaseData[] CropList3 = {
@@ -109,6 +87,19 @@ public class ConstantUtils {
             new DiseaseData("西瓜","http://d6.yihaodianimg.com/N00/M02/5E/A4/CgQCtlGZ2NWAbSV6AAJPZJxjNOk06200.jpg","xigua"),
             new DiseaseData("甘蔗","http://pic7.photophoto.cn/20080612/0020033078507471_b.jpg","ganzhe"),
             new DiseaseData("甜瓜","http://pic.qqtn.com/up/2017-5/201705091441151745527.png","tiangua"),
+            new DiseaseData("香蕉","http://www.114nz.com/all_images/tuku/fl/200909281554147130.jpg","xiangjiao"),
+            new DiseaseData("枸杞","http://www.114nz.com/all_images/tuku/fl/200909281555065163.jpg","gouqi"),
+            new DiseaseData("杏","http://www.114nz.com/all_images/tuku/fl/200909281556594769.jpg","xing"),
+            new DiseaseData("枣","http://www.114nz.com/all_images/tuku/fl/200909281557141963.jpg","zao"),
+            new DiseaseData("荔枝","http://www.114nz.com/all_images/tuku/fl/200909281557478894.jpg","lizhi"),
+            new DiseaseData("樱桃","http://www.114nz.com/all_images/tuku/fl/200909281555139318.jpg","yingtao"),
+            new DiseaseData("芒果","http://www.114nz.com/all_images/tuku/fl/200909281600085021.jpg","mangguo"),
+            new DiseaseData("柑橘","http://www.114nz.com/all_images/tuku/fl/200909281601598480.jpg","ganju"),
+            new DiseaseData("橙","http://www.114nz.com/all_images/tuku/fl/200909281602256447.jpg","cheng"),
+            new DiseaseData("柠檬","http://www.114nz.com/all_images/tuku/fl/200909281602131190.jpg","ningmeng"),
+            new DiseaseData("柚","http://www.114nz.com/all_images/tuku/fl/200909281602472379.jpg","you"),
+            new DiseaseData("菠萝","http://www.114nz.com/all_images/tuku/fl/200909281603521220.jpg","boluo"),
+            new DiseaseData("椰子","http://www.114nz.com/all_images/tuku/fl/200909281604068316.jpg","yezi"),
     };
 
 
@@ -116,10 +107,10 @@ public class ConstantUtils {
             new DiseaseData("玉米","https://cn.bing.com/th?id=OIP.BTA-AyZROm9sj9JFrKpE6gHaF7&pid=Api&rs=1","yumi"),
             new DiseaseData("水稻","https://cn.bing.com/th?id=OIP.DuAkfbnHhXVjgpbMKMkyswHaFM&pid=Api&rs=1","shuidao"),
             new DiseaseData("大麦","https://cn.bing.com/th?id=OIP.pxuy8n3hgCrTgPod0KQQ_wHaDt&pid=Api&rs=1","damai"),
-            new DiseaseData("小麦","http://www.alnaturia.com/wp-content/uploads/2017/07/DSC_0212.jpg","xiaomai"),
+            new DiseaseData("小麦","https://tse2-mm.cn.bing.net/th/id/OIP.8lf0N-6ucKpoCuUlxq3ZugHaFj?pid=Api&rs=1","xiaomai"),
             new DiseaseData("棉花","http://img.qnong.com.cn/uploadfile/2016/0309/20160309080932770.jpg","mianhua"),
             new DiseaseData("土豆","https://cn.bing.com/th?id=OIP.fBmV-BZLMMTMi_qm3MnFxQHaGR&pid=Api&rs=1","tudou"),
-            new DiseaseData("油菜","http://imgs.nmplus.hk/wp-content/uploads/2016/02/%E6%B2%B9%E8%8F%9C%E8%8A%B107.jpg","youcai"),
+            new DiseaseData("油菜","https://tse1-mm.cn.bing.net/th/id/OIP.H6JoKOeqsNqhr0_Ku9-XpgHaFj?pid=Api&rs=1","youcai"),
             new DiseaseData("大豆","https://cn.bing.com/th?id=OIP.Eww7Cgag6EG3M6pnpqLM2QHaE8&pid=Api&rs=1","dadou"),
             new DiseaseData("高粱","https://cn.bing.com/th?id=OIP._H_lgGLAmCzRXkjTIfs1AgHaFj&pid=Api&rs=1","gaoliang"),
             new DiseaseData("绿豆","https://cn.bing.com/th?id=OIP.TGNgu0X_WDX0ZOOHRttNQQHaGU&pid=Api&rs=1","lvdou"),

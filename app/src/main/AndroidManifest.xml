@@ -46,8 +46,10 @@
         android:theme="@style/AppTheme"
         tools:targetApi="n">
         <activity
-            android:name=".view.activity.MainActivity"
-            android:windowSoftInputMode="stateHidden|stateUnchanged">
+            android:name=".view.activity.GuideActivity"
+            android:windowSoftInputMode="stateHidden|adjustPan"
+            android:clipToPadding="true"
+            android:fitsSystemWindows="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -114,8 +116,11 @@
         <activity android:name=".view.activity.LearnActivity" />
         <activity android:name=".view.activity.LearnCropActivity" />
         <activity android:name=".view.activity.SelfResultActivity" />
-        <activity android:name=".view.activity.ResultActivity"
-            />
+        <activity android:name=".view.activity.ResultActivity" />
+        <activity android:name=".view.activity.DiseaseActivity" />
+        <activity android:name=".view.activity.RegisterActivity" />
+        <activity android:name=".view.activity.MainActivity"
+            android:windowSoftInputMode="stateHidden|stateUnchanged"/>
     </application>
 
 </manifest>

@@ -13,16 +13,12 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
-
 import com.bumptech.glide.Glide;
 import com.example.ywang.diseaseidentification.R;
 import com.example.ywang.diseaseidentification.adapter.disease.DiseasesAdapter;
 import com.example.ywang.diseaseidentification.bean.baseData.DiseaseData;
 import com.example.ywang.diseaseidentification.utils.file.ConstantUtils;
-import com.example.zhouwei.library.CustomPopWindow;
 import com.luck.picture.lib.photoview.PhotoView;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,28 +26,24 @@ public class CropDetailActivity extends AppCompatActivity {
 
     //下拉刷新列表
     private SwipeRefreshLayout swipeRefreshLayout;
-    private RecyclerView recyclerView;
     private DiseasesAdapter adapter;
     private List<DiseaseData> mList = new ArrayList<>();
-    private String name;
-    private Toolbar toolbar;
-    private CustomPopWindow mCustomPopWindow;
 
     @SuppressLint("ResourceAsColor")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crop_detail);
-        toolbar = (Toolbar) findViewById(R.id.toolbar_crop1);
+        Toolbar toolbar = findViewById(R.id.toolbar_crop1);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         Intent intent = getIntent();
-        name = intent.getStringExtra("name");
+        String name = intent.getStringExtra("name");
         actionBar.setTitle(name);
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        swipeRefreshLayout = findViewById(R.id.swipe_refresh);
+        RecyclerView recyclerView = findViewById(R.id.recycler_view);
         //网格式布局，产生2列数据
         initDiseases();
         GridLayoutManager layoutManager = new GridLayoutManager(this,2);
@@ -77,15 +69,9 @@ public class CropDetailActivity extends AppCompatActivity {
 
     private void initDiseases(){
         mList.clear();
-        if(ConstantUtils.scoreList.size() != 0){
-            List<String[]> list = ConstantUtils.scoreList;
-            for(int i = 1;i < list.size();i ++) {
-                mList.add(new DiseaseData(list.get(i)[0],list.get(i)[1],list.get(i)[2]));
-            }
-        }else {
-            for (int i = 0; i < ConstantUtils.datas.length; i++) {
-                mList.add(ConstantUtils.datas[i]);
-            }
+        List<String[]> list = ConstantUtils.scoreList;
+        for(int i = 1;i < list.size();i ++) {
+            mList.add(new DiseaseData(list.get(i)[0],list.get(i)[1],list.get(i)[2]));
         }
     }
 
@@ -99,11 +85,6 @@ public class CropDetailActivity extends AppCompatActivity {
                 View contentView = LayoutInflater.from(this).inflate(R.layout.pop_map,null);
                 //处理popWindow 显示内容
                 handleLogic(contentView);
-                //创建并显示popWindow
-                mCustomPopWindow = new CustomPopWindow.PopupWindowBuilder(this)
-                        .setView(contentView)
-                        .create()
-                        .showAsDropDown(findViewById(R.id.action_map),0,20);
                 break;
         }
         return true;
@@ -135,18 +116,12 @@ public class CropDetailActivity extends AppCompatActivity {
 
     /**
      * 处理弹出显示内容、点击事件等逻辑
-     * @param contentView
      */
     private void handleLogic(View contentView){
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mCustomPopWindow != null){
-                    mCustomPopWindow.dissmiss();
-                }
-                switch (v.getId()){
-
-                }
+                v.getId();
             }
         };
         PhotoView resource = contentView.findViewById(R.id.crop_resource);

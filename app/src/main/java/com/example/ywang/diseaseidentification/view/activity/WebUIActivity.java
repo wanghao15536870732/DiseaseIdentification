@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.net.http.SslError;
-import android.os.Build;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -29,7 +28,6 @@ import android.webkit.WebViewClient;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.cocosw.bottomsheet.BottomSheet;
 import com.example.ywang.diseaseidentification.R;
 import com.example.ywang.diseaseidentification.utils.SnackBarUtil;
@@ -41,9 +39,13 @@ import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechSynthesizer;
 import com.iflytek.cloud.SynthesizerListener;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class WebUIActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener{
 
@@ -51,12 +53,11 @@ public class WebUIActivity extends AppCompatActivity implements SwipeRefreshLayo
     private TextView tvTitle;
     private WebView webView;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private String title;
-    private String url;
-    private String content;
+    private String url,times;
+    private StringBuffer content = new StringBuffer();
     /*与悬浮按钮相关*/
     private FloatingActionsMenu mFloatingActionsMenu;
-    private FloatingActionButton text_to_voice,change_voice,fab_up;
+    private FloatingActionButton text_to_voice;
     private String VOICE = null;
     private ScrollView scrollView;
 
@@ -64,10 +65,10 @@ public class WebUIActivity extends AppCompatActivity implements SwipeRefreshLayo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_ui);
-        toolbar = (Toolbar) findViewById(R.id.toolbar_web);
-        tvTitle = (TextView) findViewById(R.id.title_web);
-        webView = (WebView) findViewById(R.id.web_view);
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_layout_web);
+        toolbar = findViewById(R.id.toolbar_web);
+        tvTitle = findViewById(R.id.title_web);
+        webView = findViewById(R.id.web_view);
+        swipeRefreshLayout = findViewById(R.id.swipe_layout_web);
         init();
         initFloatButton();
     }
@@ -77,15 +78,43 @@ public class WebUIActivity extends AppCompatActivity implements SwipeRefreshLayo
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle("");
-        title = getIntent().getExtras().getString("title");
+        String title = getIntent().getExtras().getString("title");
         url = getIntent().getExtras().getString("url");
-        content = getIntent().getExtras().getString("content");
-//        Toast.makeText(this, content, Toast.LENGTH_SHORT).show();
+        times = getIntent().getExtras().getString("times");
         tvTitle.setText(title);
         swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorPrimary));
         swipeRefreshLayout.setOnRefreshListener(this);
         init_web_view();
-        scrollView = (ScrollView) findViewById(R.id.scrollView_news);
+        parseNews(url);
+        scrollView = findViewById(R.id.scrollView_news);
+    }
+
+    private void parseNews(final String newsUrl) {
+        new Thread(new Runnable() {
+            List<String> newsText = new ArrayList<>();
+            @Override
+            public void run() {
+                try {
+                    //从一个URL加载一个Document对象。
+                    Document doc = Jsoup.connect(newsUrl).get();
+                    final Elements elements = doc.select("div.detail");
+                    for (Element element : elements) {
+                        Log.e("news", element.text());
+                        newsText.add(element.text());
+                        content.append(element.text());
+                    }
+                    Document document = Jsoup.connect(newsUrl).get();
+                    Elements images = document.select("div.detail")
+                            .select("img[src~=(?i)\\.(png|jpe?g|gif)]");
+                    for (Element image : images) {
+                        Log.e("news", image.attr("src"));
+                    }
+
+                } catch (Exception e) {
+                    Log.e("news", e.toString());
+                }
+            }
+        }).start();
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -200,9 +229,10 @@ public class WebUIActivity extends AppCompatActivity implements SwipeRefreshLayo
         }
         return super.onOptionsItemSelected(item);
     }
+
     private void initFloatButton() {
-        mFloatingActionsMenu = (FloatingActionsMenu) findViewById(R.id.detail_actions_menu);
-        change_voice = (FloatingActionButton) findViewById(R.id.change_voice);
+        mFloatingActionsMenu = findViewById(R.id.detail_actions_menu);
+        FloatingActionButton change_voice = findViewById(R.id.change_voice);
         change_voice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -280,15 +310,15 @@ public class WebUIActivity extends AppCompatActivity implements SwipeRefreshLayo
             }
         });
 
-        text_to_voice = (FloatingActionButton) findViewById( R.id.action_text_to_voice );
+        text_to_voice = findViewById( R.id.action_text_to_voice );
         text_to_voice.setIcon( R.drawable.ic_play  );
         text_to_voice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mFloatingActionsMenu.toggle();
-                if (!content.equals("") && text_to_voice.getTitle().equals("文字播报")) {
+                if (!content.toString().equals("") && text_to_voice.getTitle().equals("文字播报")) {
                     text_to_voice.setIcon( R.drawable.ic_pause);
-                    SpeechSynthesizer(content);
+                    SpeechSynthesizer(content.toString());
                     SpeechSynthesizer.getSynthesizer().resumeSpeaking();
                     text_to_voice.setTitle( "结束播报" );
                 }else if (text_to_voice.getTitle().equals("结束播报")){
@@ -300,7 +330,7 @@ public class WebUIActivity extends AppCompatActivity implements SwipeRefreshLayo
             }
         });
 
-        fab_up = (FloatingActionButton) findViewById(R.id.fab_up);
+        FloatingActionButton fab_up = findViewById(R.id.fab_up);
         fab_up.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -310,16 +340,10 @@ public class WebUIActivity extends AppCompatActivity implements SwipeRefreshLayo
         });
     }
 
-
     /*-------------------------------语音合成--------------------------*/
     public void SpeechSynthesizer(String text){
         //1.创建SpeechSynthesizer对象, 第二个参数：本地合成时传InitListener
         SpeechSynthesizer mTts = SpeechSynthesizer.createSynthesizer(WebUIActivity.this, null);
-
-        /**
-         2.合成参数设置，详见《科大讯飞MSC API手册(Android)》SpeechSynthesizer 类
-         *
-         */
         // 清空参数
         mTts.setParameter( SpeechConstant.PARAMS, null);
         mTts.setParameter( SpeechConstant.ENGINE_TYPE, SpeechConstant.TYPE_CLOUD); //设置云端
@@ -336,12 +360,6 @@ public class WebUIActivity extends AppCompatActivity implements SwipeRefreshLayo
         mTts.setParameter( SpeechConstant.STREAM_TYPE, "3");
         // 设置播放合成音频打断音乐播放，默认为true
         mTts.setParameter( SpeechConstant.KEY_REQUEST_FOCUS, "true");
-
-        // 设置音频保存路径，保存音频格式支持pcm、wav，设置路径为sd卡请注意WRITE_EXTERNAL_STORAGE权限
-        // 注：AUDIO_FORMAT参数语记需要更新版本才能生效
-//        mTts.setParameter(SpeechConstant.AUDIO_FORMAT, "wav");
-//        boolean isSuccess = mTts.setParameter(SpeechConstant.TTS_AUDIO_PATH, Environment.getExternalStorageDirectory() + "/msc/tts2.wav");
-//        Toast.makeText(MainActivity.this, "语音合成 保存音频到本地：\n" + isSuccess, Toast.LENGTH_LONG).show();
         //3.开始合成
         int code = mTts.startSpeaking(text, mSynListener);
 
@@ -368,7 +386,9 @@ public class WebUIActivity extends AppCompatActivity implements SwipeRefreshLayo
         public void onSpeakPaused() { }
         //播放进度回调
         //percent为播放进度0~sunny,beginPos为播放音频在文本中开始位置，endPos表示播放音频在文本中结束位置.
-        public void onSpeakProgress(int percent, int beginPos, int endPos) { }
+        public void onSpeakProgress(int percent, int beginPos, int endPos) {
+
+        }
         //恢复播放回调接口
         public void onSpeakResumed() { }
         //会话事件回调接口

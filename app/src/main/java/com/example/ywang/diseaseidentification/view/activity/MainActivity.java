@@ -21,9 +21,12 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -34,17 +37,19 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.baidu.aip.imageclassify.AipImageClassify;
 import com.example.ywang.diseaseidentification.application.MyApplication;
-import com.example.ywang.diseaseidentification.view.HorizontalChart;
+import com.example.ywang.diseaseidentification.bean.weatherData.DailyWeather;
+import com.example.ywang.diseaseidentification.bean.weatherData.Weather;
+import com.example.ywang.diseaseidentification.bean.weatherData.WeatherBean;
+import com.example.ywang.diseaseidentification.utils.network.HttpUtil;
+import com.example.ywang.diseaseidentification.view.MiuiWeatherView;
+import com.example.ywang.diseaseidentification.view.fragment.AgricultureNewsFragment;
 import com.example.ywang.diseaseidentification.view.fragment.FourthFragment;
 import com.example.ywang.diseaseidentification.view.fragment.MainFragment;
 import com.example.ywang.diseaseidentification.R;
 import com.example.ywang.diseaseidentification.view.fragment.DiseaseMapFragment;
-import com.example.ywang.diseaseidentification.view.fragment.AgricultureNewsFragment;
 import com.example.ywang.diseaseidentification.view.KickBackAnimator;
-import com.example.zhouwei.library.CustomPopWindow;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
@@ -55,17 +60,19 @@ import com.mxn.soul.flowingdrawer_core.FlowingDrawer;
 import com.next.easynavigation.constant.Anim;
 import com.next.easynavigation.utils.NavigationUtil;
 import com.next.easynavigation.view.EasyNavigationBar;
-
 import org.json.JSONObject;
-
 import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-
 import de.hdodenhof.circleimageview.CircleImageView;
-import me.panpf.swsv.CircularLayout;
-import me.panpf.swsv.SpiderWebScoreView;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuItemClickListener,View.OnClickListener{
 
@@ -81,7 +88,6 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
     private List<Fragment> fragments = new ArrayList<>();
     //底部导航栏
     private EasyNavigationBar navigationBar;
-    private FragmentManager fragmentManager;
 
     //弹出窗包含view
     private LinearLayout menuLayout;
@@ -95,38 +101,28 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
     private static final int PERMISSION_CODE = 100;
     private static final int TAKE_PICTURE = 1;
     private static final int SELECT_PICTURE = 2;
-
-    private Uri imageUri;
+    private static final int DYNAMIC = 222;
     private File outputImage;
     private FlowingDrawer mDrawer;  //侧滑栏控件
-    private Toolbar toolbar; //自定义Toolbar
     private ImageView mMenu,mBack,album;
-    private SpiderWebScoreView spiderWebScoreView;  //蛛网控件
-    private CircularLayout circularLayout;
     private CircleImageView avatar,addBtn;
     private List<LocalMedia> selectList = new ArrayList<>();
 
-    private Score[] scores = new Score[]{
-            new Score(7.0f,R.drawable.corn,"玉米"),
-            new Score(2.0f,R.drawable.corn,"玉米"),
-            new Score(3.0f,R.drawable.corn,"玉米"),
-            new Score(5.0f,R.drawable.corn,"玉米"),
-            new Score(8.0f,R.drawable.corn,"玉米"),
-            new Score(2.0f,R.drawable.corn,"玉米"),
-    };
-
-    private CustomPopWindow mCustomPopWindow;
-    private HorizontalChart horizontalChart;
-    private ArrayList<Float> monthCountList = new ArrayList<Float>();
     private ShapeLoadingDialog shapeLoadingDialog;
+    private MiuiWeatherView weatherView;
+    private SwipeRefreshLayout mainRefresh;
+    List<WeatherBean> datas = new ArrayList<>();
+    private List<DailyWeather> dailyWeatherList;
+    private LinearLayout forecastLayout;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        navigationBar = (EasyNavigationBar) findViewById(R.id.navigationBar);
-        fragmentManager = getSupportFragmentManager();
+        navigationBar = findViewById(R.id.navigationBar);
+        FragmentManager fragmentManager = getSupportFragmentManager();
 
         fragments.add(new MainFragment());
         fragments.add(DiseaseMapFragment.newInstance());
@@ -152,11 +148,14 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
                     }
                 })
                 .mode(EasyNavigationBar.MODE_ADD)
-                .anim(Anim.ZoomIn)
+                .anim(Anim.FadeIn)
                 .build();
         navigationBar.setAddViewLayout(createWeiBoView());
-        mDrawer = (FlowingDrawer) findViewById(R.id.drawer_layout);
-        mDrawer.setTouchMode(ElasticDrawer.TOUCH_MODE_BEZEL);
+        navigationBar.smoothScroll(false);
+
+        mDrawer = findViewById(R.id.drawer_layout);
+        mDrawer.setTouchMode(ElasticDrawer.TOUCH_MODE_NONE);
+
         mDrawer.setOnDrawerStateChangeListener(new ElasticDrawer.OnDrawerStateChangeListener() {
             @Override
             public void onDrawerStateChange(int oldState, int newState) {
@@ -168,62 +167,51 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
 
             }
         });
-
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        mMenu = (ImageView) findViewById(R.id.avatar);
-        mBack = (ImageView) findViewById(R.id.back_menu);
-        album = (ImageView) findViewById(R.id.album);
-        addBtn = (CircleImageView) findViewById(R.id.add_main);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        mMenu = findViewById(R.id.avatar);
+        mBack = findViewById(R.id.back_menu);
+        album = findViewById(R.id.album);
+        addBtn = findViewById(R.id.history_main);
         addBtn.setOnClickListener(this);
-        avatar = (CircleImageView) findViewById(R.id.menu_avatar);
-        horizontalChart = (HorizontalChart) findViewById(R.id.horizontal_chart);
-        horizontalChart.setRefresh(true);
-        monthCountList.clear();
-        monthCountList.add(10f);
-        monthCountList.add(30f);
-        monthCountList.add(20f);
-        monthCountList.add(60f);
-        monthCountList.add(45f);
-        horizontalChart.SetDate(monthCountList);
-        horizontalChart.invalidate();
-        horizontalChart.requestLayout();
-        horizontalChart.setRefresh(false);
+        avatar = findViewById(R.id.menu_avatar);
         avatar.setOnClickListener(this);
         album.setOnClickListener(this);
         //setSupportActionBar(toolbar);
         toolbar.setOnMenuItemClickListener(this);
         mMenu.setOnClickListener(this);
         mBack.setOnClickListener(this);
-        spiderWebScoreView = (SpiderWebScoreView) findViewById(R.id.spiderWeb);
-        circularLayout = (CircularLayout) findViewById(R.id.layout_circular);
-        setup(spiderWebScoreView,circularLayout,scores);
         requestPermission();
-
-    }
-
-    @SuppressLint("SetTextI18n")
-    private void setup(SpiderWebScoreView spiderWebScoreView, CircularLayout circularLayout, Score... scores){
-        float[] scoreArray = new float[scores.length];
-        for(int w = 0; w < scores.length; w++){
-            scoreArray[w] = scores[w].score;
-        }
-        spiderWebScoreView.setScores(10f, scoreArray);
-
-        circularLayout.removeAllViews();
-        for(Score score : scores){
-            TextView scoreTextView = (TextView)
-                    LayoutInflater.from(getBaseContext()).inflate(R.layout.score, circularLayout, false);
-            scoreTextView.setText(score.title);
-            if(score.iconId != 0){
-                scoreTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, score.iconId, 0);
+        requestWeather();
+        requestDailyWeather();
+        mainRefresh = findViewById(R.id.main_swipe_refresh);
+        weatherView = findViewById(R.id.weather);
+        forecastLayout =  findViewById(R.id.forecast_layout);
+        mainRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                requestWeather();
+                requestDailyWeather();
             }
-            circularLayout.addView(scoreTextView);
-        }
+        });
     }
+
+
 
     //仿微博弹出菜单
     private View createWeiBoView(){
         ViewGroup view = (ViewGroup) View.inflate(this,R.layout.layout_add_view,null);
+        TextView dateView = view.findViewById(R.id.date_tv);
+        TextView dayView = view.findViewById(R.id.day_tv);
+        TextView weekView = view.findViewById(R.id.week_tv);
+        Calendar calendar = Calendar.getInstance();
+        int day = calendar.get(Calendar.DATE);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int year = calendar.get(Calendar.YEAR);
+        int dow = calendar.get(Calendar.DAY_OF_WEEK);
+        dateView.setText(String.valueOf(month) + "/" + String.valueOf(year));
+        dayView.setText(String.valueOf(day));
+        weekView.setText(getWeekOfDate(dow-1));
+
         menuLayout = view.findViewById(R.id.icon_group);
         cancelImageView = view.findViewById(R.id.cancel_iv);
         cancelImageView.setOnClickListener(new View.OnClickListener() {
@@ -233,9 +221,9 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
             }
         });
         for (int i = 0; i < 2; i++) {
-            View itemView = (ViewGroup) View.inflate(MainActivity.this,R.layout.item_icon,null);
-            ImageView menuImage = (ImageView) itemView.findViewById(R.id.menu_icon_im);
-            TextView menuText = (TextView) itemView.findViewById(R.id.menu_text_tx);
+            View itemView =  View.inflate(MainActivity.this,R.layout.item_icon,null);
+            ImageView menuImage = itemView.findViewById(R.id.menu_icon_im);
+            TextView menuText = itemView.findViewById(R.id.menu_text_tx);
             menuImage.setImageResource(menuItems[i]);
             menuText.setText(menuTextItems[i]);
 
@@ -302,6 +290,13 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
         }
     }
 
+    public static String getWeekOfDate(int day_of_week) {
+        String[] weekDays = {"星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"};
+        if (day_of_week < 0)
+            day_of_week = 0;
+        return weekDays[day_of_week];
+    }
+
 
     //圆形扩展
     private void startAnimation(){
@@ -313,7 +308,7 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
                         //水平中心位置
                         int x = NavigationUtil.getScreenWidth(MainActivity.this)/ 2;
                         //竖直方向-25的位置
-                        int y = (int)(NavigationUtil.getScreenHeith(MainActivity.this) -
+                        int y = (NavigationUtil.getScreenHeith(MainActivity.this) -
                                 NavigationUtil.dip2px(MainActivity.this,25));
                         //定义揭露动画
                         Animator animator = ViewAnimationUtils.createCircularReveal(
@@ -351,7 +346,7 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
         try{
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
                 int x = NavigationUtil.getScreenWidth(MainActivity.this) / 2;
-                int y = (int)(NavigationUtil.getScreenHeith(MainActivity.this) -
+                int y = (NavigationUtil.getScreenHeith(MainActivity.this) -
                         NavigationUtil.dip2px(MainActivity.this,25));
                 //与入场动画相反
                 Animator animator = ViewAnimationUtils.createCircularReveal(
@@ -386,10 +381,10 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
         };
         try{
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-                for (int i = 0; i < permissions.length; i++) {
-                    int permission = ActivityCompat.checkSelfPermission(this,permissions[i]);
-                    if (permission != PackageManager.PERMISSION_GRANTED){
-                        ActivityCompat.requestPermissions(this,permissions,PERMISSION_CODE);
+                for (String permission1 : permissions) {
+                    int permission = ActivityCompat.checkSelfPermission(this, permission1);
+                    if (permission != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(this, permissions, PERMISSION_CODE);
                     }
                 }
             }
@@ -485,7 +480,7 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
                             client.setSocketTimeoutInMillis(60000);
 
                             // 传入可选参数调用接口
-                            HashMap<String, String> options = new HashMap<String, String>();
+                            HashMap<String, String> options = new HashMap<>();
                             options.put("baike_num", "5");
                             final JSONObject res = client.plantDetect(outputImage.getPath(), options);
                             runOnUiThread(new Runnable() {
@@ -517,17 +512,17 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
                             }else {
                                 path = handleImageBeforeKitkat(data);
                             }
-                            Log.e("result",path);
+                            //Log.e("result",path);
                             AipImageClassify client = new AipImageClassify(MyApplication.APP_ID, MyApplication.API_KEY, MyApplication.SECRET_KEY);
                             // 可选：设置网络连接参数
                             client.setConnectionTimeoutInMillis(2000);
                             client.setSocketTimeoutInMillis(60000);
 
                             // 传入可选参数调用接口
-                            HashMap<String, String> options = new HashMap<String, String>();
+                            HashMap<String, String> options = new HashMap<>();
                             options.put("baike_num", "5");
                             final JSONObject res = client.plantDetect(path, options);
-                            Log.e("res",res.toString());
+                            //Log.e("res",res.toString());
                             Intent intent = new Intent(MainActivity.this,ResultActivity.class);
                             runOnUiThread(new Runnable() {
                                 @Override
@@ -570,7 +565,7 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
                             client.setSocketTimeoutInMillis(60000);
 
                             // 传入可选参数调用接口
-                            HashMap<String, String> options = new HashMap<String, String>();
+                            HashMap<String, String> options = new HashMap<>();
                             options.put("baike_num", "5");
                             final JSONObject res = client.plantDetect(media.getPath(), options);
                             runOnUiThread(new Runnable() {
@@ -588,6 +583,10 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
 
                 }
                 break;
+            case DYNAMIC:
+                navigationBar.selectTab(4);
+
+                break;
             default:
                 break;
         }
@@ -601,6 +600,7 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
         if (DocumentsContract.isDocumentUri(this,uri)){
             //如果是Document类型的Uri,则通过document id 进行处理
             String docId = DocumentsContract.getDocumentId(uri);
+            assert uri != null;
             if ("com.android.providers.media.documents".equals(uri.getAuthority())){
                 String id = docId.split(":")[1];//解析出数字格式的id
                 String selection = MediaStore.Images.Media._ID + "=" + id;
@@ -623,8 +623,7 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
     //4.4版本以下的，选择相册的图片返回真实的Uri
     private String handleImageBeforeKitkat(Intent data){
         Uri uri = data.getData();
-        String imagePath = getImagePath(uri,null);
-        return imagePath;
+        return getImagePath(uri,null);
     }
 
     private String getImagePath(Uri uri,String selection){
@@ -665,60 +664,134 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
             case R.id.album:
                 startActivity(new Intent(MainActivity.this,AlbumActivity.class));
                 break;
-            case R.id.add_main:
-                View contentView = LayoutInflater.from(this).inflate(R.layout.pop_menu,null);
-                //处理popWindow 显示内容
-                handleLogic(contentView);
-                //创建并显示popWindow
-                mCustomPopWindow = new CustomPopWindow.PopupWindowBuilder(this)
-                        .setView(contentView)
-                        .create()
-                        .showAsDropDown(addBtn,0,20);
+            case R.id.history_main:
+
                 break;
             default:
                 break;
         }
     }
 
-    /**
-     * 处理弹出显示内容、点击事件等逻辑
-     * @param contentView
-     */
-    private void handleLogic(View contentView){
-        View.OnClickListener listener = new View.OnClickListener() {
+
+    private void requestWeather(){
+        String weatherUrl = "https://api.caiyunapp.com/v2.5/" + "5tfptDlcSmL3socE/" +
+                "112.453582,38.02132/" + "hourly.json";
+        HttpUtil.sendOkHttpRequest(weatherUrl, new Callback() {
             @Override
-            public void onClick(View v) {
-                if(mCustomPopWindow != null){
-                    mCustomPopWindow.dissmiss();
-                }
-                switch (v.getId()){
-                    case R.id.menu_robot:
-                        startActivity(new Intent(MainActivity.this,RobotActivity.class));
-                        break;
-                    case R.id.menu_dynamic:
-                        startActivity(new Intent(MainActivity.this,AddDynamicActivity.class));
-                        break;
-                }
+            public void onFailure(Call call, IOException e) {
+                mainRefresh.setRefreshing(false);
             }
-        };
-        contentView.findViewById(R.id.menu_robot).setOnClickListener(listener);
-        contentView.findViewById(R.id.menu_dynamic).setOnClickListener(listener);
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                final String responseText = response.body().string();
+                List<Weather> skyconList = HttpUtil.handleResponse(responseText,"skycon");
+                List<Weather> tempList = HttpUtil.handleResponse(responseText,"temperature");
+                if (!skyconList.isEmpty() && !tempList.isEmpty()){
+                    datas.clear();
+                    for (int i = 0; i < 6; i++) {
+                        Weather skyCon = skyconList.get(i);
+                        Weather temp = tempList.get(i);
+                        String weather = skyCon.getSkycon();
+                        String time = skyCon.getDatetime().getHours() < 10 ?
+                                "0" + skyCon.getDatetime().getHours() + ":00" :
+                                skyCon.getDatetime().getHours() + ":00";
+                        int temperature = (int) temp.getTemp();
+                        WeatherBean weatherBean = new WeatherBean(parseWeather(weather),temperature,time);
+                        datas.add(weatherBean);
+                    }
+                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        weatherView.setData(datas);
+                        weatherView.notifyDataSetChanged();
+                        mainRefresh.setRefreshing(false);
+                    }
+                });
+            }
+        });
     }
 
-    //蛛网评分组件
-    private static class Score{
-        private float score;
-        private String title;
-        private int iconId;
+    private void requestDailyWeather(){
+        String weatherUrl = "https://free-api.heweather.net/s6/weather/forecast?location=" + "taiyuan" +
+                "&key=551f547c64b24816acfed8471215cd0e";
 
-        private Score(float score, int iconId,String title) {
-            this.score = score;
-            this.iconId = iconId;
-            this.title = title;
-        }
+        HttpUtil.sendOkHttpRequest(weatherUrl, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
 
-        private Score(float score) {
-            this.score = score;
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                final String responseText = response.body().string();
+                dailyWeatherList = HttpUtil.handleDailyResponse(responseText);
+                runOnUiThread(new Runnable() {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void run() {
+                        forecastLayout.removeAllViews();
+                        for (DailyWeather forecast : dailyWeatherList) {
+                            View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.forecast_item, forecastLayout, false);
+                            TextView dateText = view.findViewById(R.id.date_text);
+
+                            TextView infoText = view.findViewById(R.id.info_text);
+                            TextView tmpText = view.findViewById(R.id.tmp);
+                            Date date = forecast.getDate();
+                            String mm = (date.getMonth() + 1 ) + "";
+                            if(Integer.valueOf(mm).intValue() < 10){
+                                mm = "0" + mm;
+                            }
+                            String day = date.getDate() + "";
+                            if(Integer.valueOf(day).intValue() < 10)
+                                day = "0" + day;
+                            dateText.setText(mm + "月" + day + "日");
+
+                            infoText.setText(forecast.getCond_txt_d());
+                            tmpText.setText(forecast.getTmp_max() + "°" + " / " + forecast.getTmp_min() + "°");
+                            forecastLayout.addView(view);
+                        }
+                        mainRefresh.setRefreshing(false);
+                    }
+                });
+            }
+        });
+    }
+
+    private String parseWeather(String weather){
+        String result = "晴（白天）";
+        switch (weather){
+            case "CLEAR_DAY":
+                result = WeatherBean.CLEAR_DAY;
+                break;
+            case "CLEAR_DAY_NIGHT":
+                result = WeatherBean.CLEAR_DAY_NIGHT;
+                break;
+            case "PARTLY_CLOUDY_DAY":
+                result = WeatherBean.PARTLY_CLOUDY_DAY;
+                break;
+            case "PARTLY_CLOUDY_NIGHT":
+                result = WeatherBean.PARTLY_CLOUDY_NIGHT;
+                break;
+            case "CLOUDY":
+                result = WeatherBean.CLOUDY;
+                break;
+            case "RAIN":
+                result = WeatherBean.RAIN;
+                break;
+            case "MODERATE_RAIN":
+                result = WeatherBean.MODERATE_RAIN;
+                break;
+            case "HEAVY_RAIN":
+                result = WeatherBean.HEAVY_RAIN;
+                break;
+            case "WIND":
+                result = WeatherBean.WIND;
+                break;
         }
+        return result;
+//        LIGHT_SNOW = "小雪";
+//        MODERATE_SNOW = "中雪";
+//        HEAVY_SNOW = "大雪";
     }
 }

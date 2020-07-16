@@ -6,34 +6,43 @@ import android.os.AsyncTask;
 
 import com.example.ywang.diseaseidentification.bean.baseData.DynamicBean;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
-public class UpLoadFileTask extends AsyncTask<String, Void, String> {
+public class UpLoadFileTask extends AsyncTask<List<String>, Void, List<String>> {
 
     /**
      * 可变长的输入参数，与AsyncTask.exucute()对应
      */
     private ProgressDialog dialog;
     @SuppressLint("StaticFieldLeak")
-    private Context mContext = null;
+    private Context mContext;
 
-    private static final String requestURL = "http://101.37.79.26:8080/show/ImageUploadServlet";
+    private static final String requestURL = "http://121.199.19.77:8080/show/ImageUploadServlet";
     private DynamicBean bean;
 
     public UpLoadFileTask(Context context,DynamicBean bean) {
         this.mContext = context;
         this.bean = bean;
-        dialog = ProgressDialog.show(mContext, "正在加载...", "系统正在处理您的请求");
     }
 
     @Override
-    protected void onPostExecute(String result) {
-        // 返回HTML页面的内容
-        dialog.dismiss();
+    protected void onPostExecute(List<String> result) {
+        try {
+            if ((null != dialog) && dialog.isShowing()) {
+                dialog.dismiss();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
+        if (dialog == null) {
+            dialog = new ProgressDialog(mContext).show(mContext,"发表动态中","正在上传中...");
+        }
     }
 
     @Override
@@ -42,9 +51,13 @@ public class UpLoadFileTask extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected String doInBackground(String... params) {
-        File file = new File(params[0]);
-        return UploadUtils.uploadFile(file, requestURL,bean);
+    protected List<String> doInBackground(List<String>... params) {
+        List<String> resultList = new ArrayList<>();
+        for (String path: params[0]) {
+            File file = new File(path);
+            resultList.add(UploadUtils.uploadFile(file, requestURL,bean));
+        }
+        return resultList;
     }
 
     @Override

@@ -5,6 +5,16 @@ import java.util.List;
 public class CropBean {
     private String title;
     private String url;
+    private String pinyin;
+
+    public String getPinyin() {
+        return pinyin;
+    }
+
+    public void setPinyin(String pinyin) {
+        this.pinyin = pinyin;
+    }
+
     private List<CropItem> mList; //植株部分
 
 

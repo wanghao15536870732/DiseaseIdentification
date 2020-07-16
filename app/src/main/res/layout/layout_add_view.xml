@@ -47,20 +47,8 @@
         app:layout_constraintBottom_toBottomOf="@+id/day_tv"
         app:layout_constraintLeft_toRightOf="@+id/day_tv" />
 
-    <TextView
-        android:id="@+id/location_result"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="北四环 北京联合大学:    阴  2~9℃"
-        android:textSize="14sp"
-        android:textColor="#666666"
-        android:layout_marginLeft="10dp"
-        app:layout_constraintLeft_toLeftOf="@+id/day_tv"
-        app:layout_constraintTop_toBottomOf="@+id/day_tv" />
-
     <ImageView
-        app:layout_constraintTop_toBottomOf="@+id/location_result"
+        app:layout_constraintTop_toBottomOf="@+id/day_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:src="@drawable/result_back"
@@ -88,6 +76,7 @@
             android:layout_height="match_parent"
             android:scaleType="centerInside"
             android:src="@mipmap/cancel"/>
+
     </LinearLayout>
 
     <LinearLayout

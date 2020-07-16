@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">智农有道</string>
     <string name="toolbar_text">病虫害识别</string>
-    <string name="dynamic_text">这一刻的想法</string>
+    <string name="dynamic_text">输入你想要提出的问题…</string>
     <string name="copy_msg">已经复制链接地址到剪切板! </string>
 
     //语音切换
@@ -19,9 +19,5 @@
     <string name="nannan">楠楠 女声 童年 汉语 普通话</string>
     <string name="laosun">老孙 男声 老年 汉语普通话</string>
     <string name="cancel">取消</string>
-
-    <string name="crop_card1">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</string>
-    <string name="crop_card2">bbbbbbbbbbbbbbbbbbbbbbbbbbbbb</string>
-    <string name="crop_card3">ccccccccccccccccccccccccccccccccccc</string>
 
 </resources>

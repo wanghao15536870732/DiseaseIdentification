@@ -1,6 +1,7 @@
 package com.example.ywang.diseaseidentification.adapter.disease;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,6 +14,8 @@ import com.bumptech.glide.Glide;
 import com.example.ywang.diseaseidentification.R;
 import com.example.ywang.diseaseidentification.bean.baseData.DiseaseData;
 import com.example.ywang.diseaseidentification.utils.network.WebUtil;
+import com.example.ywang.diseaseidentification.view.activity.DiseaseActivity;
+
 import java.util.List;
 
 public class DiseasesAdapter extends RecyclerView.Adapter<DiseasesAdapter.ViewHolder> {
@@ -50,7 +53,12 @@ public class DiseasesAdapter extends RecyclerView.Adapter<DiseasesAdapter.ViewHo
             public void onClick(View v) {
                 int position = holder.getAdapterPosition();
                 DiseaseData data = mDiseaseList.get(position);
-                WebUtil.openWeb(mContext,data.getContent(),data.getLink(),data.getContent());
+                Intent intent = new Intent(mContext, DiseaseActivity.class);
+                intent.putExtra("name",data.getContent());
+                intent.putExtra("image",data.getImageUrl());
+                intent.putExtra("html",data.getCSVName());
+                mContext.startActivity(intent);
+                //WebUtil.openWeb(mContext,data.getContent(),data.getCSVName(),data.getContent());
             }
         });
         return holder;

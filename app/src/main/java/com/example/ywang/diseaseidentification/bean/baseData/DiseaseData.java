@@ -4,24 +4,24 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class DiseaseData implements Parcelable{
-    private String content;
+    private String name;
     private String imageUrl;
-    private String link;
+    private String csvName;
 
-    public DiseaseData(){};
+    public DiseaseData(){}
 
-    public DiseaseData(String content, String imageUrl, String link) {
-        this.content = content;
+    public DiseaseData(String name, String imageUrl, String csvName) {
+        this.name = name;
         this.imageUrl = imageUrl;
-        this.link = link;
+        this.csvName = csvName;
     }
 
     public String getContent() {
-        return content;
+        return name;
     }
 
     public void setContent(String content) {
-        this.content = content;
+        this.name = content;
     }
 
     public String getImageUrl() {
@@ -32,12 +32,12 @@ public class DiseaseData implements Parcelable{
         this.imageUrl = imageUrl;
     }
 
-    public String getLink() {
-        return link;
+    public String getCSVName() {
+        return csvName;
     }
 
-    public void setLink(String link) {
-        this.link = link;
+    public void setCSVName(String link) {
+        this.csvName = link;
     }
 
     @Override
@@ -47,18 +47,18 @@ public class DiseaseData implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeSerializable(content);
+        parcel.writeSerializable(name);
         parcel.writeSerializable(imageUrl);
-        parcel.writeSerializable(link);
+        parcel.writeSerializable(csvName);
     }
 
     public static final Parcelable.Creator<DiseaseData> CREATOR = new Creator<DiseaseData>() {
         @Override
         public DiseaseData createFromParcel(Parcel source) {
             DiseaseData slideshowBean = new DiseaseData();
-            slideshowBean.content = source.readString();
+            slideshowBean.name = source.readString();
             slideshowBean.imageUrl = source.readString();
-            slideshowBean.link = source.readString();
+            slideshowBean.csvName = source.readString();
             return slideshowBean;
         }
 

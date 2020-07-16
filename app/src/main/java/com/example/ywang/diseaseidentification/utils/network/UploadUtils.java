@@ -25,8 +25,8 @@ public class UploadUtils {
     private static final String TAG = "uploadFile";
     private static final int TIME_OUT = 10*10000000;   //超时时间
     private static final String CHARSET = "utf-8"; //设置编码
-    public static final String SUCCESS="1";
-    public static final String FAILURE="0";
+    public static final String SUCCESS = "1";
+    public static final String FAILURE = "0";
     public static  String r = "";
 
     /**
@@ -40,7 +40,6 @@ public class UploadUtils {
         String  BOUNDARY =  UUID.randomUUID().toString();  //边界标识   随机生成
         String PREFIX = "--" , LINE_END = "\r\n";
         String CONTENT_TYPE = "multipart/form-data";   //内容类型
-
         try {
             URL url = new URL(RequestURL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -54,18 +53,15 @@ public class UploadUtils {
             conn.setRequestProperty("connection", "keep-alive");
             conn.setRequestProperty("Content-Type", CONTENT_TYPE + ";boundary=" + BOUNDARY);
             if(file != null) {
-
                 /*
                  * 当文件不为空，把文件包装并且上传
                  */
                 OutputStream outputSteam=conn.getOutputStream();
-
                 DataOutputStream dos = new DataOutputStream(outputSteam);
                 StringBuffer sb = new StringBuffer();
                 sb.append(PREFIX);
                 sb.append(BOUNDARY);
                 sb.append(LINE_END);
-
                 /*
                  * 这里重点注意：
                  * name里面的值为服务器端需要key   只有这个key 才可以得到对应的文件

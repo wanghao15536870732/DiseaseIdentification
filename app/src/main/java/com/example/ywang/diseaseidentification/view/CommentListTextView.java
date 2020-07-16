@@ -1,5 +1,6 @@
 package com.example.ywang.diseaseidentification.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.text.SpannableString;
@@ -15,12 +16,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-/**
- * Created by lujianchao on 2017/1/19.
- *
- * @author lujianchao
- */
-
+@SuppressLint("AppCompatCustomView")
 public class CommentListTextView extends TextView {
     /**
      * 所有评论数据
@@ -124,8 +120,8 @@ public class CommentListTextView extends TextView {
 
     public void setData (List<CommentInfo> mInfos) {
         this.mInfos = mInfos;
-        /**
-         * textview必须设置，否则自定义点击事件没响应
+        /*
+          textview必须设置，否则自定义点击事件没响应
          */
         setMovementMethod (LinkMovementMethod.getInstance ());
         setHighlightColor (Color.TRANSPARENT);
@@ -176,7 +172,7 @@ public class CommentListTextView extends TextView {
              * 处理第一个人名
              * 设置文本从第0个开始到end位置具有点击事件，点击后回调，updateDrawState中设置文本从第0个到第end位置的文本前景色就是文字颜色为橘红色
              */
-            mString.setSpan (new ClickableSpan () {
+            mString.setSpan (new ClickableSpan() {
 
                 @Override
                 public void updateDrawState (TextPaint ds) {
@@ -198,7 +194,7 @@ public class CommentListTextView extends TextView {
                     }
                 }
             }, 0, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            mString.setSpan (new ForegroundColorSpan (mTalkColor),mInfo.getNickname ().length (),mInfo.getNickname ().length ()+mTalkStr.length (),Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            mString.setSpan (new ForegroundColorSpan(mTalkColor),mInfo.getNickname ().length (),mInfo.getNickname ().length ()+mTalkStr.length (),Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
             /**
              * 处理第二个人名

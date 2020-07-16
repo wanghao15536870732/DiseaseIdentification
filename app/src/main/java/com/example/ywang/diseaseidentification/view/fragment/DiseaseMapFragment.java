@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.DocumentsContract;
@@ -17,7 +18,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -78,6 +78,7 @@ import com.baidu.mapapi.walknavi.params.WalkNaviLaunchParam;
 import com.baidu.mapapi.walknavi.params.WalkRouteNodeInfo;
 import com.cocosw.bottomsheet.BottomSheet;
 import com.example.ywang.diseaseidentification.R;
+import com.example.ywang.diseaseidentification.bean.OverLay;
 import com.example.ywang.diseaseidentification.utils.baidumap.MyOrientationListener;
 import com.example.ywang.diseaseidentification.utils.baidumap.PoiOverlay;
 import com.example.ywang.diseaseidentification.utils.baidumap.WalkingRouteOverlay;
@@ -85,6 +86,15 @@ import com.example.ywang.diseaseidentification.view.activity.PanoramaActivity;
 import com.example.ywang.diseaseidentification.view.activity.WNavigationGuideActivity;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
+
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -95,6 +105,16 @@ import static android.app.Activity.RESULT_OK;
  */
 public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerClickListener,OnGetPoiSearchResultListener {
 
+    private static final int SELECT_PICTURE = 300;
+    private static final String getOverlayUrl = "http://121.199.19.77:8080/test/GetAreaServlet";
+    private static final String postOverlayUrl = "http://121.199.19.77:8080/test/AddAreaServlet";
+    private boolean isFirstLoc = true;
+    private float mCurrentX;
+
+    /*经度纬度*/
+    private double mLatitude;
+    private double mLongitude;
+
     private MapView mMapView = null;
     private BaiduMap mBaiduMap = null;
     private LocationClient mLocationClient = null;
@@ -103,23 +123,15 @@ public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerCli
     private FloatingActionsMenu mFloatingActionsMenu;
     private FloatingActionButton mapTypeBtn, locModeBtn, posQuickBtn, panoramaBtn;
 
-    private boolean isFirstLoc = true;
     /*自定义图标*/
     private BitmapDescriptor mIconLocation;
     private MyOrientationListener mMyOrientationListener;
-    private float mCurrentX;
-    /*经度纬度*/
-    private double mLatitude;
-    private double mLongitude;
     private PoiSearch mPoiSearch = null;
 
-    private List<OverlayOptions> overlayOptions = new ArrayList<>();
-    private List<LatLng> points = new ArrayList<>();
-
-    private static final int SELECT_PICTURE = 300;
     private WalkingRouteOverlay overlay;
     private RoutePlanSearch routePlanSearch;
     private WalkNaviLaunchParam walkParam;
+    private List<OverLay> overlayList= new ArrayList<>();
 
     public static DiseaseMapFragment newInstance(){
         Bundle bundle = new Bundle();
@@ -133,7 +145,7 @@ public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerCli
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map_disease, container, false);
         //获取地图控件引用
-        mMapView = (MapView) view.findViewById(R.id.bmapView);
+        mMapView = view.findViewById(R.id.bmapView);
         mBaiduMap = mMapView.getMap();
         //开启地图的定位图层
         mBaiduMap.setMyLocationEnabled(true);
@@ -185,11 +197,12 @@ public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerCli
         });
         mMyOrientationListener.start();
         mBaiduMap.setOnMarkerClickListener(this); //设置Marker点击事件
+        new overLayDataAsync().execute(getOverlayUrl);
     }
 
     private void initFloatButton(View view) {
-        mFloatingActionsMenu = (FloatingActionsMenu) view.findViewById(R.id.map_actions_menu);
-        mapTypeBtn = (FloatingActionButton) view.findViewById(R.id.change_map_type);
+        mFloatingActionsMenu = view.findViewById(R.id.map_actions_menu);
+        mapTypeBtn = view.findViewById(R.id.change_map_type);
         mapTypeBtn.setIcon(R.drawable.ic_map_normal);
         mapTypeBtn.setTitle("卫星地图");
         mapTypeBtn.setOnClickListener(new View.OnClickListener() {
@@ -208,7 +221,7 @@ public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerCli
             }
         });
 
-        locModeBtn = (FloatingActionButton) view.findViewById(R.id.change_map_model);
+        locModeBtn = view.findViewById(R.id.change_map_model);
         locModeBtn.setIcon(R.drawable.map_mode_compass);
         locModeBtn.setTitle("罗盘模式");
         locModeBtn.setOnClickListener(new View.OnClickListener() {
@@ -227,7 +240,7 @@ public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerCli
             }
         });
 
-        posQuickBtn = (FloatingActionButton) view.findViewById(R.id.position_quick);
+        posQuickBtn = view.findViewById(R.id.position_quick);
         posQuickBtn.setIcon(R.drawable.ic_map_position);
         posQuickBtn.setTitle("快速定位");
         posQuickBtn.setOnClickListener(new View.OnClickListener() {
@@ -235,12 +248,16 @@ public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerCli
             public void onClick(View view) {
                 LatLng latLng = new LatLng(mLatitude, mLongitude);
                 MapStatusUpdate status = MapStatusUpdateFactory.newLatLng(latLng);
+                Log.e("latitude",String.valueOf(mLatitude));
+                Log.e("longitude",String.valueOf(mLongitude));
+                MapStatusUpdate zoomStatus =  MapStatusUpdateFactory.zoomTo(21.0f);
                 mBaiduMap.animateMapStatus(status);
+                mBaiduMap.animateMapStatus(zoomStatus);
                 mFloatingActionsMenu.toggle();
             }
         });
 
-        panoramaBtn = (FloatingActionButton) view.findViewById(R.id.position_panorama);
+        panoramaBtn = view.findViewById(R.id.position_panorama);
         panoramaBtn.setIcon(R.drawable.ic_add);
         panoramaBtn.setTitle("其他操作");
         panoramaBtn.setOnClickListener(new View.OnClickListener() {
@@ -288,8 +305,8 @@ public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerCli
     public void searchButtonProcess() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         View view = View.inflate(getContext(), R.layout.dialog_select_indoor, null);
-        final EditText city = (EditText) view.findViewById(R.id.et_city_indorr);
-        final EditText key = (EditText) view.findViewById(R.id.et_key_indoor);
+        final EditText city = view.findViewById(R.id.et_city_indorr);
+        final EditText key = view.findViewById(R.id.et_key_indoor);
         builder.setView(view);
         builder.setTitle("搜索地点");
         builder.setPositiveButton("搜索", new DialogInterface.OnClickListener() {
@@ -315,10 +332,10 @@ public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerCli
         final int[] result = new int[1];
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         View view = View.inflate(getContext(), R.layout.dialog_select_fence, null);
-        final EditText width = (EditText) view.findViewById(R.id.fence_width);
-        final EditText length = (EditText) view.findViewById(R.id.fence_length);
-        final TextView title = (TextView) view.findViewById(R.id.fence_title);
-        final RadioGroup radioGroup = (RadioGroup) view.findViewById(R.id.radio_group);
+        final EditText width = view.findViewById(R.id.fence_width);
+        final EditText length = view.findViewById(R.id.fence_length);
+        final TextView title = view.findViewById(R.id.fence_title);
+        final RadioGroup radioGroup = view.findViewById(R.id.radio_group);
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
@@ -331,17 +348,25 @@ public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerCli
         builder.setPositiveButton("创建", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                if (result[0] == R.id.radio_blue) {
-                    addOverlaysToMap(Integer.parseInt(width.getText().toString()),
-                            Integer.parseInt(length.getText().toString()), R.drawable.ground_overlay, title.getText().toString());
-                } else if (result[0] == R.id.radio_green) {
-                    addOverlaysToMap(Integer.parseInt(width.getText().toString()),
-                            Integer.parseInt(length.getText().toString()), R.drawable.ground_overlay_green, title.getText().toString());
-                } else if (result[0] == R.id.radio_red) {
-                    addOverlaysToMap(Integer.parseInt(width.getText().toString()),
-                            Integer.parseInt(length.getText().toString()), R.drawable.ground_overlay_red, title.getText().toString());
-                } else {
-
+                if(title.getText().equals("") || length.getText().toString().equals("") || width.getText().toString().equals("")){
+                    Toast.makeText(getContext(), "请完善区域信息！", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    OverLay overLay = new OverLay(String.valueOf(overlayList.size() + 1),"123456",title.getText().toString(),
+                            length.getText().toString(),width.getText().toString(),mLatitude,mLongitude);
+                    new addOverlayAsync().execute(overLay);
+                    if (result[0] == R.id.radio_blue) {
+                        addOverlaysToMap(Integer.parseInt(width.getText().toString()), Integer.parseInt(length.getText().toString()),
+                                R.drawable.ground_overlay, title.getText().toString(),mLatitude,mLongitude);
+                    } else if (result[0] == R.id.radio_green) {
+                        addOverlaysToMap(Integer.parseInt(width.getText().toString()), Integer.parseInt(length.getText().toString()),
+                                R.drawable.ground_overlay_green, title.getText().toString(),mLatitude,mLongitude);
+                    } else if (result[0] == R.id.radio_red) {
+                        addOverlaysToMap(Integer.parseInt(width.getText().toString()), Integer.parseInt(length.getText().toString()),
+                                R.drawable.ground_overlay_red, title.getText().toString(),mLatitude,mLongitude);
+                    }else{
+                        Toast.makeText(getContext(), "未选择区域警示颜色！请完善信息！", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -352,6 +377,121 @@ public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerCli
             }
         });
         builder.show();
+    }
+
+    class addOverlayAsync extends AsyncTask<OverLay,String,String>{
+
+        @Override
+        protected String doInBackground(OverLay... strings) {
+            OverLay overLay = strings[0];
+            StringBuilder response = new StringBuilder();
+            HttpURLConnection connection = null;
+            BufferedReader reader = null;
+            try {
+                URL url = new URL(postOverlayUrl);
+                connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("POST");
+                connection.setRequestProperty("contentType", "GBK");
+                DataOutputStream out = new DataOutputStream(connection.getOutputStream());
+                out.writeBytes("AreaId=" + overLay.getAreaId() + "&UserId=" + overLay.getUserId() +
+                        "&AreaName=" + URLEncoder.encode(overLay.getAreaName(), "utf-8") + "&AreaLength=" +
+                        overLay.getAreaLength() + "&AreaWidth=" + overLay.getAreaWidth() + "&AreaLon=" +
+                        overLay.getAreaLon() + "&AreaLat=" + overLay.getAreaLat());
+                out.flush();
+                out.close();
+                //设置连接超时和读取超时的毫秒数
+                connection.setConnectTimeout(8000);
+                connection.setReadTimeout(8000);
+
+                InputStream in = connection.getInputStream();
+                reader = new BufferedReader(new InputStreamReader(in));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (connection != null) {
+                    connection.disconnect();
+                }
+            }
+            return response.toString();
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            Toast.makeText(getContext(), "添加成功！", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    class overLayDataAsync extends AsyncTask<String,String,List<OverLay>>{
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected List<OverLay> doInBackground(String... strings) {
+            HttpURLConnection connection = null;
+            BufferedReader reader = null;
+            try {
+                URL url = new URL(strings[0]);
+                connection = (HttpURLConnection)url.openConnection();
+                connection.setRequestMethod("POST");
+                //设置连接超时和读取超时的毫秒数
+                connection.setConnectTimeout(8000);
+                connection.setReadTimeout(8000);
+
+                InputStream in = connection.getInputStream();
+                reader = new BufferedReader(new InputStreamReader(in));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    OverLay overLay = new OverLay();
+                    overLay.setAreaId(line);
+                    overLay.setUserId(reader.readLine());
+                    overLay.setAreaName(reader.readLine());
+                    overLay.setAreaLength(reader.readLine());
+                    overLay.setAreaWidth(reader.readLine());
+                    overLay.setAreaLon(Double.parseDouble(reader.readLine()));
+                    overLay.setAreaLat(Double.parseDouble(reader.readLine()));
+                    overlayList.add(overLay);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if(reader != null){
+                    try {
+                        reader.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if(connection != null){
+                    connection.disconnect();
+                }
+            }
+            return overlayList;
+        }
+
+        @Override
+        protected void onPostExecute(List<OverLay> overlayList) {
+            super.onPostExecute(overlayList);
+            for(OverLay overLay : overlayList){
+                addOverlaysToMap(Integer.parseInt(overLay.getAreaWidth()), Integer.parseInt(overLay.getAreaWidth()),
+                        R.drawable.ground_overlay_green,overLay.getAreaName(), overLay.getAreaLat(),
+                        overLay.getAreaLon());
+                Log.e("area",overLay.getAreaName());
+            }
+        }
     }
 
 
@@ -373,13 +513,13 @@ public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerCli
         }
         if (result.error == SearchResult.ERRORNO.AMBIGUOUS_KEYWORD) {
             // 当输入关键字在本市没有找到，但在其他城市找到时，返回包含该关键字信息的城市列表
-            String strInfo = "在";
+            StringBuilder strInfo = new StringBuilder("在");
             for (CityInfo cityInfo : result.getSuggestCityList()) {
-                strInfo += cityInfo.city;
-                strInfo += ",";
+                strInfo.append(cityInfo.city);
+                strInfo.append(",");
             }
-            strInfo += "找到结果";
-            Toast.makeText(getContext(), strInfo, Toast.LENGTH_LONG)
+            strInfo.append("找到结果");
+            Toast.makeText(getContext(), strInfo.toString(), Toast.LENGTH_LONG)
                     .show();
         }
     }
@@ -413,7 +553,7 @@ public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerCli
 
     private class MyPoiOverlay extends PoiOverlay {
 
-        public MyPoiOverlay(BaiduMap baiduMap) {
+        MyPoiOverlay(BaiduMap baiduMap) {
             super(baiduMap);
         }
 
@@ -460,7 +600,7 @@ public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerCli
     }
 
     //添加区域
-    public void addOverlaysToMap(int width, int length, int backId, String title) {
+    public void addOverlaysToMap(int width, int length, int backId, String title,double mLatitude,double mLongitude) {
         double latitude_1dp = 0.000008983152841195214;
         double longitude_1dp = 0.000009405717451407729;
 
@@ -635,7 +775,7 @@ public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerCli
     public boolean onMarkerClick(Marker marker) {
         Bundle bundle = marker.getExtraInfo();
         if (bundle != null) {
-            String imagePath = (String) bundle.getString("pic");
+            String imagePath = bundle.getString("pic");
             Double latitude = bundle.getDouble("latitude", 0);
             Double longitude = bundle.getDouble("longitude", 0);
             if (latitude == mLatitude && longitude == mLongitude) {

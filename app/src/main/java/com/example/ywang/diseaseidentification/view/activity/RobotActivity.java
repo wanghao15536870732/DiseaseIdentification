@@ -233,7 +233,8 @@ public class RobotActivity extends AppCompatActivity implements View.OnClickList
                         JSONObject params = data.getJSONObject("params");
                         JSONObject content = data.getJSONArray("content").getJSONObject(0);
                         if (content.has("cnt_id")) {
-                            String cnt_id = content.getString("cnt_id");JSONObject cntJson = new JSONObject(new String(event.data.getByteArray(cnt_id), "utf-8"));
+                            String cnt_id = content.getString("cnt_id");
+                            JSONObject cntJson = new JSONObject(new String(event.data.getByteArray(cnt_id), "utf-8"));
                             String sub = params.optString("sub");
                             JSONObject result = cntJson.optJSONObject("intent");
                             if ("nlp".equals(sub) && result.length() > 2) {

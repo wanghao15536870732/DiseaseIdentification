@@ -58,7 +58,7 @@ public class UpToServlet {
                 HttpURLConnection connection = null;
                 BufferedReader reader = null;
                 try {
-                    URL url = new URL("http://101.37.79.26:8080/show/addShowServlet");
+                    URL url = new URL("http://121.199.19.77:8080/show/addShowServlet");
                     connection = (HttpURLConnection)url.openConnection();
                     connection.setRequestMethod("POST");
                     connection.setRequestProperty("contentType", "GBK");

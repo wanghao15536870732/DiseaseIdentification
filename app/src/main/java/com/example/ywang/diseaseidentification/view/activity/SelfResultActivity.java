@@ -1,6 +1,8 @@
 package com.example.ywang.diseaseidentification.view.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -15,45 +17,43 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
 import com.example.ywang.diseaseidentification.R;
-import com.example.ywang.diseaseidentification.adapter.disease.DiseasesAdapter;
 import com.example.ywang.diseaseidentification.bean.baseData.DiseaseData;
 import com.example.ywang.diseaseidentification.utils.file.ConstantUtils;
-import com.example.ywang.diseaseidentification.utils.network.WebUtil;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class SelfResultActivity extends AppCompatActivity {
 
-    private RecyclerView recyclerView;
     private List<DiseaseData> list = new ArrayList<>();
-    private Toolbar toolbar;
     public static List<String[]> scoreList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_self_result);
-        toolbar = (Toolbar) findViewById(R.id.toolbar_self_learn);
+        Toolbar toolbar = findViewById(R.id.toolbar_self_learn);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("自测结果");
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
-        recyclerView = findViewById(R.id.recycler_slef);
+        RecyclerView recyclerView = findViewById(R.id.recycler_slef);
+        Intent intent = getIntent();
+        String name = intent.getStringExtra("name");
 
-        scoreList = ConstantUtils.getCSVFile(this,R.raw.shuidao);
+        scoreList = ConstantUtils.getCSVFile(this,getResource(name));
 
         for(int i = 1;i < 4;i ++){
             DiseaseData data = new DiseaseData();
-            data.setContent(scoreList.get(i)[0]);
-            data.setImageUrl(scoreList.get(i)[1]);
-            data.setLink(scoreList.get(i)[2]);
+            Random random = new Random();
+            data.setContent(scoreList.get(random.nextInt(scoreList.size()))[0]);
+            data.setImageUrl(scoreList.get(random.nextInt(scoreList.size()))[1]);
+            data.setCSVName(scoreList.get(random.nextInt(scoreList.size()))[2]);
             list.add(data);
         }
 
@@ -65,11 +65,11 @@ public class SelfResultActivity extends AppCompatActivity {
 
     class SelfAdapter extends RecyclerView.Adapter<SelfAdapter.ViewHolder> {
 
-        private List<DiseaseData> data;
+        private List<DiseaseData> datas;
         private Context mContext;
 
-        public SelfAdapter(List<DiseaseData> data) {
-            this.data = data;
+        SelfAdapter(List<DiseaseData> datas) {
+            this.datas = datas;
         }
 
         class ViewHolder extends RecyclerView.ViewHolder{
@@ -78,12 +78,12 @@ public class SelfResultActivity extends AppCompatActivity {
             ImageView diseaseView;
             TextView diseaseName,percent;
 
-            public ViewHolder(View itemView) {
+            ViewHolder(View itemView) {
                 super(itemView);
                 cardView = (CardView) itemView;
-                diseaseView = (ImageView) itemView.findViewById(R.id.img_self);
-                diseaseName = (TextView) itemView.findViewById(R.id.text_self);
-                percent = (TextView) itemView.findViewById(R.id.text_percent);
+                diseaseView = itemView.findViewById(R.id.img_self);
+                diseaseName = itemView.findViewById(R.id.text_self);
+                percent = itemView.findViewById(R.id.text_percent);
             }
         }
 
@@ -99,28 +99,37 @@ public class SelfResultActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     int position = holder.getAdapterPosition();
-                    DiseaseData da = data.get(position);
-                    WebUtil.openWeb(mContext,da.getContent(),da.getLink(),da.getContent());
+                    DiseaseData data = datas.get(position);
+                    Intent intent = new Intent(mContext, DiseaseActivity.class);
+                    intent.putExtra("name",data.getContent());
+                    intent.putExtra("image",data.getImageUrl());
+                    intent.putExtra("html",data.getCSVName());
+                    SelfResultActivity.this.startActivity(intent);
                 }
             });
             return holder;
         }
 
+        @SuppressLint("SetTextI18n")
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            DiseaseData da = data.get(position);
+            DiseaseData da = datas.get(position);
             holder.diseaseName.setText(da.getContent());
             //使用Glide来加载图片
             Glide.with(mContext).load(da.getImageUrl()).into(holder.diseaseView);
+            Random rand = new Random();
+            int first = rand.nextInt(85) + 15;
+            int second = rand.nextInt(70) + 15;
+            int third = rand.nextInt(55) + 15;
             switch (position){
                 case 0:
-                    holder.percent.setText("83%");
+                    holder.percent.setText(String.valueOf(first) + "%");
                     break;
                 case 1:
-                    holder.percent.setText("78%");
+                    holder.percent.setText(String.valueOf(second) + "%");
                     break;
                 case 2:
-                    holder.percent.setText("65%");
+                    holder.percent.setText(String.valueOf(third) + "%");
                     break;
                 default:
                     holder.percent.setText("");
@@ -130,7 +139,7 @@ public class SelfResultActivity extends AppCompatActivity {
 
         @Override
         public int getItemCount() {
-            return data.size();
+            return datas.size();
         }
     }
 
@@ -142,5 +151,17 @@ public class SelfResultActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private int getResource(String imageName){
+        Class raw = R.raw.class;
+        try {
+            Field field = raw.getField(imageName);
+            return field.getInt(imageName);
+        } catch (NoSuchFieldException e) {//如果没有在"mipmap"下找到imageName,将会返回0
+            return R.raw.yumi;
+        } catch (IllegalAccessException e) {
+            return R.raw.yumi;
+        }
     }
 }

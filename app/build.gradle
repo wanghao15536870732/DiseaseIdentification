@@ -20,7 +20,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
 }
 
 dependencies {
@@ -44,8 +43,6 @@ dependencies {
     //圆角图片
     implementation 'de.hdodenhof:circleimageview:3.0.1'
     implementation 'com.android.support:cardview-v7:27.1.1'
-    //蛛网评分
-    implementation 'me.panpf:spider-web-score-view:1.0.1'
     //图片选择库
     implementation 'com.github.LuckSiege.PictureSelector:picture_library:v2.2.3'
     //多标签选择
@@ -58,10 +55,12 @@ dependencies {
     //65536方法数过多
     implementation 'com.android.support:multidex:1.0.3'
     //瀑布时间轴
-
     implementation 'com.vivian.widgets:TimeLineItemDecoration:1.5'
     //加载更多
-    implementation 'com.github.pinguo-zhouwei:CustomPopwindow:2.1.1'
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.1.3'
+    //加载动画
     implementation 'com.github.zzz40500:android-shapeLoadingView:1.0.3.2'
+    implementation 'com.squareup.okhttp3:okhttp:3.4.1'
+    implementation 'com.google.code.gson:gson:2.7'
+    implementation 'org.jsoup:jsoup:1.9.2'
 }
