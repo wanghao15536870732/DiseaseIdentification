@@ -6,6 +6,7 @@
     <uses-sdk android:minSdkVersion="8" />
 
     <!-- 允许程序获取摄像头权限 -->
+    <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <!-- 允许程序打开网络套接字 -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -47,9 +48,9 @@
         tools:targetApi="n">
         <activity
             android:name=".view.activity.GuideActivity"
-            android:windowSoftInputMode="stateHidden|adjustPan"
             android:clipToPadding="true"
-            android:fitsSystemWindows="true">
+            android:fitsSystemWindows="true"
+            android:windowSoftInputMode="stateHidden|adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -79,11 +80,6 @@
             android:name="com.baidu.location.f"
             android:enabled="true"
             android:process=":remote" />
-
-        <activity
-            android:name=".view.activity.PanoramaActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="sensor" />
         <activity android:name=".view.activity.AddDynamicActivity" />
         <activity android:name=".view.activity.WebUIActivity" />
         <activity android:name=".view.activity.RobotActivity" />
@@ -119,7 +115,11 @@
         <activity android:name=".view.activity.ResultActivity" />
         <activity android:name=".view.activity.DiseaseActivity" />
         <activity android:name=".view.activity.RegisterActivity" />
-        <activity android:name=".view.activity.MainActivity"
+        <activity
+            android:name=".view.activity.MainActivity"
+            android:windowSoftInputMode="stateHidden|stateUnchanged" />
+        <activity android:name=".view.activity.NearByActivity"
+            android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden|stateUnchanged"/>
     </application>
 

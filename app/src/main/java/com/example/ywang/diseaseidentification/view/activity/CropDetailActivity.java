@@ -1,9 +1,11 @@
 package com.example.ywang.diseaseidentification.view.activity;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -13,6 +15,8 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
+
 import com.bumptech.glide.Glide;
 import com.example.ywang.diseaseidentification.R;
 import com.example.ywang.diseaseidentification.adapter.disease.DiseasesAdapter;
@@ -85,6 +89,15 @@ public class CropDetailActivity extends AppCompatActivity {
                 View contentView = LayoutInflater.from(this).inflate(R.layout.pop_map,null);
                 //处理popWindow 显示内容
                 handleLogic(contentView);
+                new AlertDialog.Builder(this)
+                    .setTitle("种植分布地图")
+                    .setView(contentView)
+                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    }).show();
                 break;
         }
         return true;
@@ -118,16 +131,8 @@ public class CropDetailActivity extends AppCompatActivity {
      * 处理弹出显示内容、点击事件等逻辑
      */
     private void handleLogic(View contentView){
-        View.OnClickListener listener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                v.getId();
-            }
-        };
         PhotoView resource = contentView.findViewById(R.id.crop_resource);
-        resource.setOnClickListener(listener);
         PhotoView density = contentView.findViewById(R.id.crop_density);
-        density.setOnClickListener(listener);
         Glide.with(this).load("http://www.cgris.net/cropmap/food.gif").into(resource);
         Glide.with(this).load("http://www.cgris.net/cropmap/food.gif").into(density);
     }

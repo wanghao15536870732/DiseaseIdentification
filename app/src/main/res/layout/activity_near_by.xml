@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".view.activity.NearByActivity">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/search_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/ams_et"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/border_search"
+                    android:hint="搜索"
+                    android:padding="7dp"
+                    android:textColor="@color/black"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/ams_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0"
+                    android:gravity="center"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="取消"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/res_rv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/search_layout"/>
+
+        </RelativeLayout>
+
+
+    </android.support.v7.widget.CardView>
+
+    <com.baidu.mapapi.map.MapView
+        android:id="@+id/near_by_map_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:clickable="true"
+        android:fitsSystemWindows="true" />
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/result_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_margin="16sp"
+        android:fitsSystemWindows="true"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="12dp">
+
+            <TextView
+                android:id="@+id/near_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="永强饲料批发"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/near_distance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:gravity="bottom"
+                android:text="1.4km"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:layout_width="14dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="5dp"
+                android:layout_toLeftOf="@+id/near_distance"
+                android:src="@drawable/map_distance" />
+
+            <TextView
+                android:id="@+id/near_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/near_title"
+                android:layout_marginTop="4dp"
+                android:text="13131957571"
+                android:textColor="#444040"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/near_tell"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/near_title"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="4dp"
+                android:layout_toRightOf="@+id/near_number"
+                android:text="拨打电话"
+                android:textColor="#f547d8"
+                android:textSize="13sp" />
+
+            <ImageView
+                android:id="@+id/near_tell_image"
+                android:layout_width="13dp"
+                android:layout_height="18dp"
+                android:layout_below="@+id/near_title"
+                android:layout_marginLeft="3dp"
+                android:layout_marginTop="4dp"
+                android:layout_toRightOf="@id/near_tell"
+                android:src="@drawable/ic_phone" />
+
+            <TextView
+                android:id="@+id/near_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/near_number"
+                android:layout_marginTop="15dp"
+                android:text="广兴路与祥和大街交叉口南150米"
+                android:textSize="14sp" />
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+</android.support.design.widget.CoordinatorLayout>

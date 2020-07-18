@@ -48,8 +48,8 @@ public class LearnActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_learn);
-        mLeftRvRecyclerView = (RecyclerView) findViewById(R.id.main_left_rv);
-        mRightRvRecyclerView = (RecyclerView) findViewById(R.id.main_right_rv);
+        mLeftRvRecyclerView = findViewById(R.id.main_left_rv);
+        mRightRvRecyclerView = findViewById(R.id.main_right_rv);
         mRecyclerView = findViewById(R.id.main_multi_check);
         initData();
         mRecyclerView.setHasFixedSize(true);

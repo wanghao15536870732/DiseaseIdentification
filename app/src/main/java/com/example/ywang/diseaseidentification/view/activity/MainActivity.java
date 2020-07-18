@@ -25,8 +25,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -63,7 +61,6 @@ import com.next.easynavigation.view.EasyNavigationBar;
 import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -104,8 +101,8 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
     private static final int DYNAMIC = 222;
     private File outputImage;
     private FlowingDrawer mDrawer;  //侧滑栏控件
-    private ImageView mMenu,mBack,album;
-    private CircleImageView avatar,addBtn;
+    private ImageView mMenu,mBack,addBtn;
+    private CircleImageView avatar;
     private List<LocalMedia> selectList = new ArrayList<>();
 
     private ShapeLoadingDialog shapeLoadingDialog;
@@ -170,13 +167,11 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
         Toolbar toolbar = findViewById(R.id.toolbar);
         mMenu = findViewById(R.id.avatar);
         mBack = findViewById(R.id.back_menu);
-        album = findViewById(R.id.album);
+
         addBtn = findViewById(R.id.history_main);
         addBtn.setOnClickListener(this);
         avatar = findViewById(R.id.menu_avatar);
         avatar.setOnClickListener(this);
-        album.setOnClickListener(this);
-        //setSupportActionBar(toolbar);
         toolbar.setOnMenuItemClickListener(this);
         mMenu.setOnClickListener(this);
         mBack.setOnClickListener(this);
@@ -194,8 +189,6 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
             }
         });
     }
-
-
 
     //仿微博弹出菜单
     private View createWeiBoView(){
@@ -376,9 +369,8 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
         String[] permissions = new String[]{
                 Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.RECORD_AUDIO,Manifest.permission.READ_PHONE_STATE
-
-        };
+                Manifest.permission.RECORD_AUDIO,Manifest.permission.READ_PHONE_STATE,
+                Manifest.permission.CALL_PHONE };
         try{
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                 for (String permission1 : permissions) {
@@ -584,8 +576,9 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
                 }
                 break;
             case DYNAMIC:
-                navigationBar.selectTab(4);
-
+                if(getIntent().getBooleanExtra("dynamic",false)){
+                    navigationBar.selectTab(4);
+                }
                 break;
             default:
                 break;
@@ -661,11 +654,8 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
             case R.id.back_menu:
                 mDrawer.closeMenu();
                 break;
-            case R.id.album:
-                startActivity(new Intent(MainActivity.this,AlbumActivity.class));
-                break;
             case R.id.history_main:
-
+                startActivity(new Intent(this,AlbumActivity.class));
                 break;
             default:
                 break;

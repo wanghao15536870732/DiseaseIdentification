@@ -9,16 +9,16 @@
         android:icon="@drawable/add_picture"/>
 
     <item
-        android:id="@+id/panorama"
-        android:title="搜索全景图"
-        app:showAsAction="collapseActionView"
-        android:icon="@drawable/map_panorama"/>
-
-    <item
         android:id="@+id/fence"
         android:title="围栏划分"
         app:showAsAction="collapseActionView"
         android:icon="@drawable/map_fence"/>
+
+    <item
+        android:id="@+id/panorama"
+        android:title="附近农资店"
+        app:showAsAction="collapseActionView"
+        android:icon="@drawable/map_near_by"/>
 
     <item
         android:id="@+id/cancel_chose"

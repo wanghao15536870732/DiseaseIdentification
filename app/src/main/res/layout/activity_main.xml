@@ -81,16 +81,14 @@
                                 android:layout_marginTop="10dp"
                                 android:layout_toLeftOf="@+id/history_main"/>
 
-                            <de.hdodenhof.circleimageview.CircleImageView
+                            <ImageView
                                 android:id="@+id/history_main"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
                                 android:layout_alignParentEnd="true"
                                 android:src="@drawable/ic_history"
-                                android:layout_margin="10dp"
-                                android:background="?android:attr/selectableItemBackgroundBorderless"
-                                tools:ignore="NewApi" />
+                                android:layout_margin="10dp" />
 
                         </RelativeLayout>
                     </LinearLayout>
@@ -142,17 +140,6 @@
                     tools:targetApi="lollipop"
                     android:layout_centerVertical="true"
                     android:background="?android:attr/selectableItemBackground"/>
-
-                <ImageView
-                    android:id="@+id/album"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/ic_collections"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="14dp"
-                    android:background="?android:attr/selectableItemBackgroundBorderless"
-                    tools:ignore="NewApi"/>
 
             </RelativeLayout>
 

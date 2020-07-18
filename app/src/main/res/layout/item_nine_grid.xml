@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -11,8 +10,8 @@
         android:id="@+id/image"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:scaleType="centerCrop"
-        android:background="@drawable/avatar" />
+        android:background="@drawable/avatar"
+        android:scaleType="centerCrop" />
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -21,16 +20,17 @@
         android:orientation="vertical">
 
         <RelativeLayout
-            android:orientation="horizontal"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
             <TextView
                 android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
                 android:layout_gravity="center"
                 android:text="王浩"
-                android:layout_alignParentLeft="true"
                 android:textColor="#f9b516" />
 
         </RelativeLayout>
@@ -40,9 +40,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:textStyle="bold"
+            android:text="今天的天气是真的好"
             android:textSize="14sp"
-            android:text="今天的天气是真的好" />
+            android:textStyle="bold" />
 
         <com.example.ywang.diseaseidentification.adapter.agricultural.NineGridLayout
             android:id="@+id/layout_nine_grid"
@@ -52,10 +52,10 @@
             app:spacing="4dp" />
 
         <RelativeLayout
-            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/time"
@@ -63,31 +63,27 @@
                 android:layout_height="wrap_content"
                 android:text="10分钟前" />
 
+            <TextView
+                android:id="@+id/delete_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/time" />
 
             <ImageView
                 android:id="@+id/comment"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:src="@drawable/im_comment"
-                android:layout_alignParentRight="true"/>
-
-            <ImageView
-                android:id="@+id/transmit"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_toRightOf="@+id/comment"
-                android:layout_marginLeft="40dp"
-                android:src="@drawable/ic_trans"/>
+                android:layout_alignParentRight="true"
+                android:src="@drawable/im_comment" />
 
         </RelativeLayout>
 
-
-        <com.example.ywang.diseaseidentification.view.CommentListTextView
+        <android.support.v7.widget.RecyclerView
             android:id="@+id/commentList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:layout_marginTop="10dp"/>
+            android:layout_marginTop="10dp" />
 
     </LinearLayout>
 </LinearLayout>

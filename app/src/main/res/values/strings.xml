@@ -20,4 +20,6 @@
     <string name="laosun">老孙 男声 老年 汉语普通话</string>
     <string name="cancel">取消</string>
 
+    <string name="behavior_scroll_up">com.example.ywang.diseaseidentification.utils.ScrollAwareFABBehavior</string>
+
 </resources>

@@ -23,6 +23,7 @@ import com.nineoldandroids.animation.ValueAnimator;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.Transformer;
+import com.youth.banner.listener.OnBannerListener;
 import com.youth.banner.transformer.AccordionTransformer;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,7 @@ import java.util.List;
 public class MainFragment extends Fragment implements TabLayout.OnTabSelectedListener{
 
     private List<String> images = new ArrayList<>();
+    private List<String> titles = new ArrayList<>();
     private String[] mTitles = {"问答","政策","病虫害库"};
     private List<Fragment> mFragments = new ArrayList<>();
     private TabLayout tabLayout;
@@ -103,22 +105,35 @@ public class MainFragment extends Fragment implements TabLayout.OnTabSelectedLis
     }
 
     private void initBanner(View view){
-        images.add("https://upload-images.jianshu.io/upload_images/9140378-3e03388792e59668.png");
-        images.add("http://img8.agronet.com.cn/Users/100/617/663/2019911901105591.jpg");
-        images.add("http://www.moa.gov.cn/xw/shipin/202005/W020200521362744644607.png");
+        images.add("http://www.ippcaas.cn/images/content/2020-06/20200618162443169644.jpg");
+        images.add("http://www.vanzol.com/uploads/allimg/20200716/1594878594680680.png");
+        images.add("https://s1.ax1x.com/2020/07/17/UyGo8A.md.jpg");
+        images.add("https://s1.ax1x.com/2020/07/17/Uy0iAx.md.png");
+        titles.add("植物病虫害生物学国家重点实验室2019年度学术委员会年会成功召开");
+        titles.add("厦门果蔬农业展将于2020年9月8日-11日（四天）在厦门会展中心隆重举办");
+        titles.add("40种农作物常见病虫害症状及防治方法");
+        titles.add("马铃薯晚疫病全国生长分布图");
         Banner banner = view.findViewById(R.id.banner_main);
         //设置banner样式
-        banner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR);
+        banner.setBannerStyle(BannerConfig.NUM_INDICATOR_TITLE);
         //设置图片加载器
         banner.setImageLoader(new AgricultureNewsFragment.GlideImageLoader());
         //设置图片集合
         banner.setImages(images);
+        banner.setBannerTitles(titles);
         //banner设置方法全部调用完毕时最后调用
         banner.setBannerAnimation(Transformer.DepthPage);
+        banner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR_TITLE);
         //设置轮播时间
-        banner.setDelayTime(1500);
+        banner.setDelayTime(2500);
         //设置指示器位置（当banner模式中有指示器时）
         banner.setIndicatorGravity(BannerConfig.CENTER);
+        banner.setOnBannerListener(new OnBannerListener() {
+            @Override
+            public void OnBannerClick(int position) {
+
+            }
+        });
         banner.start();
     }
 
@@ -150,6 +165,4 @@ public class MainFragment extends Fragment implements TabLayout.OnTabSelectedLis
             }
         });
     }
-
-
 }

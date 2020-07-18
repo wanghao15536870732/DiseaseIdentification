@@ -4,12 +4,25 @@
     android:layout_height="match_parent"
     xmlns:fab="http://schemas.android.com/apk/res-auto">
 
+    <EditText
+        android:id="@+id/et_keyword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="8dp"
+        android:background="@drawable/border_search"
+        android:layout_gravity="top"
+        android:hint="查找地点"
+        android:padding="6dp"
+        android:textSize="16sp"/>
+
     <com.baidu.mapapi.map.MapView
         android:id="@+id/bmapView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="true" />
-
 
     <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/map_actions_menu"
