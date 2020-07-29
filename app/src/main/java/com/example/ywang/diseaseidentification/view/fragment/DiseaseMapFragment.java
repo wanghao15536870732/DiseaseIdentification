@@ -51,15 +51,11 @@ import com.baidu.mapapi.map.TextOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.model.LatLngBounds;
 import com.baidu.mapapi.search.core.CityInfo;
-import com.baidu.mapapi.search.core.PoiInfo;
 import com.baidu.mapapi.search.core.SearchResult;
 import com.baidu.mapapi.search.poi.OnGetPoiSearchResultListener;
-import com.baidu.mapapi.search.poi.PoiCitySearchOption;
 import com.baidu.mapapi.search.poi.PoiDetailResult;
-import com.baidu.mapapi.search.poi.PoiDetailSearchOption;
 import com.baidu.mapapi.search.poi.PoiDetailSearchResult;
 import com.baidu.mapapi.search.poi.PoiIndoorResult;
-import com.baidu.mapapi.search.poi.PoiNearbySearchOption;
 import com.baidu.mapapi.search.poi.PoiResult;
 import com.baidu.mapapi.search.poi.PoiSearch;
 import com.baidu.mapapi.search.route.BikingRouteResult;
@@ -81,6 +77,7 @@ import com.baidu.mapapi.walknavi.params.WalkNaviLaunchParam;
 import com.baidu.mapapi.walknavi.params.WalkRouteNodeInfo;
 import com.cocosw.bottomsheet.BottomSheet;
 import com.example.ywang.diseaseidentification.R;
+import com.example.ywang.diseaseidentification.bean.MapImg;
 import com.example.ywang.diseaseidentification.bean.OverLay;
 import com.example.ywang.diseaseidentification.utils.baidumap.MyOrientationListener;
 import com.example.ywang.diseaseidentification.utils.baidumap.WalkingRouteOverlay;
@@ -91,14 +88,19 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -108,8 +110,11 @@ import static android.app.Activity.RESULT_OK;
 public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerClickListener, OnGetPoiSearchResultListener {
 
     private static final int SELECT_PICTURE = 300;
-    private static final String getOverlayUrl = "http://121.199.19.77:8080/test/GetAreaServlet";
-    private static final String postOverlayUrl = "http://121.199.19.77:8080/test/AddAreaServlet";
+    private static final String getOverlayUrls = "http://121.199.19.77:8080/test/GetAreaServlet"; //查询围栏
+    private static final String postOverlayUrl = "http://121.199.19.77:8080/test/AddAreaServlet"; //添加围栏
+    private static final String getMapImgs = "http://121.199.19.77:8080/test/GetPhotoServlet"; //查询地图相册
+    private static final String postMapImg = "http://121.199.19.77:8080/test/AddPhotoServlet"; //添加地图相册
+    private static final String uploadFileUrl = "http://121.199.19.77:8080/show/ImageUploadServlet";
     private boolean isFirstLoc = true;
     private float mCurrentX;
 
@@ -199,7 +204,7 @@ public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerCli
         });
         mMyOrientationListener.start();
         mBaiduMap.setOnMarkerClickListener(this); //设置Marker点击事件
-        new overLayDataAsync().execute(getOverlayUrl);
+        new overLayDataAsync().execute(getOverlayUrls);
     }
 
     private void initFloatButton(View view) {
@@ -272,18 +277,7 @@ public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerCli
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 switch (i) {
-                                    case R.id.panorama:  //附近农资店
-                                        Intent nearByIntent = new Intent(getContext(), NearByActivity.class);
-                                        nearByIntent.putExtra("latitude",mLatitude);
-                                        nearByIntent.putExtra("longitude",mLongitude);
-                                        startActivity(nearByIntent);
-                                        break;
-                                    case R.id.fence:   //地理围栏
-                                        addGeoFence();
-                                        break;
-                                    case R.id.cancel_chose:  //取消
-                                        break;
-                                    case R.id.add_pic: {
+                                    case R.id.add_pic: {  //添加地图相册
                                         if (ContextCompat.checkSelfPermission(getActivity(),
                                                 Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                                             ActivityCompat.requestPermissions(getActivity(), new String[]{
@@ -294,6 +288,17 @@ public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerCli
                                         }
                                     }
                                     break;
+                                    case R.id.fence:   //地理围栏
+                                        addGeoFence();
+                                        break;
+                                    case R.id.panorama:  //附近农资店
+                                        Intent nearByIntent = new Intent(getContext(), NearByActivity.class);
+                                        nearByIntent.putExtra("latitude", mLatitude);
+                                        nearByIntent.putExtra("longitude", mLongitude);
+                                        startActivity(nearByIntent);
+                                        break;
+                                    case R.id.cancel_chose:  //取消
+                                        break;
                                     default:
                                         break;
                                 }
@@ -319,7 +324,7 @@ public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerCli
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                RadioButton radioButton = (RadioButton) radioGroup.findViewById(i);
+                RadioButton radioButton = radioGroup.findViewById(i);
                 result[0] = i;
             }
         });
@@ -332,7 +337,7 @@ public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerCli
                     Toast.makeText(getContext(), "请完善区域信息！", Toast.LENGTH_SHORT).show();
                 } else {
                     OverLay overLay = new OverLay(String.valueOf(overlayList.size() + 1), "123456", title.getText().toString(),
-                            length.getText().toString(), width.getText().toString(), mLatitude, mLongitude);
+                            length.getText().toString(), width.getText().toString(), mLatitude, mLongitude, 0);
                     new addOverlayAsync().execute(overLay);
                     if (result[0] == R.id.radio_blue) {
                         addOverlaysToMap(Integer.parseInt(width.getText().toString()), Integer.parseInt(length.getText().toString()),
@@ -375,7 +380,7 @@ public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerCli
                 out.writeBytes("AreaId=" + overLay.getAreaId() + "&UserId=" + overLay.getUserId() +
                         "&AreaName=" + URLEncoder.encode(overLay.getAreaName(), "utf-8") + "&AreaLength=" +
                         overLay.getAreaLength() + "&AreaWidth=" + overLay.getAreaWidth() + "&AreaLon=" +
-                        overLay.getAreaLon() + "&AreaLat=" + overLay.getAreaLat());
+                        overLay.getAreaLon() + "&AreaLat=" + overLay.getAreaLat() + "&AreaType=" + overLay.getAreaType());
                 out.flush();
                 out.close();
                 //设置连接超时和读取超时的毫秒数
@@ -442,6 +447,7 @@ public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerCli
                     overLay.setAreaWidth(reader.readLine());
                     overLay.setAreaLon(Double.parseDouble(reader.readLine()));
                     overLay.setAreaLat(Double.parseDouble(reader.readLine()));
+                    overLay.setAreaType(Integer.parseInt(reader.readLine()));
                     overlayList.add(overLay);
                 }
             } catch (Exception e) {
@@ -465,14 +471,19 @@ public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerCli
         protected void onPostExecute(List<OverLay> overlayList) {
             super.onPostExecute(overlayList);
             for (OverLay overLay : overlayList) {
+                int resource = R.drawable.ground_overlay;
+                if (overLay.getAreaType() == 1) {
+                    resource = R.drawable.ground_overlay_green;
+                } else if (overLay.getAreaType() == 2) {
+                    resource = R.drawable.ground_overlay_red;
+                }
                 addOverlaysToMap(Integer.parseInt(overLay.getAreaWidth()), Integer.parseInt(overLay.getAreaWidth()),
-                        R.drawable.ground_overlay_green, overLay.getAreaName(), overLay.getAreaLat(),
+                        resource, overLay.getAreaName(), overLay.getAreaLat(),
                         overLay.getAreaLon());
                 Log.e("area", overLay.getAreaName());
             }
         }
     }
-
 
     @Override
     public void onGetPoiResult(PoiResult result) {
@@ -581,28 +592,6 @@ public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerCli
                 .fontColor(0xFF1b4560)
                 .position(point);
         mBaiduMap.addOverlay(textOptions);
-    }
-
-    /*
-   地图上添加图片
-    */
-    private void addMapPic(String imagePath) {
-        if (imagePath != null) {
-            Bitmap newBitmap = decodeSampledBitmapFromFile(imagePath, 150, 150);
-            LatLng point = new LatLng(mLatitude, mLongitude);
-            BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(newBitmap);
-            OverlayOptions options = new MarkerOptions()
-                    .icon(bitmapDescriptor)
-                    .position(point);
-            Marker marker = (Marker) mBaiduMap.addOverlay(options);
-            Bundle bundle = new Bundle();
-            bundle.putString("pic", imagePath);
-            bundle.putDouble("latitude", mLatitude);
-            bundle.putDouble("longitude", mLongitude);
-            marker.setExtraInfo(bundle);
-        } else {
-            Toast.makeText(getContext(), "failed to find imagePath", Toast.LENGTH_SHORT).show();
-        }
     }
 
     public static Bitmap decodeSampledBitmapFromFile(String filename, int reqWidth, int reqHeight) {
@@ -722,6 +711,29 @@ public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerCli
     }
 
 
+    /*
+    地图上添加图片
+    */
+    private void addMapPic(String imagePath) {
+        if (imagePath != null) {
+            new uploadFileAsync().execute(new File(imagePath));
+            Bitmap newBitmap = decodeSampledBitmapFromFile(imagePath, 200, 200);
+            LatLng point = new LatLng(mLatitude, mLongitude);
+            BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(newBitmap);
+            OverlayOptions options = new MarkerOptions()
+                    .icon(bitmapDescriptor)
+                    .position(point);
+            Marker marker = (Marker) mBaiduMap.addOverlay(options);
+            Bundle bundle = new Bundle();
+            bundle.putString("pic", imagePath);
+            bundle.putDouble("latitude", mLatitude);
+            bundle.putDouble("longitude", mLongitude);
+            marker.setExtraInfo(bundle);
+        } else {
+            Toast.makeText(getContext(), "failed to find imagePath", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     @Override
     public boolean onMarkerClick(Marker marker) {
         Bundle bundle = marker.getExtraInfo();
@@ -730,10 +742,9 @@ public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerCli
             Double latitude = bundle.getDouble("latitude", 0);
             Double longitude = bundle.getDouble("longitude", 0);
             if (latitude == mLatitude && longitude == mLongitude) {
-
                 Toast.makeText(getContext(), "始末位置不能相同！", Toast.LENGTH_SHORT).show();
             } else if (imagePath == null) {
-                Toast.makeText(getContext(), "附近全景图", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "加载失败，请重新添加", Toast.LENGTH_SHORT).show();
             } else {
                 showTheWay(new LatLng(latitude, longitude));
             }
@@ -861,6 +872,152 @@ public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerCli
                 Log.d("Navigation", "WalkNavigation onRoutePlanFail");
             }
         });
+    }
+
+    class uploadFileAsync extends AsyncTask<File, String, String> {
+
+        @Override
+        protected String doInBackground(File... strings) {
+            String BOUNDARY = UUID.randomUUID().toString();  //边界标识   随机生成
+            String PREFIX = "--", LINE_END = "\r\n";
+            String CONTENT_TYPE = "multipart/form-data";   //内容类型
+            try {
+                URL url = new URL(uploadFileUrl);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setReadTimeout(10 * 1000000);
+                conn.setConnectTimeout(10 * 1000000);
+                conn.setDoInput(true);  //允许输入流
+                conn.setDoOutput(true); //允许输出流
+                conn.setUseCaches(false);  //不允许使用缓存
+                conn.setRequestMethod("POST");  //请求方式
+                conn.setRequestProperty("Charset", "utf-8");  //设置编码
+                conn.setRequestProperty("connection", "keep-alive");
+                conn.setRequestProperty("Content-Type", CONTENT_TYPE + ";boundary=" + BOUNDARY);
+                if (strings[0] != null) {
+                    /*
+                     * 当文件不为空，把文件包装并且上传
+                     */
+                    OutputStream outputSteam = conn.getOutputStream();
+                    DataOutputStream dos = new DataOutputStream(outputSteam);
+                    StringBuffer sb = new StringBuffer();
+                    sb.append(PREFIX);
+                    sb.append(BOUNDARY);
+                    sb.append(LINE_END);
+                    /*
+                     * 这里重点注意：
+                     * name里面的值为服务器端需要key   只有这个key 才可以得到对应的文件
+                     * filename是文件的名字，包含后缀名的   比如:abc.png
+                     */
+
+                    sb.append("Content-Disposition: form-data; name=\"img\"; filename=\"" + strings[0].getName() + "\"" + LINE_END);
+                    sb.append("Content-Type: application/octet-stream; charset=" + "utf-8" + LINE_END);
+                    sb.append(LINE_END);
+                    dos.write(sb.toString().getBytes());
+
+                    InputStream is = new FileInputStream(strings[0]);
+                    byte[] bytes = new byte[1024];
+                    int len = 0;
+                    while ((len = is.read(bytes)) != -1) {
+                        dos.write(bytes, 0, len);
+                    }
+                    is.close();
+                    dos.write(LINE_END.getBytes());
+                    byte[] end_data = (PREFIX + BOUNDARY + PREFIX + LINE_END).getBytes();
+                    dos.write(end_data);
+                    dos.flush();
+
+                    /*
+                     * 获取响应码  200 = 成功
+                     * 当响应成功，获取响应的流
+                     */
+
+                    int res = conn.getResponseCode();
+                    if (res == 200) {
+                        InputStream in = conn.getInputStream();
+                        BufferedReader reader = null;
+                        reader = new BufferedReader(new InputStreamReader(in));
+                        StringBuilder response = new StringBuilder();
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            response.append(line);
+                        }
+                        return response.toString();
+                    }
+                }
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return "";
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            MapImg img = new MapImg();
+            img.setPhotoSrc(s);
+            img.setUserId(123456);
+            img.setDiseaseName("测试");
+            new addMapImgAsync().execute(img);
+        }
+    }
+
+    class addMapImgAsync extends AsyncTask<MapImg,String,String>{
+
+        @Override
+        protected String doInBackground(MapImg... mapImgs) {
+            MapImg img = mapImgs[0];
+            StringBuilder response = new StringBuilder();
+            HttpURLConnection connection = null;
+            BufferedReader reader = null;
+            try {
+                URL url = new URL(postMapImg);
+                connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("POST");
+                connection.setRequestProperty("contentType", "GBK");
+                DataOutputStream out = new DataOutputStream(connection.getOutputStream());
+                out.writeBytes("PhotoId=" + img.getPhotoId() + "&UserId=" + img.getUserId() +
+                        "&DiseaseName=" + URLEncoder.encode(img.getDiseaseName(), "utf-8") +
+                        "&Lat=" + img.getLat() + "&Log=" + img.getLog() + "&PhotoSrc=" + img.getPhotoSrc());
+                out.flush();
+                out.close();
+                //设置连接超时和读取超时的毫秒数
+                connection.setConnectTimeout(8000);
+                connection.setReadTimeout(8000);
+
+                InputStream in = connection.getInputStream();
+                reader = new BufferedReader(new InputStreamReader(in));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (connection != null) {
+                    connection.disconnect();
+                }
+            }
+            return response.toString();
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            if (s.equals("true")){
+                Toast.makeText(getContext(), "添加成功", Toast.LENGTH_SHORT).show();
+            }else {
+                Toast.makeText(getContext(), "添加失败", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
 

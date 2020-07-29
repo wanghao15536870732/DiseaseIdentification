@@ -221,7 +221,7 @@
             android:layout_marginTop="20dp"
             android:text="忘记密码"
             android:textSize="18sp"
-            style="@style/ClickableTextView" />
+            style="@style/ClickableTextView"/>
 
         <TextView
             android:id="@+id/tv_register_account"
@@ -232,7 +232,7 @@
             android:layout_marginTop="20dp"
             android:text="注册账号"
             android:textSize="18sp"
-            style="@style/ClickableTextView" />
+            style="@style/ClickableTextView"/>
 
     </RelativeLayout>
 
@@ -252,7 +252,7 @@
             android:layout_height="wrap_content"
             android:text="阅读并同意"
             android:textSize="18sp"
-            android:textColor="@android:color/white" />
+            style="@style/ClickableTextView"/>
 
         <TextView
             android:id="@+id/tv_terms_of_service"
@@ -261,7 +261,7 @@
             android:gravity="start|center_vertical"
             android:text="服务条款"
             android:textSize="18sp"
-            style="@style/ClickableTextView"/>
+            android:textColor="@android:color/white" />
 
     </LinearLayout>
 

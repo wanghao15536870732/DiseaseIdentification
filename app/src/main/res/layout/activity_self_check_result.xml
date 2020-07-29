@@ -23,8 +23,26 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_slef"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
     </android.support.v7.widget.RecyclerView>
+
+
+    <TextView
+        android:id="@+id/more_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_margin="16dp"
+        android:text="上述结果偏差太大？点击查看其他相似病征"
+        android:textSize="16sp"
+        android:clickable="true"
+        android:textColor="@color/selector_text_press_color"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_disease"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
 
 </LinearLayout>

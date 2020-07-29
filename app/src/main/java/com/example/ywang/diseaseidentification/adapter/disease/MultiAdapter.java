@@ -1,30 +1,29 @@
 package com.example.ywang.diseaseidentification.adapter.disease;
 
-import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.TextView;
 import com.example.ywang.diseaseidentification.R;
+import com.example.ywang.diseaseidentification.bean.AgriPosition;
 import java.util.HashMap;
 import java.util.List;
 
 public class MultiAdapter extends RecyclerView.Adapter {
 
-    private List<String> datas;
+    private List<AgriPosition.DiseaseFeatureListBean> beanList;
     public static HashMap<Integer, Boolean> isSelected;
 
-    public MultiAdapter(List<String> datas) {
-        this.datas = datas;
+    public MultiAdapter(List<AgriPosition.DiseaseFeatureListBean> list) {
+        this.beanList = list;
         init();
     }
 
     // 初始化 设置所有item都为未选择
     public void init() {
-        isSelected = new HashMap<Integer, Boolean>();
-        for (int i = 0; i < datas.size(); i++) {
+        isSelected = new HashMap<>();
+        for (int i = 0; i < beanList.size(); i++) {
             isSelected.put(i, false);
         }
     }
@@ -45,8 +44,8 @@ public class MultiAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if(holder instanceof MultiViewHolder){
             final MultiViewHolder viewHolder = (MultiViewHolder) holder;
-            String name = datas.get(position);
-            viewHolder.mTvName.setText(name);
+            AgriPosition.DiseaseFeatureListBean bean = beanList.get(position);
+            viewHolder.mTvName.setText(bean.getName());
             viewHolder.itemView.setSelected(isSelected.get(position));
 
             if (mOnItemClickListener != null) {
@@ -62,7 +61,7 @@ public class MultiAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        return datas.size();
+        return beanList.size();
     }
 
     class MultiViewHolder extends RecyclerView.ViewHolder{

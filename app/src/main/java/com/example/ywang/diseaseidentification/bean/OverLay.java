@@ -8,12 +8,13 @@ public class OverLay {
     private String AreaWidth;
     private double AreaLat;
     private double AreaLon;
+    private int AreaType;
 
     public OverLay() {
     }
 
     public OverLay(String areaId, String userId, String areaName,
-                   String areaLength, String areaWidth, double areaLat, double areaLon) {
+                   String areaLength, String areaWidth, double areaLat, double areaLon,int type) {
         AreaId = areaId;
         UserId = userId;
         AreaName = areaName;
@@ -21,6 +22,15 @@ public class OverLay {
         AreaWidth = areaWidth;
         AreaLat = areaLat;
         AreaLon = areaLon;
+        AreaType = type;
+    }
+
+    public int getAreaType() {
+        return AreaType;
+    }
+
+    public void setAreaType(int areaType) {
+        AreaType = areaType;
     }
 
     public String getAreaId() {

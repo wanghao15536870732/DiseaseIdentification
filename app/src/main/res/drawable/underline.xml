@@ -5,7 +5,7 @@
         android:top="-3.50dp">
         <!--bottom表示从底部坐标开始，其它方向使用负数，表示从边界外指定位置开始绘制stroke线条，起到隐藏效果-->
         <shape android:shape="rectangle">
-            <stroke android:width="1.0px" android:color="#8090df24"/>
+            <stroke android:width="1.0px" android:color="#80695a5a"/>
         </shape>
     </item>
 

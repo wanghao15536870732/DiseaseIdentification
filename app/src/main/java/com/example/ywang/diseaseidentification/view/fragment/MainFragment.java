@@ -46,7 +46,7 @@ public class MainFragment extends Fragment implements TabLayout.OnTabSelectedLis
         tabLayout = view.findViewById(R.id.main_tab_layout);
         ViewPager viewPager = view.findViewById(R.id.home_viewpager);
         mFragments.add(NewsFragment.newInstance("http://121.199.19.77:8080/show/GetNewsThreeServlet"));
-        mFragments.add(NewsFragment.newInstance("http://121.199.19.77:8080/show/GetNewsThreeServlet"));
+        mFragments.add(NewsFragment.newInstance("http://121.199.19.77:8080/test/GetZhengceServlet"));
         mFragments.add(DiseaseMainFragment.newInstance());
 
         TitleAdapter mAdapter = new TitleAdapter(getFragmentManager(), mFragments, mTitles);

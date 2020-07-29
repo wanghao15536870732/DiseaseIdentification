@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.ywang.diseaseidentification.R;
-import com.example.ywang.diseaseidentification.bean.Item;
+import com.example.ywang.diseaseidentification.bean.HistoryItem;
 import com.example.ywang.diseaseidentification.view.activity.TimeRecordActivity;
 
 import java.util.List;
@@ -21,9 +21,9 @@ import java.util.List;
 public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineAdapter.ViewHolder> {
 
     private Context mContext;
-    private List<Item> mList;
+    private List<HistoryItem> mList;
 
-    public void setList(List<Item> list) {
+    public void setList(List<HistoryItem> list) {
         mList = list;
     }
 
@@ -31,7 +31,7 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineAdapter.ViewHo
         mContext = context;
     }
 
-    public TimeLineAdapter(Context context,List<Item> list) {
+    public TimeLineAdapter(Context context,List<HistoryItem> list) {
         mContext = context;
         mList=list;
     }
@@ -45,22 +45,22 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        final Item item = mList.get(position);
-        holder.textView.setText(item.getTime());
-        Glide.with(mContext).load(item.getImageUrl()).into(holder.imageView);
-        holder.content_text.setText(item.getContent());
-        holder.weather_text.setText(item.getWeather());
-        holder.tmp_text.setText(item.getTmp());
-        holder.city.setText(item.getCity());
-        holder.detial.setText(item.getDetail());
+        final HistoryItem historyItem = mList.get(position);
+        holder.textView.setText(historyItem.getTime());
+        Glide.with(mContext).load(historyItem.getImageUrl()).into(holder.imageView);
+        holder.content_text.setText(historyItem.getContent());
+        holder.weather_text.setText(historyItem.getWeather());
+        holder.tmp_text.setText(historyItem.getTmp());
+        holder.city.setText(historyItem.getCity());
+        holder.detial.setText(historyItem.getDetail());
         holder.album_card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, TimeRecordActivity.class);
-                intent.putExtra("latitude",item.getLatLng().latitude);
-                intent.putExtra("longitude",item.getLatLng().longitude);
-                intent.putExtra("image",item.getImageUrl());
-                intent.putExtra("describe",item.getDescrip());
+                intent.putExtra("latitude", historyItem.getLatLng().latitude);
+                intent.putExtra("longitude", historyItem.getLatLng().longitude);
+                intent.putExtra("image", historyItem.getImageUrl());
+                intent.putExtra("describe", historyItem.getDescrip());
                 mContext.startActivity(intent);
             }
         });

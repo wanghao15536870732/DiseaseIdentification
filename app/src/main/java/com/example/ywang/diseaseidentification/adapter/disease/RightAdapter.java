@@ -1,46 +1,72 @@
 package com.example.ywang.diseaseidentification.adapter.disease;
 
-import android.content.Context;
 import android.graphics.Color;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.example.ywang.diseaseidentification.R;
-import com.example.ywang.diseaseidentification.bean.CropBean;
-import com.example.ywang.diseaseidentification.bean.CropItem;
-
-import java.util.HashMap;
+import com.example.ywang.diseaseidentification.bean.AgriPosition;
 import java.util.List;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-
-public class RightAdapter extends BaseQuickAdapter<CropItem>{
+public class RightAdapter extends BaseQuickAdapter<AgriPosition> {
 
     private int selectPos = 0;
-    public RightAdapter(List<CropItem> data) {
-        super( R.layout.crop_part_item, data);
+
+    public RightAdapter(List<AgriPosition> data) {
+        super(R.layout.crop_part_item, data);
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, CropItem cropItem) {
-        if(selectPos == helper.getAdapterPosition()){
-            helper.convertView.setBackgroundColor( Color.parseColor("#FFFFFF"));
-            helper.setTextColor(R.id.crop_text, Color.parseColor("#40a5f3"));
-        }else{
-            helper.convertView.setBackgroundColor(Color.parseColor("#F4F4F4"));
-            helper.setTextColor(R.id.crop_text, Color.parseColor("#333333"));
-        }
-        helper.setText(R.id.crop_text,cropItem.getTitle());
+    protected void convert(BaseViewHolder helper, AgriPosition agriItem) {
         ImageView imageView = helper.convertView.findViewById(R.id.crop_src);
-        Glide.with(helper.getConvertView().getContext()).load(cropItem.getUrl()).into(imageView);
+        int selectId = 0;
+        int normalId = 0;
+        switch (agriItem.getName()) {
+            case "叶":
+                selectId = R.mipmap.ye;
+                normalId = R.mipmap.ye_no;
+                break;
+            case "花":
+                selectId = R.mipmap.flower;
+                normalId = R.mipmap.flower_no;
+                break;
+            case "根":
+                selectId = R.mipmap.root;
+                normalId = R.mipmap.root_no;
+                break;
+            case "茎":
+                selectId = R.mipmap.jing;
+                normalId = R.mipmap.jing_no;
+                break;
+            case "果":
+                selectId = R.mipmap.guo;
+                normalId = R.mipmap.guo_no;
+                break;
+            case "植株":
+                selectId = R.mipmap.plant;
+                normalId = R.mipmap.plant_no;
+                break;
+            case "树干":
+                selectId = R.mipmap.gan;
+                normalId = R.mipmap.gan_no;
+                break;
+            case "树枝":
+                selectId = R.mipmap.leaf;
+                normalId = R.mipmap.leaf_no;
+                break;
+        }
+        if (selectPos == helper.getAdapterPosition()) {
+            helper.convertView.setBackgroundColor(Color.parseColor("#FFFFFF"));
+            //helper.setTextColor(R.id.crop_text, Color.parseColor("#40a5f3"));
+            imageView.setImageResource(selectId);
+        } else {
+            helper.convertView.setBackgroundColor(Color.parseColor("#FFFFFF"));
+            //helper.setTextColor(R.id.crop_text, Color.parseColor("#333333"));
+            imageView.setImageResource(normalId);
+        }
+        //helper.setText(R.id.crop_text,agriItem.getName());
+        //Glide.with(helper.getConvertView().getContext()).load(agriItem.getUrl()).into(imageView);
+        //imageView.setImageResource(R.drawable.image_placeholder);
     }
 
     public int getSelectPos() {

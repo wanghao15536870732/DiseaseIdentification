@@ -2,7 +2,7 @@ package com.example.ywang.diseaseidentification.bean;
 
 import com.baidu.mapapi.model.LatLng;
 
-public class Item {
+public class HistoryItem {
     private String imageUrl;
     private String time;
     private String content;
@@ -13,7 +13,7 @@ public class Item {
     private String detail;
     private String descrip;
 
-    public Item(String imageUrl, String time, String content, LatLng latLng, String weather, String tmp, String city, String detail, String descrip) {
+    public HistoryItem(String imageUrl, String time, String content, LatLng latLng, String weather, String tmp, String city, String detail, String descrip) {
         this.imageUrl = imageUrl;
         this.time = time;
         this.content = content;

@@ -11,32 +11,37 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="6dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
         android:background="?android:attr/selectableItemBackground">
-
-        <ImageView
-            android:id="@+id/img_self"
-            android:layout_width="90dp"
-            android:layout_height="80dp"
-            android:layout_alignParentLeft="true"/>
 
         <TextView
             android:id="@+id/text_self"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:layout_centerVertical="true"
-            android:layout_centerInParent="true"
-            android:layout_marginRight="16dp"/>
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="16dp"
+            android:textColor="@color/black"/>
 
         <TextView
             android:id="@+id/text_percent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/arrow_right"
+            android:layout_marginRight="5dp"
+            android:textColor="#ff4d4d"/>
+
+        <ImageView
+            android:id="@+id/arrow_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_arrow_right"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="16dp"/>
+            android:layout_marginRight="10dp"/>
 
     </RelativeLayout>
 

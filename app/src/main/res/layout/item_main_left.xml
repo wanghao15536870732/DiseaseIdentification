@@ -29,6 +29,7 @@
             android:layout_toRightOf="@+id/left_image"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="5dp"
+            android:textStyle="bold"
             android:textColor="@color/black"/>
 
     </RelativeLayout>

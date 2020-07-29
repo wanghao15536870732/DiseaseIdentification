@@ -1,11 +1,7 @@
 package com.example.ywang.diseaseidentification.utils.file;
 
 import android.content.Context;
-import android.content.res.AssetManager;
-
-import com.example.ywang.diseaseidentification.bean.CropItem;
 import com.example.ywang.diseaseidentification.bean.baseData.DiseaseData;
-
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -118,24 +114,4 @@ public class ConstantUtils {
             new DiseaseData("荞麦","https://static.baicaolu.com/uploads/201507/1436285026i8NwYdcR.jpg","qiaomai"),
             new DiseaseData("麻类","http://n.sinaimg.cn/translate/88/w500h388/20181201/Vlp1-hpevhcm5855739.jpg","malei"),
     };
-
-    /*根、茎、叶、花、果实、植株*/
-    public static CropItem[] items = {
-        new CropItem("https://upload-images.jianshu.io/upload_images/9140378-a5428a598e98769d.png","叶"),
-        new CropItem("https://upload-images.jianshu.io/upload_images/9140378-be3f3fef607e7526.png","花"),
-        new CropItem("https://upload-images.jianshu.io/upload_images/9140378-404409164ec6d8d1.png","根"),
-        new CropItem("https://upload-images.jianshu.io/upload_images/9140378-523faa0544cb8971.png","茎"),
-        new CropItem("https://upload-images.jianshu.io/upload_images/9140378-b5fdc46a7bc0b7bd.png","果"),
-        new CropItem("https://upload-images.jianshu.io/upload_images/9140378-6528a63eee161045.png","植株"),
-    };
-
-    public static String[][] Disease = {
-            {"病斑","病斑","黑褐色","枯死","水渍状斑点","暗绿色","坏死大斑","脱落","畸形","轮纹状","灰褐色霉", "黄褐色病斑", "圆形或近圆形病斑", "油渍状", "枯萎", "破裂病斑", "病斑密布", "粘液", "不规则病斑","褐色病斑","凹陷病斑","棉絮状菌丝体"},
-            {"膨大","肿胀","歪扭","绿叶变态","白色霉","孢子","圆形或近圆形病斑","畸形","弯曲","肥大","纺锤形病斑","梭形丙班","灰白色病斑","灰褐色病斑","不规则病斑","绿色","长菱形病斑","黑色病斑","黑色霉","破裂","椭圆形病斑","软化","腐烂"},
-            {"膨大","孢子","芽管","黄色孢子","球形孢子","肿瘤","矮小","黄色","维管束变褐色","长条形病斑","枯萎","肿胀","瘤状物",""},
-            {"膨大","孢子","芽管"},
-            {"膨大","孢子","芽管"},
-            {"膨大","孢子","芽管"},
-    };
-
 }
