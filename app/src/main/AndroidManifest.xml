@@ -12,6 +12,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- 允许程序设置内置sd卡的写权限 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"
+        tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <!-- 允许程序获取网络状态 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -46,6 +48,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="n">
+
+        <uses-library android:name="org.apache.http.legacy" android:required="false" />
         <activity
             android:name=".view.activity.GuideActivity"
             android:clipToPadding="true"
@@ -123,7 +127,9 @@
             android:name=".view.activity.NearByActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden|stateUnchanged" />
-        <activity android:name=".view.activity.DiseaseDetailActivity"></activity>
+        <activity android:name=".view.activity.DiseaseDetailActivity"/>
+        <activity android:name=".view.activity.DetailActivity"/>
+        <activity android:name=".view.activity.MainResultActivity"/>
     </application>
 
 </manifest>

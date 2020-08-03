@@ -11,6 +11,8 @@ import android.content.ContentUris;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
@@ -40,6 +42,8 @@ import com.example.ywang.diseaseidentification.application.MyApplication;
 import com.example.ywang.diseaseidentification.bean.weatherData.DailyWeather;
 import com.example.ywang.diseaseidentification.bean.weatherData.Weather;
 import com.example.ywang.diseaseidentification.bean.weatherData.WeatherBean;
+import com.example.ywang.diseaseidentification.utils.Classifier;
+import com.example.ywang.diseaseidentification.utils.Utils;
 import com.example.ywang.diseaseidentification.utils.network.HttpUtil;
 import com.example.ywang.diseaseidentification.view.MiuiWeatherView;
 import com.example.ywang.diseaseidentification.view.fragment.AgricultureNewsFragment;
@@ -111,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
     List<WeatherBean> datas = new ArrayList<>();
     private List<DailyWeather> dailyWeatherList;
     private LinearLayout forecastLayout;
+    private Classifier classifier;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -188,6 +193,7 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
                 requestDailyWeather();
             }
         });
+        classifier = new Classifier(Utils.assetFilePath(this, "resnet50.pt"));
     }
 
     //仿微博弹出菜单
@@ -370,7 +376,7 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
                 Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.RECORD_AUDIO,Manifest.permission.READ_PHONE_STATE,
-                Manifest.permission.CALL_PHONE };
+                Manifest.permission.CALL_PHONE,Manifest.permission.WRITE_SETTINGS };
         try{
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                 for (String permission1 : permissions) {
@@ -535,43 +541,53 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
                 break;
             case PictureConfig.CHOOSE_REQUEST:
                 if(resultCode == RESULT_OK) {
-                    shapeLoadingDialog = new ShapeLoadingDialog(this);
-                    shapeLoadingDialog.setLoadingText("正在识别中...");
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    shapeLoadingDialog.show();
-                                }
-                            });
-                            // 图片选择结果回调
-                            selectList = PictureSelector.obtainMultipleResult(data);
-                            LocalMedia media = selectList.get(0);
-                            Log.i("图片-----》", media.getPath());
-                            Log.e("result",media.getPath());
-                            AipImageClassify client = new AipImageClassify(MyApplication.APP_ID, MyApplication.API_KEY, MyApplication.SECRET_KEY);
-                            // 可选：设置网络连接参数
-                            client.setConnectionTimeoutInMillis(2000);
-                            client.setSocketTimeoutInMillis(60000);
+                    selectList = PictureSelector.obtainMultipleResult(data);
+                    LocalMedia media = selectList.get(0);
+                    Log.i("图片-----》", media.getPath());
+                    Intent intent = new Intent(this, MainResultActivity.class);
+                    Bitmap bitmap = BitmapFactory.decodeFile(media.getPath());
+                    intent.putExtra("image_path", media.getPath());
+                    String predict = classifier.predict(bitmap);
+                    intent.putExtra("predict", predict);
+                    startActivity(intent);
 
-                            // 传入可选参数调用接口
-                            HashMap<String, String> options = new HashMap<>();
-                            options.put("baike_num", "5");
-                            final JSONObject res = client.plantDetect(media.getPath(), options);
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    shapeLoadingDialog.dismiss();
-                                }
-                            });
-                            Intent intent = new Intent(MainActivity.this,ResultActivity.class);
-                            intent.putExtra("imagePath",media.getPath());
-                            intent.putExtra("result",res.toString());
-                            startActivity(intent);
-                        }
-                    }).start();
+//                    shapeLoadingDialog = new ShapeLoadingDialog(this);
+//                    shapeLoadingDialog.setLoadingText("正在识别中...");
+//                    new Thread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            runOnUiThread(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    shapeLoadingDialog.show();
+//                                }
+//                            });
+//                            // 图片选择结果回调
+//                            selectList = PictureSelector.obtainMultipleResult(data);
+//                            LocalMedia media = selectList.get(0);
+//                            Log.i("图片-----》", media.getPath());
+//                            Log.e("result",media.getPath());
+//                            AipImageClassify client = new AipImageClassify(MyApplication.APP_ID, MyApplication.API_KEY, MyApplication.SECRET_KEY);
+//                            // 可选：设置网络连接参数
+//                            client.setConnectionTimeoutInMillis(2000);
+//                            client.setSocketTimeoutInMillis(60000);
+//
+//                            // 传入可选参数调用接口
+//                            HashMap<String, String> options = new HashMap<>();
+//                            options.put("baike_num", "5");
+//                            final JSONObject res = client.plantDetect(media.getPath(), options);
+//                            runOnUiThread(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    shapeLoadingDialog.dismiss();
+//                                }
+//                            });
+//                            Intent intent = new Intent(MainActivity.this,ResultActivity.class);
+//                            intent.putExtra("imagePath",media.getPath());
+//                            intent.putExtra("result",res.toString());
+//                            startActivity(intent);
+//                        }
+//                    }).start();
 
                 }
                 break;

@@ -26,6 +26,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -75,6 +76,10 @@ import com.baidu.mapapi.walknavi.adapter.IWRoutePlanListener;
 import com.baidu.mapapi.walknavi.model.WalkRoutePlanError;
 import com.baidu.mapapi.walknavi.params.WalkNaviLaunchParam;
 import com.baidu.mapapi.walknavi.params.WalkRouteNodeInfo;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.cocosw.bottomsheet.BottomSheet;
 import com.example.ywang.diseaseidentification.R;
 import com.example.ywang.diseaseidentification.bean.MapImg;
@@ -204,7 +209,8 @@ public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerCli
         });
         mMyOrientationListener.start();
         mBaiduMap.setOnMarkerClickListener(this); //设置Marker点击事件
-        new overLayDataAsync().execute(getOverlayUrls);
+        new overLayDataAsync().execute(getOverlayUrls); /* 同步病害地理围栏 */
+        new mapImgDataAsymc().execute(getMapImgs); /* 同步病害地图marker */
     }
 
     private void initFloatButton(View view) {
@@ -415,6 +421,95 @@ public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerCli
             super.onPostExecute(s);
             Toast.makeText(getContext(), "添加成功！", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    class mapImgDataAsymc extends AsyncTask<String,String,List<MapImg>>{
+        List<MapImg> imageList = new ArrayList<>();
+        @Override
+        protected List<MapImg> doInBackground(String... strings) {
+            HttpURLConnection connection = null;
+            BufferedReader reader = null;
+            try {
+                URL url = new URL(strings[0]);
+                connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("POST");
+                //设置连接超时和读取超时的毫秒数
+                connection.setConnectTimeout(8000);
+                connection.setReadTimeout(8000);
+
+                InputStream in = connection.getInputStream();
+                reader = new BufferedReader(new InputStreamReader(in));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    MapImg image = new MapImg();
+                    image.setPhotoId(Integer.parseInt(line));
+                    image.setUserId(reader.readLine());
+                    image.setDiseaseName(reader.readLine());
+                    image.setLat(Double.parseDouble(reader.readLine()));
+                    image.setLog(Double.parseDouble(reader.readLine()));
+                    image.setPhotoSrc(reader.readLine());
+                    imageList.add(image);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (connection != null) {
+                    connection.disconnect();
+                }
+            }
+            return imageList;
+        }
+
+        @Override
+        protected void onPostExecute(List<MapImg> mapImgs) {
+            super.onPostExecute(mapImgs);
+            for(MapImg mapImg : mapImgs){
+                customizeMarkerIcon(mapImg);
+            }
+        }
+    }
+
+    /**
+     * by moos on 2017/11/13
+     * func:定制化marker的图标
+     * @return
+     */
+    private void customizeMarkerIcon(MapImg mapImg){
+        final View markerView = LayoutInflater.from(getContext()).inflate(R.layout.marker_bg,null);
+        final ImageView icon = markerView.findViewById(R.id.marker_item_icon);
+
+        Glide.with(getContext()).load(getContext()).into(icon);
+        Bitmap bitmap = convertViewToBitmap(markerView);
+        LatLng point = new LatLng(mapImg.getLat(), mapImg.getLog());
+        BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(bitmap);
+        OverlayOptions options = new MarkerOptions()
+                .icon(bitmapDescriptor)
+                .position(point);
+        Marker marker = (Marker) mBaiduMap.addOverlay(options);
+        Bundle bundle = new Bundle();
+        bundle.putString("pic", mapImg.getPhotoSrc());
+        bundle.putDouble("latitude", mLatitude);
+        bundle.putDouble("longitude", mLongitude);
+        marker.setExtraInfo(bundle);
+    }
+
+    /**
+     * func:view转bitmap
+     */
+    public static Bitmap convertViewToBitmap(View view) {
+        view.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
+        view.buildDrawingCache();
+        Bitmap bitmap = view.getDrawingCache();
+        return bitmap;
     }
 
     class overLayDataAsync extends AsyncTask<String, String, List<OverLay>> {
@@ -957,8 +1052,10 @@ public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerCli
             super.onPostExecute(s);
             MapImg img = new MapImg();
             img.setPhotoSrc(s);
-            img.setUserId(123456);
+            img.setUserId("123456");
             img.setDiseaseName("测试");
+            Log.e("test",s);
+
             new addMapImgAsync().execute(img);
         }
     }
@@ -1012,6 +1109,7 @@ public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerCli
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            Log.e("test",s);
             if (s.equals("true")){
                 Toast.makeText(getContext(), "添加成功", Toast.LENGTH_SHORT).show();
             }else {

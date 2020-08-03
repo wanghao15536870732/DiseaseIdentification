@@ -2,7 +2,7 @@ package com.example.ywang.diseaseidentification.bean;
 
 public class MapImg {
     private int photoId;
-    private int userId;
+    private String userId;
     private String diseaseName;
     private Double lat;
     private Double log;
@@ -16,11 +16,11 @@ public class MapImg {
         this.photoId = photoId;
     }
 
-    public int getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

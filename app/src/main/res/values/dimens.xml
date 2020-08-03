@@ -14,4 +14,6 @@
     <dimen name="center_offset">5dp</dimen>
     <dimen name="line_space">1dp</dimen>
 
+    <dimen name="card_padding">30dp</dimen>
+
 </resources>
