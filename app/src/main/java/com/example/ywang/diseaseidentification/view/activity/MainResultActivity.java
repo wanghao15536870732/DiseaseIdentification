@@ -24,10 +24,12 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public class MainResultActivity extends AppCompatActivity{
+public class MainResultActivity extends AppCompatActivity {
     private Bitmap imageBitmap;
     private ViewPager mViewPager;
     private CardPagerAdapter mCardAdapter;
@@ -58,7 +60,6 @@ public class MainResultActivity extends AppCompatActivity{
         initScanLine();
         String pred = getIntent().getStringExtra("predict");
         ImageView imageView = findViewById(R.id.image);
-        Log.e("result",pred);
         //imageView.setImageBitmap(imageBitmap);
         imageView.setBackground(new BitmapDrawable(imageBitmap));
         assert pred != null;
@@ -80,6 +81,7 @@ public class MainResultActivity extends AppCompatActivity{
         new DataTask().execute(linkList);
     }
 
+
     private class DataTask extends AsyncTask<List<String>, String, List<String>> {
         @Override
         protected void onPreExecute() {
@@ -88,8 +90,9 @@ public class MainResultActivity extends AppCompatActivity{
             mIvScan.startAnimation(mTop2Bottom);
         }
 
+        @SafeVarargs
         @Override
-        protected List<String> doInBackground(List<String>... strings) {
+        protected final List<String> doInBackground(List<String>... strings) {
             publishProgress("正在分析图片");
             return parseHtmlData(strings[0]);
         }
@@ -103,9 +106,20 @@ public class MainResultActivity extends AppCompatActivity{
         protected void onPostExecute(List<String> contentList) {
             super.onPostExecute(contentList);
             isNeedAnimation = false;
+            ArrayList localArrayList = new ArrayList();
+            for (int m = 1; m < predict_result.length; m += 2) {
+                localArrayList.add(Double.parseDouble(predict_result[m]));
+            }
+            double d = (Double) Collections.max(localArrayList);
             for (int i = 0, j = 0; i < predict_result.length; i += 2, j++) {
                 CardItem cardItem = new CardItem(predict_result[i], contentList.get(j), true);
                 cardItem.setLink(linkList.get(j));
+                double score = Double.parseDouble(predict_result[i + 1]);
+                Log.e("score", String.valueOf(score));
+                double rec = (score - 0.0D) / (d + 0.2D - 0.0D);
+                BigDecimal b = new BigDecimal(rec);
+                double f1 = b.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                cardItem.setScore(f1);
                 mCardAdapter.addCardItem(cardItem);
             }
             CardItem finalCard = new CardItem("以上结果都不是？", "", false);
@@ -120,7 +134,7 @@ public class MainResultActivity extends AppCompatActivity{
         }
     }
 
-    private void initScanLine(){
+    private void initScanLine() {
         mIvScan = findViewById(R.id.scan_line);
         mTop2Bottom = new TranslateAnimation(TranslateAnimation.ABSOLUTE, 0f,
                 TranslateAnimation.ABSOLUTE, 0f, TranslateAnimation.RELATIVE_TO_PARENT, 0f,
@@ -144,7 +158,7 @@ public class MainResultActivity extends AppCompatActivity{
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                if(isNeedAnimation){
+                if (isNeedAnimation) {
                     mIvScan.setRotationX(180);
                     mIvScan.startAnimation(mTop2Bottom);
                 }
@@ -169,7 +183,7 @@ public class MainResultActivity extends AppCompatActivity{
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                if(isNeedAnimation){
+                if (isNeedAnimation) {
                     mIvScan.setRotationX(0);
                     mIvScan.startAnimation(mBottom2Top);
                 }

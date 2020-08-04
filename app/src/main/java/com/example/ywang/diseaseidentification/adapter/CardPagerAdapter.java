@@ -81,10 +81,12 @@ public class CardPagerAdapter extends PagerAdapter implements CardAdapter {
     private void bind(final CardItem item, View view) {
         TextView titleTextView = view.findViewById(R.id.titleTextView);
         TextView contentTextView = view.findViewById(R.id.contentTextView);
+        TextView scoreTextView = view.findViewById(R.id.score_text);
         Button reTakeBtn = view.findViewById(R.id.re_take_btn);
         Button moreBtn = view.findViewById(R.id.more_btn);
         titleTextView.setText(item.getTitle());
         contentTextView.setText(item.getText());
+        scoreTextView.setText(String.valueOf(item.getScore()));
         if(item.isScore_show()){
             view.findViewById(R.id.score_label).setVisibility(View.VISIBLE);
             reTakeBtn.setVisibility(View.GONE);

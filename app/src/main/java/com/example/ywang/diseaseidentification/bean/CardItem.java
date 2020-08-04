@@ -6,8 +6,17 @@ public class CardItem {
     private boolean score_show = true;
     private boolean image_show = false;
     private String link;
+    private double score;
 
-    public CardItem(String title, String text,boolean isShow) {
+    public double getScore() {
+        return score;
+    }
+
+    public void setScore(double score) {
+        this.score = score;
+    }
+
+    public CardItem(String title, String text, boolean isShow) {
         mTitleResource = title;
         mTextResource = text;
         score_show = isShow;
