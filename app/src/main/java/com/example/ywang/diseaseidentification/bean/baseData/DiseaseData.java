@@ -45,6 +45,14 @@ public class DiseaseData implements Parcelable{
         return 0;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeSerializable(name);

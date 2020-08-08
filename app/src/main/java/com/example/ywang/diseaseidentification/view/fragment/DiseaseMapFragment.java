@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -77,13 +78,17 @@ import com.baidu.mapapi.walknavi.model.WalkRoutePlanError;
 import com.baidu.mapapi.walknavi.params.WalkNaviLaunchParam;
 import com.baidu.mapapi.walknavi.params.WalkRouteNodeInfo;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.CenterInside;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.cocosw.bottomsheet.BottomSheet;
 import com.example.ywang.diseaseidentification.R;
 import com.example.ywang.diseaseidentification.bean.MapImg;
 import com.example.ywang.diseaseidentification.bean.OverLay;
+import com.example.ywang.diseaseidentification.utils.SnackBarUtil;
 import com.example.ywang.diseaseidentification.utils.baidumap.MyOrientationListener;
 import com.example.ywang.diseaseidentification.utils.baidumap.WalkingRouteOverlay;
 import com.example.ywang.diseaseidentification.view.activity.NearByActivity;
@@ -100,7 +105,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -210,7 +214,7 @@ public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerCli
         mMyOrientationListener.start();
         mBaiduMap.setOnMarkerClickListener(this); //设置Marker点击事件
         new overLayDataAsync().execute(getOverlayUrls); /* 同步病害地理围栏 */
-        new mapImgDataAsymc().execute(getMapImgs); /* 同步病害地图marker */
+        new mapImgDataAsync().execute(getMapImgs); /* 同步病害地图marker */
     }
 
     private void initFloatButton(View view) {
@@ -321,7 +325,7 @@ public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerCli
      */
     private void addGeoFence() {
         final int[] result = new int[1];
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         View view = View.inflate(getContext(), R.layout.dialog_select_fence, null);
         final EditText width = view.findViewById(R.id.fence_width);
         final EditText length = view.findViewById(R.id.fence_length);
@@ -343,20 +347,23 @@ public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerCli
                     Toast.makeText(getContext(), "请完善区域信息！", Toast.LENGTH_SHORT).show();
                 } else {
                     OverLay overLay = new OverLay(String.valueOf(overlayList.size() + 1), "123456", title.getText().toString(),
-                            length.getText().toString(), width.getText().toString(), mLatitude, mLongitude, 0);
-                    new addOverlayAsync().execute(overLay);
+                            length.getText().toString(), width.getText().toString(), mLatitude, mLongitude);
                     if (result[0] == R.id.radio_blue) {
                         addOverlaysToMap(Integer.parseInt(width.getText().toString()), Integer.parseInt(length.getText().toString()),
                                 R.drawable.ground_overlay, title.getText().toString(), mLatitude, mLongitude);
+                        overLay.setAreaType(0);
                     } else if (result[0] == R.id.radio_green) {
                         addOverlaysToMap(Integer.parseInt(width.getText().toString()), Integer.parseInt(length.getText().toString()),
                                 R.drawable.ground_overlay_green, title.getText().toString(), mLatitude, mLongitude);
+                        overLay.setAreaType(1);
                     } else if (result[0] == R.id.radio_red) {
                         addOverlaysToMap(Integer.parseInt(width.getText().toString()), Integer.parseInt(length.getText().toString()),
                                 R.drawable.ground_overlay_red, title.getText().toString(), mLatitude, mLongitude);
+                        overLay.setAreaType(2);
                     } else {
                         Toast.makeText(getContext(), "未选择区域警示颜色！请完善信息！", Toast.LENGTH_SHORT).show();
                     }
+                    new addOverlayAsync().execute(overLay);
                 }
             }
         });
@@ -423,7 +430,7 @@ public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerCli
         }
     }
 
-    class mapImgDataAsymc extends AsyncTask<String,String,List<MapImg>>{
+    class mapImgDataAsync extends AsyncTask<String,String,List<MapImg>>{
         List<MapImg> imageList = new ArrayList<>();
         @Override
         protected List<MapImg> doInBackground(String... strings) {
@@ -479,25 +486,32 @@ public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerCli
     /**
      * by moos on 2017/11/13
      * func:定制化marker的图标
-     * @return
      */
-    private void customizeMarkerIcon(MapImg mapImg){
+    private void customizeMarkerIcon(final MapImg mapImg){
         final View markerView = LayoutInflater.from(getContext()).inflate(R.layout.marker_bg,null);
         final ImageView icon = markerView.findViewById(R.id.marker_item_icon);
-
-        Glide.with(getContext()).load(getContext()).into(icon);
-        Bitmap bitmap = convertViewToBitmap(markerView);
-        LatLng point = new LatLng(mapImg.getLat(), mapImg.getLog());
-        BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(bitmap);
-        OverlayOptions options = new MarkerOptions()
-                .icon(bitmapDescriptor)
-                .position(point);
-        Marker marker = (Marker) mBaiduMap.addOverlay(options);
-        Bundle bundle = new Bundle();
-        bundle.putString("pic", mapImg.getPhotoSrc());
-        bundle.putDouble("latitude", mLatitude);
-        bundle.putDouble("longitude", mLongitude);
-        marker.setExtraInfo(bundle);
+        Log.e("marker",mapImg.toString());
+        Glide.with(getContext()).load(mapImg.getPhotoSrc())
+                .apply(RequestOptions.bitmapTransform(new CenterCrop()))
+                .into(new SimpleTarget<Drawable>() {
+            @Override
+            public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                icon.setImageDrawable(resource);
+                Bitmap bitmap = convertViewToBitmap(markerView);
+                LatLng point = new LatLng(mapImg.getLat(), mapImg.getLog());
+                BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(bitmap);
+                OverlayOptions options = new MarkerOptions()
+                        .icon(bitmapDescriptor)
+                        .position(point);
+                Marker marker = (Marker) mBaiduMap.addOverlay(options);
+                Bundle bundle = new Bundle();
+                bundle.putString("pic", mapImg.getPhotoSrc());
+                bundle.putDouble("latitude", mapImg.getLat());
+                bundle.putDouble("longitude", mapImg.getLog());
+                bundle.putString("disease_name",mapImg.getDiseaseName());
+                marker.setExtraInfo(bundle);
+            }
+        });
     }
 
     /**
@@ -683,7 +697,7 @@ public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerCli
         OverlayOptions textOptions = new TextOptions()
                 .text(title)
                 .bgColor(0xFFFFFFFF)
-                .fontSize(70)
+                .fontSize(65)
                 .fontColor(0xFF1b4560)
                 .position(point);
         mBaiduMap.addOverlay(textOptions);
@@ -812,7 +826,7 @@ public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerCli
     private void addMapPic(String imagePath) {
         if (imagePath != null) {
             new uploadFileAsync().execute(new File(imagePath));
-            Bitmap newBitmap = decodeSampledBitmapFromFile(imagePath, 200, 200);
+            Bitmap newBitmap = decodeSampledBitmapFromFile(imagePath, 150, 180);
             LatLng point = new LatLng(mLatitude, mLongitude);
             BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(newBitmap);
             OverlayOptions options = new MarkerOptions()
@@ -836,18 +850,19 @@ public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerCli
             String imagePath = bundle.getString("pic");
             Double latitude = bundle.getDouble("latitude", 0);
             Double longitude = bundle.getDouble("longitude", 0);
+            String diseaseName = bundle.getString("disease_name");
             if (latitude == mLatitude && longitude == mLongitude) {
                 Toast.makeText(getContext(), "始末位置不能相同！", Toast.LENGTH_SHORT).show();
             } else if (imagePath == null) {
                 Toast.makeText(getContext(), "加载失败，请重新添加", Toast.LENGTH_SHORT).show();
             } else {
-                showTheWay(new LatLng(latitude, longitude));
+                showTheWay(new LatLng(latitude, longitude),diseaseName);
             }
         }
         return true;
     }
 
-    private void showTheWay(final LatLng end) {
+    private void showTheWay(final LatLng end,String diseaseName) {
         routePlanSearch = RoutePlanSearch.newInstance();
         routePlanSearch.setOnGetRoutePlanResultListener(new OnGetRoutePlanResultListener() {
             @Override
@@ -886,8 +901,9 @@ public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerCli
             }
         });
         routePlanSearch.walkingSearch(getSearchWayParams(end));
+        String title = "选择该" + diseaseName + "导航类型";
         new BottomSheet.Builder(getActivity())
-                .title("请选择导航类型")
+                .title(title)
                 .sheet(R.menu.choose_navigation)
                 .listener(new DialogInterface.OnClickListener() {
                     @Override
@@ -900,6 +916,7 @@ public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerCli
                                 startWalkNavigation(end, 0);
                                 break;
                             case R.id.navigation_bike:
+                                Toast.makeText(getContext(), "该功能正在开发中....", Toast.LENGTH_SHORT).show();
                                 break;
                         }
                     }
@@ -1029,7 +1046,7 @@ public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerCli
                     int res = conn.getResponseCode();
                     if (res == 200) {
                         InputStream in = conn.getInputStream();
-                        BufferedReader reader = null;
+                        BufferedReader reader;
                         reader = new BufferedReader(new InputStreamReader(in));
                         StringBuilder response = new StringBuilder();
                         String line;
@@ -1039,8 +1056,6 @@ public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerCli
                         return response.toString();
                     }
                 }
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -1048,15 +1063,28 @@ public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerCli
         }
 
         @Override
-        protected void onPostExecute(String s) {
+        protected void onPostExecute(final String s) {
             super.onPostExecute(s);
-            MapImg img = new MapImg();
-            img.setPhotoSrc(s);
-            img.setUserId("123456");
-            img.setDiseaseName("测试");
-            Log.e("test",s);
 
-            new addMapImgAsync().execute(img);
+            final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            View view = View.inflate(getContext(), R.layout.dialog_select_pic, null);
+            final TextView title = view.findViewById(R.id.pic_title);
+            ImageView picImg = view.findViewById(R.id.pic_img);
+            Glide.with(getContext()).load(s).into(picImg);
+            builder.setView(view);
+            builder.setTitle("设置病害信息");
+            builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    MapImg img = new MapImg();
+                    img.setPhotoSrc(s);
+                    img.setUserId("123456");
+                    img.setDiseaseName(title.getText().toString());
+                    img.setLat(mLatitude);
+                    img.setLog(mLongitude);
+                    new addMapImgAsync().execute(img);
+                }
+            }).show();
         }
     }
 
@@ -1074,7 +1102,7 @@ public class DiseaseMapFragment extends Fragment implements BaiduMap.OnMarkerCli
                 connection.setRequestMethod("POST");
                 connection.setRequestProperty("contentType", "GBK");
                 DataOutputStream out = new DataOutputStream(connection.getOutputStream());
-                out.writeBytes("PhotoId=" + img.getPhotoId() + "&UserId=" + img.getUserId() +
+                out.writeBytes("id=" + img.getPhotoId() + "&userid=" + img.getUserId() +
                         "&DiseaseName=" + URLEncoder.encode(img.getDiseaseName(), "utf-8") +
                         "&Lat=" + img.getLat() + "&Log=" + img.getLog() + "&PhotoSrc=" + img.getPhotoSrc());
                 out.flush();

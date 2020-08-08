@@ -41,6 +41,10 @@ public class DiseasesAdapter extends RecyclerView.Adapter<DiseasesAdapter.ViewHo
         mDiseaseList = fruitList;
     }
 
+    public void setData(List<DiseaseData> fruitList){
+        mDiseaseList = fruitList;
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
         if (mContext == null){

@@ -3,6 +3,7 @@ package com.example.ywang.diseaseidentification.view.activity;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -10,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,6 +25,8 @@ import com.example.ywang.diseaseidentification.adapter.disease.DiseasesAdapter;
 import com.example.ywang.diseaseidentification.bean.baseData.DiseaseData;
 import com.example.ywang.diseaseidentification.utils.file.ConstantUtils;
 import com.luck.picture.lib.photoview.PhotoView;
+
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +36,8 @@ public class CropDetailActivity extends AppCompatActivity {
     private SwipeRefreshLayout swipeRefreshLayout;
     private DiseasesAdapter adapter;
     private List<DiseaseData> mList = new ArrayList<>();
+    private List<DiseaseData> mSearchList = new ArrayList<>();
+    private SearchView mSearchView;
 
     @SuppressLint("ResourceAsColor")
     @Override
@@ -68,7 +74,35 @@ public class CropDetailActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.crop_menu,menu);
-        return true;
+        MenuItem searchItem = menu.findItem(R.id.menu_search);
+        //通过MenuItem得到SearchView
+        mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        mSearchView.setQueryHint("输入病害名称");
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                mSearchList.clear();
+                if(s.equals("")){
+                    adapter.setData(mList);
+                    adapter.notifyDataSetChanged();
+                }else {
+                    for(DiseaseData data : mList){
+                        if(data.getName().contains(s)){
+                            mSearchList.add(data);
+                        }
+                    }
+                    adapter.setData(mSearchList);
+                    adapter.notifyDataSetChanged();
+                }
+                return false;
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
     }
 
     private void initDiseases(){
@@ -77,6 +111,25 @@ public class CropDetailActivity extends AppCompatActivity {
         for(int i = 1;i < list.size();i ++) {
             mList.add(new DiseaseData(list.get(i)[0],list.get(i)[1],list.get(i)[2]));
         }
+    }
+
+    // 让菜单同时显示图标和文字
+    @Override
+    public boolean onMenuOpened(int featureId, Menu menu) {
+        if (menu != null) {
+            if (menu.getClass().getSimpleName().equalsIgnoreCase("MenuBuilder")) {
+                try {
+                    @SuppressLint("PrivateApi")
+                    Method method = menu.getClass().getDeclaredMethod("setOptionalIconsVisible",
+                            Boolean.TYPE);
+                    method.setAccessible(true);
+                    method.invoke(menu, true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return super.onMenuOpened(featureId, menu);
     }
 
     @Override

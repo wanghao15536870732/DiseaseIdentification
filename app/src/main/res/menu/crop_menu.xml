@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:id="@+id/action_map"
-        android:title="more"
-        android:icon="@drawable/map_panorama"
+
+    <item
+        android:id="@+id/menu_search"
         android:orderInCategory="100"
+        android:title="搜索"
+        app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="always" />
+
+    <item android:id="@+id/action_map"
+        android:title="资源种植分布图"
+        android:icon="@drawable/map_panorama"
+        app:showAsAction="never" />
 
 </menu>

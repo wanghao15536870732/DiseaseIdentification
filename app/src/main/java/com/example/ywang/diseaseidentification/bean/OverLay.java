@@ -13,8 +13,19 @@ public class OverLay {
     public OverLay() {
     }
 
+    public OverLay(String areaId, String userId, String areaName, String areaLength,
+                   String areaWidth, double areaLat, double areaLon) {
+        AreaId = areaId;
+        UserId = userId;
+        AreaName = areaName;
+        AreaLength = areaLength;
+        AreaWidth = areaWidth;
+        AreaLat = areaLat;
+        AreaLon = areaLon;
+    }
+
     public OverLay(String areaId, String userId, String areaName,
-                   String areaLength, String areaWidth, double areaLat, double areaLon,int type) {
+                   String areaLength, String areaWidth, double areaLat, double areaLon, int type) {
         AreaId = areaId;
         UserId = userId;
         AreaName = areaName;

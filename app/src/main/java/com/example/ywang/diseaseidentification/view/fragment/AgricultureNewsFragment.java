@@ -30,7 +30,7 @@ public class AgricultureNewsFragment extends Fragment{
 
     private List<Fragment> mFragments = new ArrayList<>(  );
 
-    private String[] mTitles = {"农业头条","疾病防治","种植技巧"};
+    private String[] mTitles = {"农业头条","疾病防治","科技资讯"};
     private static String agricultureMainUrl = "http://121.199.19.77:8080/show/GetNewsOneServlet";
     private static String agricultureControlUrl = "http://121.199.19.77:8080/show/GetNewsTwoServlet";
     private static String agricultureMethodUrl = "http://121.199.19.77:8080/show/GetNewsThreeServlet";

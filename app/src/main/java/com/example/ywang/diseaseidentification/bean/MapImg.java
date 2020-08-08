@@ -55,4 +55,16 @@ public class MapImg {
     public void setPhotoSrc(String photoSrc) {
         this.photoSrc = photoSrc;
     }
+
+    @Override
+    public String toString() {
+        return "MapImg{" +
+                "photoId=" + photoId +
+                ", userId='" + userId + '\'' +
+                ", diseaseName='" + diseaseName + '\'' +
+                ", lat=" + lat +
+                ", log=" + log +
+                ", photoSrc='" + photoSrc + '\'' +
+                '}';
+    }
 }

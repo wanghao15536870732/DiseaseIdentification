@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
     private static final int DYNAMIC = 222;
     private File outputImage;
     private FlowingDrawer mDrawer;  //侧滑栏控件
-    private ImageView mMenu, mBack, addBtn;
+    private ImageView mMenu, mBack, addBtn, searchBtn;
     private CircleImageView avatar;
     private List<LocalMedia> selectList = new ArrayList<>();
     private MiuiWeatherView weatherView;
@@ -173,7 +173,6 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
         Toolbar toolbar = findViewById(R.id.toolbar);
         mMenu = findViewById(R.id.avatar);
         mBack = findViewById(R.id.back_menu);
-
         addBtn = findViewById(R.id.history_main);
         addBtn.setOnClickListener(this);
         avatar = findViewById(R.id.menu_avatar);
@@ -181,6 +180,8 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
         toolbar.setOnMenuItemClickListener(this);
         mMenu.setOnClickListener(this);
         mBack.setOnClickListener(this);
+        searchBtn = findViewById(R.id.search_main);
+        searchBtn.setOnClickListener(this);
         requestPermission();
         requestWeather();
         requestDailyWeather();
@@ -377,7 +378,7 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
                 Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.RECORD_AUDIO, Manifest.permission.READ_PHONE_STATE,
-                Manifest.permission.CALL_PHONE, Manifest.permission.WRITE_SETTINGS};
+                Manifest.permission.CALL_PHONE};
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 for (String permission1 : permissions) {
@@ -591,6 +592,9 @@ public class MainActivity extends AppCompatActivity implements Toolbar.OnMenuIte
                 break;
             case R.id.history_main:
                 startActivity(new Intent(this, AlbumActivity.class));
+                break;
+            case R.id.search_main:
+                Toast.makeText(this, "该功能还在开发当中...", Toast.LENGTH_SHORT).show();
                 break;
             default:
                 break;

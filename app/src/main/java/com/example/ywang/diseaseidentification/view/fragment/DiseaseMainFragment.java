@@ -27,7 +27,7 @@ public class DiseaseMainFragment extends Fragment implements TabLayout.OnTabSele
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
 
-    private String[] mTitles = {"蔬菜", "粮棉油", "水果", "经济作物",};
+    private String[] mTitles = {"蔬菜", "粮棉油", "水果", "经济作物"};
     private List<DiseaseData> mList = new ArrayList<>();
     private List<DiseaseData> mList2 = new ArrayList<>();
     private List<DiseaseData> mList3 = new ArrayList<>();

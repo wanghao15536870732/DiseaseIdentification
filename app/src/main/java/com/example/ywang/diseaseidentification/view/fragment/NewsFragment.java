@@ -32,16 +32,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressLint("ValidFragment")
-public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
+public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private NewsListAdapter adapter;
     private List<NewsBean> mNewsBeans = new ArrayList<>();
 
-    public static NewsFragment newInstance(String mUrl){
+    public static NewsFragment newInstance(String mUrl) {
         Bundle bundle = new Bundle();
-        bundle.putString("url",mUrl);
+        bundle.putString("url", mUrl);
         NewsFragment fragment = new NewsFragment();
         fragment.setArguments(bundle);
         return fragment;
@@ -55,9 +55,9 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_news,container,false);
+        View view = inflater.inflate(R.layout.fragment_news, container, false);
         Bundle bundle = getArguments();
-        if(bundle != null){
+        if (bundle != null) {
             mUrl = bundle.getString("url");
         }
         recyclerView = view.findViewById(R.id.recyclerView_news);
@@ -86,7 +86,7 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         return view;
     }
 
-    private void initData(){
+    private void initData() {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -94,7 +94,7 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 BufferedReader reader = null;
                 try {
                     URL url = new URL(mUrl);
-                    connection = (HttpURLConnection)url.openConnection();
+                    connection = (HttpURLConnection) url.openConnection();
                     connection.setRequestMethod("POST");
                     //设置连接超时和读取超时的毫秒数
                     connection.setConnectTimeout(8000);
@@ -105,32 +105,32 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                     String line;
                     mNewsBeans.clear();
                     mIsRefreshing = true;
-                    Log.e("newsbean ",String.valueOf(mNewsBeans.size()) );
-                    while ((line = reader.readLine())!=null) {
-                        int num = line.charAt(0)-'0';
+                    Log.e("newsbean ", String.valueOf(mNewsBeans.size()));
+                    while ((line = reader.readLine()) != null) {
+                        int num = line.charAt(0) - '0';
                         String author = reader.readLine();
                         String time = reader.readLine();
                         String title = reader.readLine();
                         String content = reader.readLine();
                         String img_url = reader.readLine();
                         String main_url = reader.readLine();
-                        NewsBean newsBean = new NewsBean(num,author,time,title,content,img_url,main_url);
-                        news[num-1] = newsBean;
+                        NewsBean newsBean = new NewsBean(num, author, time, title, content, img_url, main_url);
+                        news[num - 1] = newsBean;
                         mNewsBeans.add(newsBean);
                     }
-                    Log.e("newsbean",String.valueOf(mNewsBeans.size()) );
+                    Log.e("newsbean", String.valueOf(mNewsBeans.size()));
                     mIsRefreshing = false;
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
-                    if(reader!=null){
+                    if (reader != null) {
                         try {
                             reader.close();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }
-                    if(connection != null){
+                    if (connection != null) {
                         connection.disconnect();
                     }
                 }
@@ -146,9 +146,9 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         new Thread(new Runnable() {
             @Override
             public void run() {
-                try{
+                try {
                     Thread.sleep(2000);
-                }catch (InterruptedException e){
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
                 getActivity().runOnUiThread(new Runnable() {
@@ -163,19 +163,19 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         }).start();
     }
 
-    class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.ViewHolder>{
+    class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.ViewHolder> {
 
         private Context mContext;
         private List<NewsBean> mNewsList;
 
-        NewsListAdapter(List<NewsBean> items){
+        NewsListAdapter(List<NewsBean> items) {
             this.mNewsList = items;
         }
 
         @NonNull
         @Override
         public NewsListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_news,parent,false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_news, parent, false);
             final ViewHolder holder = new ViewHolder(view);
             mContext = parent.getContext();
             holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -183,7 +183,7 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 public void onClick(View view) {
                     int position = holder.getAdapterPosition();
                     NewsBean newsBean = mNewsList.get(position);
-                    WebUtil.openWeb(mContext, newsBean.getTitle(), newsBean.getMain_url(),newsBean.getContent());
+                    WebUtil.openWeb(mContext, newsBean.getTitle(), newsBean.getMain_url(), newsBean.getContent());
                 }
             });
             return holder;
@@ -192,10 +192,10 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             NewsBean newsBean = mNewsList.get(position);
-            holder.time.setText( newsBean.getTime() );
-            holder.author.setText( newsBean.getAuthor() );
-            holder.title.setText( newsBean.getTitle() );
-            Glide.with(mContext).load( newsBean.getUrl() ).into( holder.mImageView );
+            holder.time.setText(newsBean.getTime());
+            holder.author.setText(newsBean.getAuthor());
+            holder.title.setText(newsBean.getTitle());
+            Glide.with(mContext).load(newsBean.getUrl()).into(holder.mImageView);
         }
 
         @Override
@@ -203,16 +203,16 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             return mNewsBeans.size();
         }
 
-        class ViewHolder extends RecyclerView.ViewHolder{
-            private TextView title,time,author;
+        class ViewHolder extends RecyclerView.ViewHolder {
+            private TextView title, time, author;
             private ImageView mImageView;
 
             ViewHolder(View itemView) {
                 super(itemView);
-                title = itemView.findViewById( R.id.item_news_title );
-                author = itemView.findViewById( R.id.item_news_source );
-                time = itemView.findViewById( R.id.item_news_date );
-                mImageView = itemView.findViewById( R.id.img_news);
+                title = itemView.findViewById(R.id.item_news_title);
+                author = itemView.findViewById(R.id.item_news_source);
+                time = itemView.findViewById(R.id.item_news_date);
+                mImageView = itemView.findViewById(R.id.img_news);
             }
         }
     }

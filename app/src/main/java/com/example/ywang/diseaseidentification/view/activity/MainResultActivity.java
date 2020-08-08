@@ -50,13 +50,14 @@ public class MainResultActivity extends AppCompatActivity {
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
 
         mViewPager = findViewById(R.id.viewPager_result);
-        mCardAdapter = new CardPagerAdapter(MainResultActivity.this);
+
         if (getIntent().getBundleExtra("image_data") != null) {
             imageBitmap = (Bitmap) getIntent().getBundleExtra("image_data").get("data");
         } else if (getIntent().getStringExtra("image_path") != null) {
             String path = getIntent().getStringExtra("image_path");
             imageBitmap = BitmapFactory.decodeFile(path);
         }
+        mCardAdapter = new CardPagerAdapter(MainResultActivity.this,imageBitmap);
         initScanLine();
         String pred = getIntent().getStringExtra("predict");
         ImageView imageView = findViewById(R.id.image);

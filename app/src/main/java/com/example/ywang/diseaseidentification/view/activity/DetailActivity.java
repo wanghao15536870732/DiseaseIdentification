@@ -1,22 +1,33 @@
 package com.example.ywang.diseaseidentification.view.activity;
 
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.BackgroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.ywang.diseaseidentification.R;
+import com.iflytek.cloud.ErrorCode;
+import com.iflytek.cloud.SpeechConstant;
+import com.iflytek.cloud.SpeechError;
+import com.iflytek.cloud.SpeechSynthesizer;
+import com.iflytek.cloud.SynthesizerListener;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -32,6 +43,8 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private LinearLayout layout;
     private ImageView background;
     private CollapsingToolbarLayout collapsingToolbar;
+    private String texts = "";
+    private TextView contentView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,15 +98,34 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
             layout.removeAllViews();
             for (index = 0; index < contentList.size() - 1; index++) {
                 View view = LayoutInflater.from(DetailActivity.this)
-                        .inflate(R.layout.result_card_item, layout, false);
-                TextView content = view.findViewById(R.id.disease_text);
+                        .inflate(R.layout.card_item, layout, false);
                 TextView title = view.findViewById(R.id.disease_main);
+                final TextView content = view.findViewById(R.id.disease_text);
+                final ImageView voiceImg = view.findViewById(R.id.disease_voice);
                 if (contentList.get(index).getTitle().equals("")) {
                     title.setVisibility(View.GONE);
                 } else {
                     title.setText(contentList.get(index).getTitle());
                 }
                 content.setText(contentList.get(index).getContent());
+                voiceImg.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (voiceImg.getTag() == "play") {
+                            voiceImg.setTag("stop");
+                            voiceImg.setImageResource(R.drawable.voice_play);
+                            if (SpeechSynthesizer.getSynthesizer().isSpeaking())
+                                SpeechSynthesizer.getSynthesizer().pauseSpeaking();
+                        }else if (voiceImg.getTag() == "stop"){
+                            voiceImg.setTag("play");
+                            voiceImg.setImageResource(R.drawable.voice_play_on);
+                            texts = content.getText().toString();
+                            contentView = content;
+                            SpeechSynthesizer(texts);
+                            SpeechSynthesizer.getSynthesizer().resumeSpeaking();
+                        }
+                    }
+                });
                 layout.addView(view);
             }
             String imageUrl = contentList.get(index).getImageUrl();
@@ -136,6 +168,67 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
             e.printStackTrace();
         }
         return detailList;
+    }
+
+    /*-------------------------------语音合成--------------------------*/
+    public void SpeechSynthesizer(String text){
+        //1.创建SpeechSynthesizer对象, 第二个参数：本地合成时传InitListener
+        SpeechSynthesizer mTts = SpeechSynthesizer.createSynthesizer(DetailActivity.this, null);
+        // 清空参数
+        mTts.setParameter( SpeechConstant.PARAMS, null);
+        mTts.setParameter( SpeechConstant.ENGINE_TYPE, SpeechConstant.TYPE_CLOUD); //设置云端
+        mTts.setParameter( SpeechConstant.VOICE_NAME, "xiaoyan" );//设置发音人
+        mTts.setParameter( SpeechConstant.SPEED, "50");//设置语速
+        //设置合成音调
+        mTts.setParameter( SpeechConstant.PITCH, "50");
+        mTts.setParameter( SpeechConstant.VOLUME, "80");//设置音量，范围0~sunny
+        mTts.setParameter( SpeechConstant.STREAM_TYPE, "3");
+        // 设置播放合成音频打断音乐播放，默认为true
+        mTts.setParameter( SpeechConstant.KEY_REQUEST_FOCUS, "true");
+        //3.开始合成
+        int code = mTts.startSpeaking(text, mSynListener);
+
+        if (code != ErrorCode.SUCCESS) {
+            if (code == ErrorCode.ERROR_COMPONENT_NOT_INSTALLED) {
+                //上面的语音配置对象为初始化时：
+                Toast.makeText(DetailActivity.this, "语音组件未安装", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(DetailActivity.this, "语音合成失败,错误码: " + code, Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    //合成监听器
+    private SynthesizerListener mSynListener = new SynthesizerListener() {
+        //会话结束回调接口，没有错误时，error为null
+        public void onCompleted(SpeechError error) { }
+        //缓冲进度回调
+        //percent为缓冲进度0~sunny，beginPos为缓冲音频在文本中开始位置，endPos表示缓冲音频在文本中结束位置，info为附加信息。
+        public void onBufferProgress(int percent, int beginPos, int endPos, String info) { }
+        //开始播放
+        public void onSpeakBegin() { }
+        //暂停播放
+        public void onSpeakPaused() { }
+        //播放进度回调
+        //percent为播放进度0~sunny,beginPos为播放音频在文本中开始位置，endPos表示播放音频在文本中结束位置.
+        public void onSpeakProgress(int percent, int beginPos, int endPos) {
+            SpannableStringBuilder style = new SpannableStringBuilder(texts);
+            style.setSpan(new BackgroundColorSpan(Color.parseColor("#f49d6b")),
+                    beginPos,endPos + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            contentView.setText(style);
+        }
+        //恢复播放回调接口
+        public void onSpeakResumed() { }
+        //会话事件回调接口
+        public void onEvent(int arg0, int arg1, int arg2, Bundle arg3) { }
+    };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(SpeechSynthesizer.getSynthesizer() != null){
+            SpeechSynthesizer.getSynthesizer().destroy();
+        }
     }
 
     @Override

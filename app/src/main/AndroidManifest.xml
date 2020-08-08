@@ -27,9 +27,6 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <!-- 获取手机录音机使用权限，听写、识别、语义理解需要用到此权限 -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission
-        android:name="android.permission.WRITE_APN_SETTINGS"
-        tools:ignore="ProtectedPermissions" />
 
     <supports-screens
         android:anyDensity="true"
