@@ -34,6 +34,10 @@
 + [中国农业种质信息网](http://www.cgris.net/)
 + [第一农经网](http://www.1nongjing.com/)
 
+## 模型训练(pytorch)
+
++ [plants_disease_classify](https://github.com/wanghao15536870732/plants_disease_classify)
+
 ## 团队介绍和人员分工
 
 **所在学校**  中北大学 </br>
